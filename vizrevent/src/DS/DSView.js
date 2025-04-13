@@ -1,12 +1,47 @@
-import React from 'react'
+import React from 'react';
 
-const DSView = () => {
+const DSView = (props) => {
+
+    const { onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
+
+
+
+    const handleDatasetSelect = () => {
+        //dataset to be passed to the DSController
+        const newDataset = { id: 1, name: 'New Dataset' };
+        onDatasetChange(newDataset);
+    };
+
+    const handleDataFieldSelect = () => {
+        // List of data field selected to be passed to DSController
+        // Example datafields input
+        const exampleDatafields = [
+            { id: 1, name: 'Field1', type: 'numeric' },
+            { id: 2, name: 'Field2', type: 'categorical' },
+        ];
+        onDatafieldSelect(exampleDatafields);
+    };
+
+    const handleVizEncoderSelect = () => {
+        // List of data field selected to be passed to DSController
+        const exampleEncoder = [
+            { id: 1, name: 'Field1', type: 'color' },
+            { id: 2, name: 'Field2', type: 'size' },
+        ];
+         onEncoderSelect(exampleEncoder);
+    };
+
     return (
-      <div style={{ backgroundColor: 'red' }}>
-        DSView
-      </div>
-    );
-  };
-  
+        <div style={{ backgroundColor: 'red' }}>
+            DSView
+            <button onClick={handleDatasetSelect}>Change Dataset</button>
 
-export default DSView
+            <button onClick={handleDataFieldSelect}>Change DataField</button>
+
+            <button onClick={handleVizEncoderSelect}>Change VizEncoder</button>
+
+        </div>
+    );
+};
+
+export default DSView;
