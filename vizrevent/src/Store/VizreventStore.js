@@ -46,6 +46,6 @@ export const useStoreSelector = (stateSelector = state => state, dispatchSelecto
 
   return {
     state:selectedState,
-    ...selectedDispatchMethods,
+    dispatch:selectedDispatchMethods,
   };
 };

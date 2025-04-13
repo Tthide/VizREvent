@@ -5,15 +5,15 @@ import RECController from './REC/RECController';
 import VPController from './VP/VPController';
 
 function App() {
-  const { state, setRecSettings, setVizParam, setDataset, setInputViz } = useStoreSelector();
-console.log("useStoreSelector output:"+useStoreSelector());
-console.log(useStoreSelector());
+  const { state, dispatch } = useStoreSelector();
+//console.log("useStoreSelector output:"+useStoreSelector());
+//console.log("useStoreSelector output:"+useStoreSelector());
 
  const handleUpdate = () => {
-   setRecSettings({ key: 'value' });
-   setVizParam({ param: 'value' });
-   setDataset('link_or_direct_dataset');
-   setInputViz({ input: 'value' });
+   dispatch.setRecSettings({ key: 'value' });
+   dispatch.setVizParam({ param: 'value' });
+   dispatch.setDataset('link_or_direct_dataset');
+   dispatch.setInputViz({ input: 'value' });
  };
 
   return (
