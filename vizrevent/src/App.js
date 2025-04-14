@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       <div>
-        <button onClick={handleUpdate}>Update Store</button>
+        <button onClick={handleUpdate}>Reset Store</button>
         <pre>{JSON.stringify(state, null, 2)}</pre>
       </div>
       <div>

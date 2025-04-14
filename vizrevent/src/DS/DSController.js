@@ -5,13 +5,15 @@ import { useStoreSelector } from '../Store/VizreventStore';
 
 
 const DSController = () => {
+
+    //connecting to store
     const { state, dispatch } = useStoreSelector(state => ({
         vizParam: state.vizParam,
         dataset: state.dataset,
     }));
 
-    console.log("DSController useStoreSelector Output:");
-    console.log(dispatch);
+    //console.log("DSController useStoreSelector Output:");
+    //console.log(dispatch);
 
     //Takes selected dataset and dispatch it to store
     const handleDatasetSelect = (dataset) => {

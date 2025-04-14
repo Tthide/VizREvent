@@ -33,7 +33,7 @@ const DSView = (props) => {
 
     return (
         <div style={{ backgroundColor: 'red' }}>
-            DSView
+            <h1>DSView</h1>
             <button onClick={handleDatasetSelect}>Change Dataset</button>
 
             <button onClick={handleDataFieldSelect}>Change DataField</button>
