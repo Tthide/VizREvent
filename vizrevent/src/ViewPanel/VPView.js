@@ -1,7 +1,7 @@
 import React from 'react';
 
 const VPView = (props) => {
-  const { vizList, vizSelectedId, onVizSelect, onVizCreate, onVizDelete } = props;
+  const { vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete } = props;
 
 
   const handleVizCreateClick = () => {
@@ -16,16 +16,16 @@ const VPView = (props) => {
   }
 
   const handleVizDelete = () => {
-    if (vizSelectedId !== null) {
-      onVizDelete(vizSelectedId);
+    if (vizSelected !== null) {
+      onVizDelete(vizSelected);
     }
   }
 
   return (
     <div style={{ backgroundColor: 'gray', padding: '20px' }}>
       <h2>VPView</h2>
-      <button onClick={onVizCreate}>Create Visualization</button>
-      {vizSelectedId !== null && (
+      <button onClick={handleVizCreateClick}>Create Visualization</button>
+      {vizSelected !== null && (
         <button onClick={handleVizDelete}>
           Delete Selected Visualization
         </button>
@@ -39,8 +39,8 @@ const VPView = (props) => {
             key={viz.id}
             onClick={handleVizSelect(viz)}
             style={{
-              backgroundColor: viz.id === vizSelectedId ? 'blue' : 'white',
-              color: viz.id === vizSelectedId ? 'white' : 'black',
+              backgroundColor: viz.id === vizSelected.id ? 'blue' : 'white',
+              color: viz.id === vizSelected.id ? 'white' : 'black',
             }}
           >
             Visualization {index + 1}: {viz.vizQuery}

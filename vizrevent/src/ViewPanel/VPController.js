@@ -10,17 +10,17 @@ const VPController = () => {
     const { state, dispatch } = useStoreSelector(state => ({
         vizParam: state.vizParam,
         inputViz: state.inputViz,
+        selectedViz: state.selectedViz,
         dataset: state.dataset,
     }));
 
     //Creating local state 
     const [vizList, setVizList] = useState([]);
-    const [vizSelectedId,setVizSelectedId]=useState(null);
 
     //Takes selected viz and dispatch its properties to store
     const handleVizSelect = (vizSelected) => {
-        setVizSelectedId(vizSelected.id);
         dispatch.setVizParam(vizSelected);
+        dispatch.setSelectedViz(vizSelected);
     };
 
     //createViz and automatically selects it
@@ -30,8 +30,9 @@ const VPController = () => {
             vizQuery: vizQuery
         };
         setVizList(preVizList => [...preVizList, newViz]);
-        setVizSelectedId(newViz.id);
         dispatch.setVizParam(newViz);
+        dispatch.setSelectedViz(newViz);
+
     };
 
     // Handle new Viz creation from RECController 
@@ -47,20 +48,20 @@ const VPController = () => {
     };
 
     //Takes selected dataset and dispatch it to store
-    const handleVizDelete = (deletedVizId) => {
+    const handleVizDelete = (vizToDelete) => {
 
         // Error checking
-        if (deletedVizId === null) {
-            throw new Error('Id provided is null.');
+        if (vizToDelete === null || vizToDelete.id === null) {
+            throw new Error('the Viz provided is null or has a null id.');
         }
         if (vizList.length === 0) {
             throw new Error('Visualization list is empty.');
         }
-        setVizList(preVizList => preVizList.filter(item => item.id !== deletedVizId));
+        setVizList(preVizList => preVizList.filter(item => item.id !== vizToDelete.id));
         //Resetting these properties since the selected viz doesn't exist anymore
         dispatch.setInputViz(null);
         dispatch.setVizParam(null);
-        setVizSelectedId(null);
+        dispatch.setSelectedViz(null);
 
     };
 
@@ -68,13 +69,13 @@ const VPController = () => {
         <>
             <VPView
                 vizList={vizList}
-                vizSelectedId={vizSelectedId}
+                vizSelected={state.selectedViz}
                 onVizSelect={handleVizSelect}
                 onVizCreate={handleEmptyVizCreate}
                 onVizDelete={handleVizDelete}
             />
 
-            <pre>VPControllerPseudoState:{JSON.stringify({ state, vizSelectedId,vizList }, null, 2)}</pre>
+            <pre>VPControllerPseudoState:{JSON.stringify({ state,vizList }, null, 2)}</pre>
         </>
     )
 } 
