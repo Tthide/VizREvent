@@ -1,8 +1,8 @@
 import React from 'react';
 import { useStoreSelector } from './Store/VizreventStore';
-import DSController from './DS/DSController';
-import RECController from './REC/RECController';
-import VPController from './VP/VPController';
+import DSController from './DataSettings/DSController';
+import RECController from './RECommender/RECController';
+import VPController from './ViewPanel/VPController';
 
 function App() {
   const { state, dispatch } = useStoreSelector();
