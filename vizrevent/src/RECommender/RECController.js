@@ -54,7 +54,7 @@ const RECController = () => {
         if (isOpened) {
             setRecList(prevRecList=>recCompute(prevRecList, state.vizParam, state.recSettings, state.dataset));
         }
-    }, [state.vizParam, state.recSettings, state.dataset]);
+    }, [isOpened,state.vizParam, state.recSettings, state.dataset]);
 
     return (
         <>
