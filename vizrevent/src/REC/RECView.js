@@ -2,7 +2,7 @@ import React from 'react';
 
 const RECView = (props) => {
 
-  const { isOpened, onPanelOpenerClick, recList } = props;
+  const { isOpened, onPanelOpenerClick, recList, onRecItemSelect } = props;
 
 
   const handlePanelExpandClick = () => {
@@ -10,27 +10,33 @@ const RECView = (props) => {
     onPanelOpenerClick(isOpened);
   };
 
+  const handleRecItemSelect = (recVizSettings) => {
+    onRecItemSelect(recVizSettings);
+  }
 
   //display one recommendation item
   const displayRECItem = (recItem) => {
 
-
-    return <button key={recItem.id}>recommendation n°{recItem.id}</button>;
+    console.log("Call displayRECItem");
+    console.log(recItem);
+    return <button key={recItem.id} onClick={() => handleRecItemSelect(recItem.vizQuery)}>recommendation n°{recItem.id}</button>;
 
 
   }
 
   return (
     <div style={{ backgroundColor: 'blue' }}>
+      <h1>RECView</h1>
+
       {isOpened && (
         <div className='RECPanel' style={{ backgroundColor: 'blue' }}>
           <div className='RECVizList'>
-            {recList.map(recItem => displayRECItem(recItem))}
+            {recList.map(recItem =>displayRECItem(recItem))}
           </div>
         </div>
       )}
-      <h1>RECView</h1>
 
+      {/* Expanding panel button, this could also be but in RECController but to respect MVC we put it here*/}
       <button onClick={handlePanelExpandClick}>
         {isOpened ? "Close Panel" : " Open panel"}
       </button>

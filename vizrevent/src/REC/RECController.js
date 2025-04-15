@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import RECView from './RECView'
 import { useStoreSelector } from '../Store/VizreventStore';
 
@@ -16,25 +16,21 @@ const RECController = () => {
     //Creating local state 
     const [isOpened, setIsOpened] = useState(false);
     const [recList, setRecList] = useState([
-        { id: 1 },
-        { id: 2 },
-        { id: 3 }
+        { id: 1, vizQuery: 'query1' },
+        { id: 2, vizQuery: 'query2' },
+        { id: 3, vizQuery: 'query3' }
     ]);
 
-    //console.log("RECController useStoreSelector Output:");
-    //console.log(dispatch);
-
-
-
     //function that actually computes the recommendation
-    const recCompute = (vizParam,recSettings,dataset) => {
-        const recList = [
-            { id: 1 },
-            { id: 2 },
-            { id: 3 }
-        ];
-
-        setRecList(recList);
+    const recCompute = (recList, vizParam, recSettings, dataset) => {
+        const newRecList = recList.map(item => ({
+            ...item,
+            vizQuery: `${item.vizQuery}/${item.id}`
+        }));
+        return newRecList;
+        /* recommendation provided in the past could influence futur recommendation here (be mindfull of infinite recursive loops)
+        const newRecSettings="";
+        dispatch.setRecSettings(newRecSettings)*/
     }
 
     ///////Event Handlers
@@ -44,14 +40,30 @@ const RECController = () => {
         setIsOpened(!(currentIsOpened));
     };
 
+    /*Dispatch selected recommendation to store for creation in VP, dispatch item's vizParam for display in DS
+    and dispatch new recSettings to recommend related view of current selected Viz*/
+    const handleRecSelection = (recVizSelect) => {
+        dispatch.setInputViz(recVizSelect);
+        dispatch.setVizParam(recVizSelect);
+        dispatch.setRecSettings(recVizSelect);
+    }
+
+    // We only compute the recommendation when the panel is opened to save up on some performance
+    // Use useEffect to update recList when store properties change
+    useEffect(() => {
+        if (isOpened) {
+            setRecList(prevRecList=>recCompute(prevRecList, state.vizParam, state.recSettings, state.dataset));
+        }
+    }, [state.vizParam, state.recSettings, state.dataset]);
 
     return (
         <>
             <RECView isOpened={isOpened}
                 onPanelOpenerClick={handlePanelOpener}
-                recList={recList} />
-            <h1>RECControllerPseudoState:{JSON.stringify(state, null, 2)}</h1>
-            <h1>local state:{JSON.stringify(isOpened, null, 2)}</h1>
+                recList={recList}
+                onRecItemSelect={handleRecSelection} />
+            <pre>RECControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>
+            <pre>local state:{JSON.stringify({ isOpened, recList }, null, 2)}</pre>
         </>
     )
 }
