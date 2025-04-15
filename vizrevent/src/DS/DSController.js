@@ -54,7 +54,7 @@ const DSController = () => {
             <DSView onDatasetChange={handleDatasetSelect}
                 onDatafieldSelect={handleDatafieldSelect}
                 onEncoderSelect={handleEncoderSelect} />
-            <h1>DSControllerPseudoState:{JSON.stringify(state, null, 2)}</h1>
+            <pre>DSControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>
         </>
     )
 }

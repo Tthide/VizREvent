@@ -20,7 +20,7 @@ function App() {
     <>
       <div>
         <button onClick={handleUpdate}>Reset Store</button>
-        <pre>{JSON.stringify(state, null, 2)}</pre>
+        <pre>{JSON.stringify(state, null, 3)}</pre>
       </div>
       <div>
         <DSController />
