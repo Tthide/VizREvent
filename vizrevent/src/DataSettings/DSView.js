@@ -2,7 +2,7 @@ import React from 'react';
 
 const DSView = (props) => {
 
-    const { onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
+    const { hasSelectedViz, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
 
 
 
@@ -28,17 +28,18 @@ const DSView = (props) => {
             { id: 1, name: 'Field1', type: 'color' },
             { id: 2, name: 'Field2', type: 'size' },
         ];
-         onEncoderSelect(exampleEncoder);
+        onEncoderSelect(exampleEncoder);
     };
 
     return (
         <div style={{ backgroundColor: 'red' }}>
             <h1>DSView</h1>
             <button onClick={handleDatasetSelect}>Change Dataset</button>
+            {//we only display the settings inputs if a viz has been selected
+            hasSelectedViz ?
+                <><button onClick={handleDataFieldSelect}>Change DataField</button>
 
-            <button onClick={handleDataFieldSelect}>Change DataField</button>
-
-            <button onClick={handleVizEncoderSelect}>Change VizEncoder</button>
+                    <button onClick={handleVizEncoderSelect}>Change VizEncoder</button>)</> : <></>}
 
         </div>
     );

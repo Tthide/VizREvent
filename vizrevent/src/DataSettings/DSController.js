@@ -10,6 +10,7 @@ const DSController = () => {
     const { state, dispatch } = useStoreSelector(state => ({
         vizParam: state.vizParam,
         dataset: state.dataset,
+        selectedViz: state.selectedViz,
     }));
 
     //console.log("DSController useStoreSelector Output:");
@@ -51,7 +52,9 @@ const DSController = () => {
 
     return (
         <>
-            <DSView onDatasetChange={handleDatasetSelect}
+            <DSView
+                hasSelectedViz={state.selectedViz !== null}
+                onDatasetChange={handleDatasetSelect}
                 onDatafieldSelect={handleDatafieldSelect}
                 onEncoderSelect={handleEncoderSelect} />
             <pre>DSControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>
