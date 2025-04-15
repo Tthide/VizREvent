@@ -5,6 +5,7 @@ import {
   setVizParam,
   setDataset,
   setInputViz,
+  setSelectedViz,
 } from './VizreventActions';
 
 // Create a context for the store
@@ -20,6 +21,7 @@ export const StoreProvider = ({ children }) => {
       setVizParam: (vizParam) => dispatch(setVizParam(vizParam)),
       setDataset: (dataset) => dispatch(setDataset(dataset)),
       setInputViz: (inputViz) => dispatch(setInputViz(inputViz)),
+      setSelectedViz: (selectedViz) => dispatch(setSelectedViz(selectedViz)),
     },
   }), [state]);
 
