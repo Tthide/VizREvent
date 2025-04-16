@@ -39,8 +39,8 @@ const VPView = (props) => {
             key={viz.id}
             onClick={handleVizSelect(viz)}
             style={{
-              backgroundColor: viz.id === vizSelected.id ? 'blue' : 'white',
-              color: viz.id === vizSelected.id ? 'white' : 'black',
+              backgroundColor: vizSelected &&  viz.id === vizSelected.id ? 'blue' : 'white',
+              color:vizSelected && viz.id === vizSelected.id ? 'white' : 'black',
             }}
           >
             Visualization {index + 1}: {viz.vizQuery}
