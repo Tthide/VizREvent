@@ -16,10 +16,10 @@ const RECController = () => {
     //Creating local state 
     const [isOpened, setIsOpened] = useState(false);
     const [recList, setRecList] = useState([
-        { id: 1, vizQuery: 'query1' },
-        { id: 2, vizQuery: 'query2' },
-        { id: 3, vizQuery: 'query3' }
-    ]);
+        { id: 1, vizQuery: 'RECquery1' },
+        { id: 2, vizQuery: 'RECquery2' },
+        { id: 3, vizQuery: 'RECquery3' }
+    ]); //example value
 
     //function that actually computes the recommendation
     const recCompute = (recList, vizParam, recSettings, dataset) => {

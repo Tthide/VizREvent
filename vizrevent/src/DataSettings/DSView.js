@@ -24,6 +24,7 @@ const DSView = (props) => {
 
     const handleVizEncoderSelect = () => {
         // List of data field selected to be passed to DSController
+        // Example encoder input
         const exampleEncoder = [
             { id: 1, name: 'Field1', type: 'color' },
             { id: 2, name: 'Field2', type: 'size' },
@@ -36,10 +37,10 @@ const DSView = (props) => {
             <h1>DSView</h1>
             <button onClick={handleDatasetSelect}>Change Dataset</button>
             {//we only display the settings inputs if a viz has been selected
-            hasSelectedViz ?
-                <><button onClick={handleDataFieldSelect}>Change DataField</button>
+                hasSelectedViz ?
+                    <><button onClick={handleDataFieldSelect}>Change DataField</button>
 
-                    <button onClick={handleVizEncoderSelect}>Change VizEncoder</button>)</> : <></>}
+                        <button onClick={handleVizEncoderSelect}>Change VizEncoder</button>)</> : <></>}
 
         </div>
     );
