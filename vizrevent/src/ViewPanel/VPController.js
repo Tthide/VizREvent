@@ -57,7 +57,7 @@ const VPController = () => {
 
         setVizList(preVizList => preVizList.filter(item => item.id !== vizToDelete.id));
         //Resetting these properties since the selected viz doesn't exist anymore
-        dispatch.setSelectedViz();
+        dispatch.setSelectedViz(null);
         dispatch.setInputViz(null);
         dispatch.setVizParam(null);
     };
