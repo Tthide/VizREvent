@@ -24,8 +24,8 @@ const DSController = () => {
     //Convert selected Datafields to new vizParam and recSettings value
     const handleDatafieldSelect = (datafields) => {
 
-        ////////////////////////Exemple
         // Convert selected Datafields to new vizParam and recSettings value
+        //exemple value
         const newVizParam = {
             xAxis: datafields[0].name, // Example: setting the x-axis to the first datafield
             yAxis: datafields[1].name, // Example: setting the y-axis to the second datafield
@@ -44,9 +44,9 @@ const DSController = () => {
     };
 
     //Convert selected Visualization Encoder to new vizParam and recSettings value
-    const handleEncoderSelect = (dataset) => {
-        dispatch.setVizParam(dataset);
-        dispatch.setRecSettings(dataset);
+    const handleEncoderSelect = (vizEncoder) => {
+        dispatch.setVizParam(vizEncoder);
+        dispatch.setRecSettings(vizEncoder);
     };
 
 
