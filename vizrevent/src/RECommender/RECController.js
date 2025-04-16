@@ -44,7 +44,7 @@ const RECController = () => {
     and dispatch new recSettings to recommend related view of current selected Viz*/
     const handleRecSelection = (recVizSelect) => {
         dispatch.setInputViz(recVizSelect);
-        dispatch.setVizParam(recVizSelect);
+        dispatch.setVizParam(recVizSelect.vizQuery);
         dispatch.setRecSettings(recVizSelect);
     }
 
