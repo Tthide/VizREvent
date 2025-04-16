@@ -17,12 +17,6 @@ const VPController = () => {
     //Creating local state 
     const [vizList, setVizList] = useState([]);
 
-    //Takes selected viz and dispatch its properties to store
-    const handleVizSelect = (vizSelected) => {
-        dispatch.setVizParam(vizSelected);
-        dispatch.setSelectedViz(vizSelected);
-    };
-
     //createViz and automatically selects it
     const createViz = (vizQuery = "empty Viz") => {
         const newViz = {
@@ -50,21 +44,43 @@ const VPController = () => {
     //Takes selected dataset and dispatch it to store
     const handleVizDelete = (vizToDelete) => {
 
+
+
         // Error checking
         if (vizToDelete === null || vizToDelete.id === null) {
-            throw new Error('the Viz provided is null or has a null id.');
+            throw new Error('VPController/handleVizDelete: the Viz provided is null or has a null id.');
         }
         if (vizList.length === 0) {
-            throw new Error('Visualization list is empty.');
+            throw new Error('VPController/handleVizDelete: Visualization list is empty.');
         }
+
+
         setVizList(preVizList => preVizList.filter(item => item.id !== vizToDelete.id));
         //Resetting these properties since the selected viz doesn't exist anymore
+        dispatch.setSelectedViz();
         dispatch.setInputViz(null);
         dispatch.setVizParam(null);
-        dispatch.setSelectedViz(null);
-
     };
 
+    //Takes selected viz and dispatch its properties to store
+    const handleVizSelect = (vizSelected) => {
+
+
+        // Error checking
+        if (vizSelected === null || vizSelected.id === null) {
+            throw new Error('VPController/handleVizSelect: the Viz provided is null or has a null id.');
+        }
+
+        //deselecting current selectedViz by clicking on it again
+        if (state.selectedViz &&  vizSelected === state.selectedViz) {
+            dispatch.setVizParam(null);
+            dispatch.setSelectedViz(null);
+        }
+        else {
+            dispatch.setVizParam(vizSelected);
+            dispatch.setSelectedViz(vizSelected);
+        }
+    };
     return (
         <>
             <VPView
@@ -75,9 +91,9 @@ const VPController = () => {
                 onVizDelete={handleVizDelete}
             />
 
-            <pre>VPControllerPseudoState:{JSON.stringify({ state,vizList }, null, 2)}</pre>
+            <pre>VPControllerPseudoState:{JSON.stringify({ state, vizList }, null, 2)}</pre>
         </>
     )
-} 
+}
 
 export default VPController
