@@ -53,7 +53,7 @@ const DSController = () => {
     return (
         <>
             <DSView
-                hasSelectedViz={state.selectedViz !== null}
+                hasSelectedViz={state.selectedViz && state.selectedViz !== null}
                 onDatasetChange={handleDatasetSelect}
                 onDatafieldSelect={handleDatafieldSelect}
                 onEncoderSelect={handleEncoderSelect} />
