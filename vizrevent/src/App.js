@@ -20,7 +20,7 @@ function App() {
     <>
       <div>
         <button onClick={handleUpdate}>Reset Store</button>
-        <pre>{JSON.stringify(state, null, 4)}</pre>
+        <pre>{JSON.stringify(state, null, 5)}</pre>
       </div>
       <div style={{ display: 'flex', gap: '20px' }}>
         <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
