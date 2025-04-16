@@ -43,7 +43,7 @@ const VPView = (props) => {
               color:vizSelected && viz.id === vizSelected.id ? 'white' : 'black',
             }}
           >
-            Visualization {index + 1}: {viz.vizQuery}
+            Visualization {index + 1}:  {JSON.stringify(viz.vizQuery)}
           </button>
         ))}
 

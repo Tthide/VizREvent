@@ -24,14 +24,15 @@ const VPController = () => {
             vizQuery: vizQuery
         };
         setVizList(preVizList => [...preVizList, newViz]);
-        dispatch.setVizParam(newViz);
+        dispatch.setVizParam(newViz.vizQuery);
         dispatch.setSelectedViz(newViz);
+        dispatch.setInputViz(null);
 
     };
 
     // Handle new Viz creation from RECController 
     useEffect(() => {
-        if (state.inputViz !== null) {
+        if (state.inputViz && state.inputViz !== null) {
             createViz(state.inputViz.vizQuery);
         }
     }, [state.inputViz]);
@@ -44,8 +45,6 @@ const VPController = () => {
     //Takes selected dataset and dispatch it to store
     const handleVizDelete = (vizToDelete) => {
 
-
-
         // Error checking
         if (vizToDelete === null || vizToDelete.id === null) {
             throw new Error('VPController/handleVizDelete: the Viz provided is null or has a null id.');
@@ -53,7 +52,6 @@ const VPController = () => {
         if (vizList.length === 0) {
             throw new Error('VPController/handleVizDelete: Visualization list is empty.');
         }
-
 
         setVizList(preVizList => preVizList.filter(item => item.id !== vizToDelete.id));
         //Resetting these properties since the selected viz doesn't exist anymore
@@ -72,15 +70,38 @@ const VPController = () => {
         }
 
         //deselecting current selectedViz by clicking on it again
-        if (state.selectedViz &&  vizSelected === state.selectedViz) {
+        if (state.selectedViz && vizSelected === state.selectedViz) {
             dispatch.setVizParam(null);
             dispatch.setSelectedViz(null);
         }
         else {
-            dispatch.setVizParam(vizSelected);
+            dispatch.setVizParam(vizSelected.vizQuery);
             dispatch.setSelectedViz(vizSelected);
         }
     };
+
+
+    // Handle updating the vizQuery of the selected visualization
+    useEffect(() => {
+
+        //vizParam is updated when a new viz is added from REC, we put this additional condition to not 
+        // update the selectedView from REC(without that, the selected view becomes like the selected REC viz)
+        if (state.selectedViz && state.vizParam && !state.inputViz) {
+            setVizList(preVizList =>
+                preVizList.map(viz => {
+                    if (viz.id === state.selectedViz.id) {
+                        const updatedViz = { ...viz, vizQuery: state.vizParam };
+                        // Updates store
+                        dispatch.setSelectedViz(updatedViz);
+                        return updatedViz;
+                    } else {
+                        return viz;
+                    }
+                })
+            );
+        }
+    }, [state.vizParam]);
+
     return (
         <>
             <VPView
