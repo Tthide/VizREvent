@@ -17,16 +17,41 @@ const RECController = () => {
     //Creating local state 
     const [isOpened, setIsOpened] = useState(false);
     const [recList, setRecList] = useState([
-    { id: 1, vizQuery: { type: 'RECquery', recId: uuidv4(), iterationNumber: 0 } },
-    { id: 2, vizQuery: { type: 'RECquery', recId: uuidv4(), iterationNumber: 0 } },
-    { id: 3, vizQuery: { type: 'RECquery', recId: uuidv4(), iterationNumber: 0 } }]); //example value
+        {
+            id: 1, vizQuery: {
+                mark: "bar",
+                encoding: {
+                    x: { field: "a", type: "nominal", axis: { title: "Category" } },
+                    y: { field: "b", type: "quantitative", axis: { title: "Value" } }
+                },
+
+            }
+        },
+        {
+            id: 2, vizQuery: {
+                mark: "point",
+                encoding: {
+                    x: { field: "a", type: "nominal", axis: { title: "Category" } },
+                    y: { field: "b", type: "quantitative", axis: { title: "Value" } }
+                }
+            }
+        },
+        {
+            id: 3, vizQuery: {
+                mark: "line",
+                encoding: {
+                    x: { field: "a", type: "nominal", axis: { title: "Category" } },
+                    y: { field: "b", type: "quantitative", axis: { title: "Value" } }
+                }
+            }
+        }]); //example value
 
     //function that actually computes the recommendation
     const recCompute = (recList, vizParam, recSettings, dataset) => {
 
         const newRecList = recList.map(item => ({
             ...item,
-            vizQuery: {...item.vizQuery,iterationNumber:item.vizQuery.iterationNumber+1},
+            vizQuery: { ...item.vizQuery, iterationNumber: item.vizQuery.iterationNumber + 1 },
         }));
 
         //example output
