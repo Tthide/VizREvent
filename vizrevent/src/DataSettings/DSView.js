@@ -8,7 +8,20 @@ const DSView = (props) => {
 
     const handleDatasetSelect = () => {
         //dataset to be passed to the DSController
-        const newDataset = { id: 1, name: 'New Dataset' };
+        const newDataset = {
+            name: "table",
+            values: [
+                {a: 'A', b: 28},
+                {a: 'B', b: 55},
+                {a: 'C', b: 43},
+                {a: 'D', b: 91},
+                {a: 'E', b: 81},
+                {a: 'F', b: 53},
+                {a: 'G', b: 19},
+                {a: 'H', b: 87},
+                {a: 'I', b: 52},
+              ],
+        };
         onDatasetChange(newDataset);
     };
 
