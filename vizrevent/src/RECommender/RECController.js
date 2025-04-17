@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import RECView from './RECView'
 import { useStoreSelector } from '../Store/VizreventStore';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -16,17 +17,20 @@ const RECController = () => {
     //Creating local state 
     const [isOpened, setIsOpened] = useState(false);
     const [recList, setRecList] = useState([
-        { id: 1, vizQuery: 'RECquery1' },
-        { id: 2, vizQuery: 'RECquery2' },
-        { id: 3, vizQuery: 'RECquery3' }
-    ]); //example value
+    { id: 1, vizQuery: { type: 'RECquery', recId: uuidv4(), iterationNumber: 0 } },
+    { id: 2, vizQuery: { type: 'RECquery', recId: uuidv4(), iterationNumber: 0 } },
+    { id: 3, vizQuery: { type: 'RECquery', recId: uuidv4(), iterationNumber: 0 } }]); //example value
 
     //function that actually computes the recommendation
     const recCompute = (recList, vizParam, recSettings, dataset) => {
+
         const newRecList = recList.map(item => ({
             ...item,
-            vizQuery: `${item.vizQuery}/${item.id}`
+            vizQuery: {...item.vizQuery,iterationNumber:++item.vizQuery.iterationNumber},
         }));
+
+        //example output
+
         return newRecList;
         /* recommendation provided in the past could influence futur recommendation here (be mindfull of infinite recursive loops)
         const newRecSettings="";
@@ -52,9 +56,9 @@ const RECController = () => {
     // Use useEffect to update recList when store properties change
     useEffect(() => {
         if (isOpened) {
-            setRecList(prevRecList=>recCompute(prevRecList, state.vizParam, state.recSettings, state.dataset));
+            setRecList(prevRecList => recCompute(prevRecList, state.vizParam, state.recSettings, state.dataset));
         }
-    }, [isOpened,state.vizParam, state.recSettings, state.dataset]);
+    }, [isOpened, state.vizParam, state.recSettings, state.dataset]);
 
     return (
         <>
