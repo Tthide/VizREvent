@@ -1,4 +1,5 @@
 import React from 'react';
+import Viz from '../Viz/Viz';
 
 const VPView = (props) => {
   const { vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete } = props;
@@ -24,7 +25,7 @@ const VPView = (props) => {
     vizList.forEach(viz => {
       onVizDelete(viz);
     });
-  
+
   }
 
   return (
@@ -47,16 +48,24 @@ const VPView = (props) => {
 
         {vizList.map((viz, index) => (
           //here button will need to be replaced by a viz inta
-          <button
-            key={viz.id}
+          //<button
+          //  key={viz.id}
+          //  onClick={handleVizSelect(viz)}
+          //  style={{
+          //    backgroundColor: vizSelected && viz.id === vizSelected.id ? 'blue' : 'white',
+          //    color: vizSelected && viz.id === vizSelected.id ? 'white' : 'black',
+          //  }}
+          //>
+          //  Visualization {index + 1}:  {JSON.stringify(viz.vizQuery)}
+          //</button>
+          <Viz key={viz.id}
             onClick={handleVizSelect(viz)}
+            vizQuery={vizSelected.vizQuery}>
             style={{
               backgroundColor: vizSelected && viz.id === vizSelected.id ? 'blue' : 'white',
               color: vizSelected && viz.id === vizSelected.id ? 'white' : 'black',
             }}
-          >
-            Visualization {index + 1}:  {JSON.stringify(viz.vizQuery)}
-          </button>
+          </Viz>
         ))}
 
       </div>
