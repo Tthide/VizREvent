@@ -26,7 +26,7 @@ const RECController = () => {
 
         const newRecList = recList.map(item => ({
             ...item,
-            vizQuery: {...item.vizQuery,iterationNumber:++item.vizQuery.iterationNumber},
+            vizQuery: {...item.vizQuery,iterationNumber:item.vizQuery.iterationNumber+1},
         }));
 
         //example output
