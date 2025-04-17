@@ -20,6 +20,12 @@ const VPView = (props) => {
       onVizDelete(vizSelected);
     }
   }
+  const handleVPVizClear = () => {
+    vizList.forEach(viz => {
+      onVizDelete(viz);
+    });
+  
+  }
 
   return (
     <div style={{ backgroundColor: 'gray', padding: '20px' }}>
@@ -30,6 +36,12 @@ const VPView = (props) => {
           Delete Selected Visualization
         </button>
       )}
+      {vizList && vizList.length !== 0 && (
+        <button onClick={handleVPVizClear}>
+          Clear all Visualization
+        </button>
+      )}
+
       <div>
         <h3>Visualizations:</h3>
 
@@ -39,8 +51,8 @@ const VPView = (props) => {
             key={viz.id}
             onClick={handleVizSelect(viz)}
             style={{
-              backgroundColor: vizSelected &&  viz.id === vizSelected.id ? 'blue' : 'white',
-              color:vizSelected && viz.id === vizSelected.id ? 'white' : 'black',
+              backgroundColor: vizSelected && viz.id === vizSelected.id ? 'blue' : 'white',
+              color: vizSelected && viz.id === vizSelected.id ? 'white' : 'black',
             }}
           >
             Visualization {index + 1}:  {JSON.stringify(viz.vizQuery)}
