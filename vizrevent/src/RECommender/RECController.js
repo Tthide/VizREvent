@@ -69,6 +69,8 @@ const RECController = () => {
         //Can only open if a dataset has been selected
         if (state.dataset) {
             setIsOpened(!(currentIsOpened));
+        } else {
+            console.error("Error: No dataset selected. Cannot open the panel.");
         }
     };
 

@@ -19,6 +19,9 @@ const VPController = () => {
 
     //createViz and automatically selects it
     const createViz = (vizQuery =null) => {
+
+        if (state.dataset) {
+
         const newViz = {
             id: uuidv4(),
             vizQuery: vizQuery
@@ -27,7 +30,9 @@ const VPController = () => {
         dispatch.setVizParam(newViz.vizQuery);
         dispatch.setSelectedViz(newViz);
         dispatch.setInputViz(null);
-
+    } else {
+        console.error("Error: No dataset selected. Cannot create visualizations.");
+    }
     };
 
     // Handle new Viz creation from RECController 
