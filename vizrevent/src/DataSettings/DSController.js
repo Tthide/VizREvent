@@ -24,18 +24,11 @@ const DSController = () => {
     //Convert selected Datafields to new vizParam and recSettings value
     const handleDatafieldSelect = (datafields) => {
 
-        // Convert selected Datafields to new vizParam and recSettings value
-        //exemple value
-        const newVizParam = {
-            xAxis: datafields[0].name, // Example: setting the x-axis to the first datafield
-            yAxis: datafields[1].name, // Example: setting the y-axis to the second datafield
-            chartType: 'bar', // Example: setting the chart type to 'bar'
-        };
+        //Selected Datafields needs to be converted to new vizParam and recSettings value
+        //Placeholder exemple value
+        const newVizParam = datafields;
 
-        const newRecSettings = {
-            filter: { field: datafields[0].name, value: 10 }, // Example: setting a filter on the first datafield
-            sort: { field: datafields[1].name, order: 'asc' }, // Example: setting sorting on the second datafield
-        };
+        const newRecSettings = datafields;
 
         /* New vizParam and recSettings will be computed here */
 
