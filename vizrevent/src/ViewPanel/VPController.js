@@ -18,7 +18,7 @@ const VPController = () => {
     const [vizList, setVizList] = useState([]);
 
     //createViz and automatically selects it
-    const createViz = (vizQuery = "empty Viz") => {
+    const createViz = (vizQuery =null) => {
         const newViz = {
             id: uuidv4(),
             vizQuery: vizQuery

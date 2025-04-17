@@ -47,25 +47,17 @@ const VPView = (props) => {
         <h3>Visualizations:</h3>
 
         {vizList.map((viz, index) => (
-          //here button will need to be replaced by a viz inta
-          //<button
-          //  key={viz.id}
-          //  onClick={handleVizSelect(viz)}
-          //  style={{
-          //    backgroundColor: vizSelected && viz.id === vizSelected.id ? 'blue' : 'white',
-          //    color: vizSelected && viz.id === vizSelected.id ? 'white' : 'black',
-          //  }}
-          //>
-          //  Visualization {index + 1}:  {JSON.stringify(viz.vizQuery)}
-          //</button>
-          <Viz key={viz.id}
-            onClick={handleVizSelect(viz)}
-            vizQuery={vizSelected.vizQuery}>
+          <div onClick={handleVizSelect(viz)}
             style={{
               backgroundColor: vizSelected && viz.id === vizSelected.id ? 'blue' : 'white',
               color: vizSelected && viz.id === vizSelected.id ? 'white' : 'black',
-            }}
-          </Viz>
+
+            }}>
+            <Viz key={viz.id}
+              vizQuery={viz.vizQuery}>
+
+            </Viz>
+          </div>
         ))}
 
       </div>
