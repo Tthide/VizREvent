@@ -66,7 +66,10 @@ const RECController = () => {
 
     //"Opens" and display RECView on expanding button
     const handlePanelOpener = (currentIsOpened) => {
-        setIsOpened(!(currentIsOpened));
+        //Can only open if a dataset has been selected
+        if (state.dataset) {
+            setIsOpened(!(currentIsOpened));
+        }
     };
 
     /*Dispatch selected recommendation to store for creation in VP, dispatch item's vizParam for display in DS
