@@ -1,5 +1,5 @@
 import React from 'react';
-
+import DracoComponent from './Draco';
 const RECView = (props) => {
 
   const { isOpened, onPanelOpenerClick, recList, onRecItemSelect } = props;
@@ -39,6 +39,7 @@ const RECView = (props) => {
         {isOpened ? "Close Panel" : " Open panel"}
       </button>
 
+      <DracoComponent></DracoComponent>
     </div>
   );
 };
