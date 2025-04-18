@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import RECView from './RECView'
 import { useStoreSelector } from '../Store/VizreventStore';
-import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -44,7 +43,7 @@ const RECController = () => {
                     y: { field: "b", type: "quantitative", axis: { title: "Value" } }
                 }
             }
-        }]); //example value
+        }]); //example values
 
     //function that actually computes the recommendation
     const recCompute = (recList, vizParam, recSettings, dataset) => {
