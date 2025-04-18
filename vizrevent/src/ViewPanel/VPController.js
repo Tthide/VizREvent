@@ -31,7 +31,7 @@ const VPController = () => {
         dispatch.setSelectedViz(newViz);
         dispatch.setInputViz(null);
     } else {
-        console.error("Error: No dataset selected. Cannot create visualizations.");
+        console.warn("Error//VPController: No dataset selected. Cannot create visualizations.");
     }
     };
 
@@ -40,6 +40,7 @@ const VPController = () => {
         if (state.inputViz && state.inputViz !== null) {
             createViz(state.inputViz.vizQuery);
         }
+
     }, [state.inputViz]);
 
     // Handle empty Viz creation in VPView
@@ -51,7 +52,7 @@ const VPController = () => {
     const handleVizDelete = (vizToDelete) => {
 
         // Error checking
-        if (vizToDelete === null || vizToDelete.id === null) {
+        if (!vizToDelete || vizToDelete.id === null) {
             throw new Error('VPController/handleVizDelete: the Viz provided is null or has a null id.');
         }
         if (vizList.length === 0) {
@@ -105,6 +106,7 @@ const VPController = () => {
                 })
             );
         }
+
     }, [state.vizParam]);
 
     return (
