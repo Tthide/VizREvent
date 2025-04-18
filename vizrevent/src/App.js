@@ -4,22 +4,24 @@ import DSController from './DataSettings/DSController';
 import RECController from './RECommender/RECController';
 import VPController from './ViewPanel/VPController';
 
+
 function App() {
   const { state, dispatch } = useStoreSelector();
   //console.log("useStoreSelector output:"+useStoreSelector());
   //console.log("useStoreSelector output:"+useStoreSelector());
 
-  const handleUpdate = () => {
-    dispatch.setRecSettings({ key: 'value' });
-    dispatch.setVizParam({ param: 'value' });
-    dispatch.setDataset('link_or_direct_dataset');
-    dispatch.setInputViz({ input: 'value' });
+  const handleStoreReset = () => {
+    dispatch.setRecSettings(null);
+    dispatch.setVizParam(null);
+    dispatch.setDataset(null);
+    dispatch.setInputViz(null);
+    dispatch.setSelectedViz(null);
   };
 
   return (
     <>
       <div>
-        <button onClick={handleUpdate}>Reset Store</button>
+        <button onClick={handleStoreReset}>Reset Store</button>
         <pre>{JSON.stringify(state, null, 5)}</pre>
       </div>
       <div style={{ display: 'flex', gap: '20px' }}>
