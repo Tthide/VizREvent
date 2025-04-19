@@ -1,5 +1,4 @@
 import React from 'react';
-import DracoComponent from './Draco';
 import RecViz from '../Viz/RecViz';
 const RECView = (props) => {
 
@@ -18,7 +17,7 @@ const RECView = (props) => {
   //display one recommendation item
   const displayRECItem = (recItem) => {
     //button to be replaced by RecViz component
-    return <RecViz recItem={recItem} onRecItemSelect={() => handleRecItemSelect(recItem)}>recommendation n°{recItem.id}</RecViz>;
+    return <RecViz key={recItem.id} recItem={recItem} onRecItemSelect={() => handleRecItemSelect(recItem)}>recommendation n°{recItem.id}</RecViz>;
 
 
   }
@@ -26,11 +25,10 @@ const RECView = (props) => {
   return (
     <div style={{ backgroundColor: 'blue' }}>
       <h1>RECView</h1>
-
       {isOpened && (
         <div className='RECPanel' style={{ backgroundColor: 'blue' }}>
           <div className='RECVizList'>
-            {recList.map(recItem =>displayRECItem(recItem))}
+            {recList.map(recItem => displayRECItem(recItem))}
           </div>
         </div>
       )}
@@ -39,8 +37,6 @@ const RECView = (props) => {
       <button onClick={handlePanelExpandClick}>
         {isOpened ? "Close Panel" : " Open panel"}
       </button>
-
-      <DracoComponent></DracoComponent>
     </div>
   );
 };
