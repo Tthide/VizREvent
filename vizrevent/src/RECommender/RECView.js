@@ -1,5 +1,6 @@
 import React from 'react';
 import DracoComponent from './Draco';
+import RecViz from '../Viz/RecViz';
 const RECView = (props) => {
 
   const { isOpened, onPanelOpenerClick, recList, onRecItemSelect } = props;
@@ -17,7 +18,7 @@ const RECView = (props) => {
   //display one recommendation item
   const displayRECItem = (recItem) => {
     //button to be replaced by RecViz component
-    return <button key={recItem.id} onClick={() => handleRecItemSelect(recItem)}>recommendation n°{recItem.id}</button>;
+    return <RecViz recItem={recItem} onRecItemSelect={() => handleRecItemSelect(recItem)}>recommendation n°{recItem.id}</RecViz>;
 
 
   }

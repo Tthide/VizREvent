@@ -25,7 +25,6 @@ const Viz = (props) => {
 
 return (
     <>
-        <pre>Viz</pre>
         {vizQuery && vizQuery !== null ? (
             <VegaLite data={state.dataset} spec={spec} />
         ) : ( //placeholder for empty viz
