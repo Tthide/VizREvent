@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import RECView from './RECView'
 import { useStoreSelector } from '../Store/VizreventStore';
+import DracoRecProcess from './DracoUtils';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -15,47 +17,34 @@ const RECController = () => {
 
     //Creating local state 
     const [isOpened, setIsOpened] = useState(false);
-    const [recList, setRecList] = useState([
-        {
-            id: 1, vizQuery: {
-                mark: "bar",
-                encoding: {
-                    x: { field: "a", type: "nominal", axis: { title: "Category" } },
-                    y: { field: "b", type: "quantitative", axis: { title: "Value" } }
-                },
-
-            }
-        },
-        {
-            id: 2, vizQuery: {
-                mark: "point",
-                encoding: {
-                    x: { field: "a", type: "nominal", axis: { title: "Category" } },
-                    y: { field: "b", type: "quantitative", axis: { title: "Value" } }
-                }
-            }
-        },
-        {
-            id: 3, vizQuery: {
-                mark: "line",
-                encoding: {
-                    x: { field: "a", type: "nominal", axis: { title: "Category" } },
-                    y: { field: "b", type: "quantitative", axis: { title: "Value" } }
-                }
-            }
-        }]); //example values
+    const [recList, setRecList] = useState([]); //example values
 
     //function that actually computes the recommendation
-    const recCompute = (recList, vizParam, recSettings, dataset) => {
+    const recCompute = async (recList, vizParam, recSettings, dataset) => {
 
-        const newRecList = recList.map(item => ({
-            ...item,
-            vizQuery: { ...item.vizQuery, iterationNumber: item.vizQuery.iterationNumber + 1 },
-        }));
+        try {
+            // Call DracoRecProcess with the dataset
+            const solutionSet = await DracoRecProcess(dataset);
 
-        //example output
+            console.log(solutionSet);
+            // Update recList based on the solutionSet
+            const newRecList = solutionSet.specs.map(item => (
+                //the draco spec output doesn't the contain the dataset input in the prepareData, therefore we have to update this here
+                //And because Draco and Vega-Lite require different data property format, we also change it to fit Vega-Lite
+                item.data={
+                    values: state.dataset
+                }, 
+                {
+                id: uuidv4(),
+                vizQuery: item,
+                // You can use solutionSet to update the vizQuery or other properties
+            }));
 
-        return newRecList;
+            return newRecList;
+        } catch (error) {
+            console.error('Error computing recommendations:', error);
+            return recList; // Return the original recList in case of error
+        }
         /* recommendation provided in the past could influence futur recommendation here (be mindfull of infinite recursive loops)
         const newRecSettings="";
         dispatch.setRecSettings(newRecSettings)*/
@@ -85,7 +74,12 @@ const RECController = () => {
     // Use useEffect to update recList when store properties change
     useEffect(() => {
         if (isOpened) {
-            setRecList(prevRecList => recCompute(prevRecList, state.vizParam, state.recSettings, state.dataset));
+            const computeRecommendations = async () => {
+                const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.dataset);
+                setRecList(newRecList);
+            };
+
+            computeRecommendations();
         }
     }, [isOpened, state.vizParam, state.recSettings, state.dataset]);
 
