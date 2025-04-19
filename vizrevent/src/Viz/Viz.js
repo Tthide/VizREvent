@@ -11,11 +11,15 @@ const Viz = (props) => {
         dataset: state.dataset,
     }));
 
+    //Ensuring data format for Vega - Lite, Draco and Vega-lite requires different data format so we convert it here to fit Vega-lite
     const spec = {
 
-        schema: "https://vega.github.io/schema/vega-lite/v5.json",
-        data: state.dataset,
-        ...vizQuery
+        schema: "https://vega.github.io/schema/vega-lite/v3.json",
+        data: {
+            values: state.dataset
+        },
+        ...vizQuery,
+
 
     };
 
@@ -23,17 +27,18 @@ const Viz = (props) => {
 
 
 
-return (
-    <>
-        {vizQuery && vizQuery !== null ? (
-            <VegaLite data={state.dataset} spec={spec} />
-        ) : ( //placeholder for empty viz
-            <div style={{ border: '1px solid black', width: '200px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span>No Visualization Available</span>
-            </div>
-        )}
-    </>
-);
+
+    return (
+        <>
+            {vizQuery && vizQuery !== null ? (
+                <VegaLite data={state.dataset} spec={spec} />
+            ) : ( //placeholder for empty viz
+                <div style={{ border: '1px solid black', width: '200px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span>No Visualization Available</span>
+                </div>
+            )}
+        </>
+    );
 
 };
 
