@@ -1,6 +1,7 @@
 import React from 'react'
 import DSView from './DSView'
 import { useStoreSelector } from '../Store/VizreventStore';
+import { DatasetFetcher } from './DatasetUtils';
 
 
 
@@ -16,11 +17,16 @@ const DSController = () => {
     //console.log("DSController useStoreSelector Output:");
     //console.log(dispatch);
 
-    //Takes selected dataset and dispatch it to store
-    const handleDatasetSelect = (dataset) => {
-        dispatch.setDataset(dataset);
+    // Takes selected dataset and dispatch it to store
+    const handleDatasetSelect = async (dataset) => {
+        try {
+            const data = await DatasetFetcher();
+            console.log(data); // This will log the resolved value
+            dispatch.setDataset(data);
+        } catch (error) {
+            console.error('Error fetching dataset:', error);
+        }
     };
-
     //Convert selected Datafields to new vizParam and recSettings value
     const handleDatafieldSelect = (datafields) => {
 
