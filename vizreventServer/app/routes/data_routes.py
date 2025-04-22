@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from ..services.data_service import get_data, process_data
+from ..services.data_service import get_data, process_data, list_datasets
 import json
 import traceback
 
@@ -21,4 +21,13 @@ def get_dataset():
     except Exception as e:
         traceback.print_exc()  # Print the traceback to the console
         return jsonify({"error": str(e)}), 500
+    
 
+@data_bp.route('/api/datasetList', methods=['GET'])
+def list_datasets_route():
+    try:
+        datasets = list_datasets()
+        return jsonify(datasets)
+    except Exception as e:
+        traceback.print_exc()  # Print the traceback to the console
+        return jsonify({"error": str(e)}), 500
