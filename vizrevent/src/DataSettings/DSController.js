@@ -20,7 +20,7 @@ const DSController = () => {
     // Takes selected dataset and dispatch it to store
     const handleDatasetSelect = async (dataset) => {
         try {
-            const data = await DatasetFetcher();
+            const data = await DatasetFetcher(dataset);
             console.log(data); // This will log the resolved value
             dispatch.setDataset(data);
         } catch (error) {
