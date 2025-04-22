@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import DSView from './DSView'
 import { useStoreSelector } from '../Store/VizreventStore';
-import { DatasetFetcher } from './DatasetUtils';
+import { DatasetFetcher, DatasetListFetcher } from './DatasetUtils';
 
 
 
@@ -14,8 +14,20 @@ const DSController = () => {
         selectedViz: state.selectedViz,
     }));
 
-    //console.log("DSController useStoreSelector Output:");
-    //console.log(dispatch);
+    const [datasetList, setDatasetList] = useState([]);
+
+    useEffect(() => {
+        const fetchDatasets = async () => {
+            try {
+                const data = await DatasetListFetcher();
+                setDatasetList(data);
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
+
+        fetchDatasets();
+    }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     // Takes selected dataset and dispatch it to store
     const handleDatasetSelect = async (dataset) => {
@@ -53,6 +65,7 @@ const DSController = () => {
         <>
             <DSView
                 hasSelectedViz={state.selectedViz && state.selectedViz !== null}
+                datasetList={datasetList}
                 onDatasetChange={handleDatasetSelect}
                 onDatafieldSelect={handleDatafieldSelect}
                 onEncoderSelect={handleEncoderSelect} />
