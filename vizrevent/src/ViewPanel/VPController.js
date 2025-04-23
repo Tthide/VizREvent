@@ -11,7 +11,7 @@ const VPController = () => {
         vizParam: state.vizParam,
         inputViz: state.inputViz,
         selectedViz: state.selectedViz,
-        dataset: state.dataset,
+        datasetId: state.datasetId,
     }));
 
     //Creating local state 
@@ -20,7 +20,7 @@ const VPController = () => {
     //createViz and automatically selects it
     const createViz = (vizQuery =null) => {
 
-        if (state.dataset) {
+        if (state.datasetId) {
 
         const newViz = {
             id: uuidv4(),

@@ -3,7 +3,7 @@ import reducer, { initialState } from './VizreventReducer';
 import {
   setRecSettings,
   setVizParam,
-  setDataset,
+  setDatasetId,
   setInputViz,
   setSelectedViz,
 } from './VizreventActions';
@@ -19,7 +19,7 @@ export const StoreProvider = ({ children }) => {
     dispatchMethods: {
       setRecSettings: (recSettings) => dispatch(setRecSettings(recSettings)),
       setVizParam: (vizParam) => dispatch(setVizParam(vizParam)),
-      setDataset: (dataset) => dispatch(setDataset(dataset)),
+      setDatasetId: (datasetId) => dispatch(setDatasetId(datasetId)),
       setInputViz: (inputViz) => dispatch(setInputViz(inputViz)),
       setSelectedViz: (selectedViz) => dispatch(setSelectedViz(selectedViz)),
     },

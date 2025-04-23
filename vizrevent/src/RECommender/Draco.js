@@ -6,7 +6,7 @@ const DracoComponent = (props) => {
 
   //connecting to store
   const { state, dispatch } = useStoreSelector(state => ({
-    dataset: state.dataset,
+    datasetId: state.datasetId,
   }));
 
 
@@ -15,7 +15,7 @@ const DracoComponent = (props) => {
 
   useEffect(() => {
     setStatus('Processing...');
-    DracoRecProcess(state.dataset)
+    DracoRecProcess(state.datasetId)
       .then((solutionSet) => {
         setSolutionSet(solutionSet);
         setStatus('Processing completed.');
@@ -23,7 +23,7 @@ const DracoComponent = (props) => {
       .catch((error) => {
         setStatus(error);
       });
-  }, [state.dataset]);
+  }, [state.datasetId]);
 
   return (
     <div>

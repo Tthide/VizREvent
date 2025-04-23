@@ -13,7 +13,7 @@ function App() {
   const handleStoreReset = () => {
     dispatch.setRecSettings(null);
     dispatch.setVizParam(null);
-    dispatch.setDataset(null);
+    dispatch.setDatasetId(null);
     dispatch.setInputViz(null);
     dispatch.setSelectedViz(null);
   };

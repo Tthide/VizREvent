@@ -12,7 +12,7 @@ const RECController = () => {
     const { state, dispatch } = useStoreSelector(state => ({
         vizParam: state.vizParam,
         recSettings: state.recSettings,
-        dataset: state.dataset,
+        datasetId: state.datasetId,
     }));
 
     //Creating local state 
@@ -32,7 +32,7 @@ const RECController = () => {
                 //the draco spec output doesn't the contain the dataset input in the prepareData, therefore we have to update this here
                 //And because Draco and Vega-Lite require different data property format, we also change it to fit Vega-Lite
                 item.data={
-                    values: state.dataset
+                    values: state.datasetId
                 }, 
                 {
                 id: uuidv4(),
@@ -55,7 +55,7 @@ const RECController = () => {
     //"Opens" and display RECView on expanding button
     const handlePanelOpener = (currentIsOpened) => {
         //Can only open if a dataset has been selected
-        if (state.dataset) {
+        if (state.datasetId) {
             setIsOpened(!(currentIsOpened));
         } else {
             console.error("Error: No dataset selected. Cannot open the panel.");
@@ -75,13 +75,13 @@ const RECController = () => {
     useEffect(() => {
         if (isOpened) {
             const computeRecommendations = async () => {
-                const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.dataset);
+                const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.datasetId);
                 setRecList(newRecList);
             };
 
             computeRecommendations();
         }
-    }, [isOpened, state.vizParam, state.recSettings, state.dataset]);
+    }, [isOpened, state.vizParam, state.recSettings, state.datasetId]);
 
     return (
         <>

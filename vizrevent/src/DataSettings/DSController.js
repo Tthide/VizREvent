@@ -10,7 +10,7 @@ const DSController = () => {
     //connecting to store
     const { state, dispatch } = useStoreSelector(state => ({
         vizParam: state.vizParam,
-        dataset: state.dataset,
+        datasetId: state.datasetId,
         selectedViz: state.selectedViz,
     }));
 
@@ -30,14 +30,9 @@ const DSController = () => {
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     // Takes selected dataset and dispatch it to store
-    const handleDatasetSelect = async (datasetId) => {
-        try {
-            const data = await DatasetFetcher({datasetId:datasetId});
-            console.log(data); // This will log the resolved value
-            dispatch.setDataset(data);
-        } catch (error) {
-            console.error('Error fetching dataset:', error);
-        }
+    const handleDatasetSelect =  (datasetId) => {
+
+        dispatch.setDatasetId({datasetId:datasetId});
     };
     //Convert selected Datafields to new vizParam and recSettings value
     const handleDatafieldSelect = (datafields) => {

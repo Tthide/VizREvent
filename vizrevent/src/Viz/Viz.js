@@ -8,7 +8,7 @@ const Viz = (props) => {
 
     // Connecting to store
     const { state } = useStoreSelector(state => ({
-        dataset: state.dataset,
+        datasetId: state.datasetId,
     }));
 
     //Ensuring data format for Vega - Lite, Draco and Vega-lite requires different data format so we convert it here to fit Vega-lite
@@ -16,7 +16,7 @@ const Viz = (props) => {
 
         schema: "https://vega.github.io/schema/vega-lite/v3.json",
         data: {
-            values: state.dataset
+            values: state.datasetId
         },
         ...vizQuery,
 
@@ -31,7 +31,7 @@ const Viz = (props) => {
     return (
         <>
             {vizQuery && vizQuery !== null ? (
-                <VegaLite data={state.dataset} spec={spec} />
+                <VegaLite data={state.datasetId} spec={spec} />
             ) : ( //placeholder for empty viz
                 <div style={{ border: '1px solid black', width: '200px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <span>No Visualization Available</span>
