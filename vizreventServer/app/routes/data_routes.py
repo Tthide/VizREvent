@@ -9,10 +9,10 @@ data_bp = Blueprint('data', __name__)
 def get_dataset():
     try:
         #every API request from react will contain the current chosen dataset
-        dataset_param = request.args.get('dataset')
-        print(f"Dataset: {dataset_param}")
+        dataset_id = request.args.get('datasetId')
+        print(f"Dataset: {dataset_id}")
         
-        dataset=get_data(dataset_param)
+        dataset=get_data(dataset_id)
         
         # Process the data based on query parameters
         processed_data = process_data(dataset)

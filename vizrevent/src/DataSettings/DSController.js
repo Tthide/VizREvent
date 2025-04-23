@@ -30,9 +30,9 @@ const DSController = () => {
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     // Takes selected dataset and dispatch it to store
-    const handleDatasetSelect = async (dataset) => {
+    const handleDatasetSelect = async (datasetId) => {
         try {
-            const data = await DatasetFetcher(dataset);
+            const data = await DatasetFetcher({datasetId:datasetId});
             console.log(data); // This will log the resolved value
             dispatch.setDataset(data);
         } catch (error) {

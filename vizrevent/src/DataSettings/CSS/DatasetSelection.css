@@ -1,0 +1,34 @@
+.table-container {
+    width: 100%;
+    height: 30em;
+    padding: 1em;
+    overflow-y: auto;
+    background-color: #D98324;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th,
+.table-container td {
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    text-align: left;
+}
+
+.table-container th {
+    background-color: #f2f2f2;
+    position: sticky; /*Ensure that the header is always displayed*/
+    top: 0;
+}
+
+.table-container tr {
+    background-color: #f9f9f9;
+
+}
+
+.table-container tr:hover {
+    background-color: #D98324;
+}

@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
+import DatasetSelection from './DatasetSelection';
 
 const DSView = (props) => {
 
-    const { hasSelectedViz, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
+    const { hasSelectedViz, datasetList, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
+    // State to manage the visibility of the DatasetSelection component
+    const [isDatasetSelectionOpen, setIsDatasetSelectionOpen] = useState(false);
+
+    const handleDatasetSelectionOpen = () => {
+        setIsDatasetSelectionOpen(true);
+    };
 
 
-
-    const handleDatasetSelect = () => {
-        //dataset to be passed to the DSController
-        const newDataset = { dataset: 3900493 }
-        onDatasetChange(newDataset);
+    const handleDatasetSelect = (datasetId) => {
+        console.log(datasetId)
+        onDatasetChange(datasetId);
     };
 
     const handleDataFieldSelect = () => {
@@ -42,7 +47,10 @@ const DSView = (props) => {
     return (
         <div style={{ backgroundColor: 'red' }}>
             <h1>DSView</h1>
-            <button onClick={handleDatasetSelect}>Change Dataset</button>
+            <button onClick={handleDatasetSelectionOpen}>Change Dataset</button>
+            {isDatasetSelectionOpen && (
+                <DatasetSelection datasetList={datasetList} onDatasetSelect={handleDatasetSelect} />
+            )}
             {//we only display the settings inputs if a viz has been selected
                 hasSelectedViz ?
                     <>

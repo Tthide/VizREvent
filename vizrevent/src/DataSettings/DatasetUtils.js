@@ -1,6 +1,8 @@
 export const DatasetFetcher = async (params = {},serverUrl = 'http://localhost:5000/api/dataset') => {
     try {
-        const queryString = new URLSearchParams(params).toString();
+        
+        const queryString = new URLSearchParams(params);
+        
         const response = await fetch(`${serverUrl}?${queryString}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
