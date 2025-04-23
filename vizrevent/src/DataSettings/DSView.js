@@ -10,7 +10,9 @@ const DSView = (props) => {
     //when Change dataset button is pressed, this make isDatasetSelectionOpen true
     //when a dataset is selected in DatasetSelection, this make it false and closes DatasetSelection
     const handleDatasetSelectionOpen = () => {
-        setIsDatasetSelectionOpen(!isDatasetSelectionOpen);
+        console.log("isDatasetSelectionOpen:",isDatasetSelectionOpen)
+
+        setIsDatasetSelectionOpen(prevState => !prevState);
     };
 
 
