@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MatchInfo from './DatasetMatchInfo';
 import './CSS/DatasetSelection.css';
 
-const DatasetSelection = ({ datasetList, onDatasetSelect }) => {
+const DatasetSelection = ({ datasetList, onDatasetSelect,onSelectionConfirm }) => {
     const [selectedMatchId, setSelectedMatchId] = useState(null);
 
     if (!datasetList || datasetList.length === 0) {
@@ -19,6 +19,7 @@ const DatasetSelection = ({ datasetList, onDatasetSelect }) => {
 
     const handleConfirmClick = () => {
         if (selectedMatchId) {
+            onSelectionConfirm();
             onDatasetSelect(selectedMatchId);
         }
     };
