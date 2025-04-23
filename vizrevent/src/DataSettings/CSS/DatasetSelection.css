@@ -1,10 +1,24 @@
-.table-container {
-    width: 100%;
+.dataset-selection {
+    width: 80%; /* Adjust the width as needed */
+    max-width: 1200px; /* Optional: maximum width for the table container */
     height: 30em;
-    padding: 1em;
-    overflow-y: auto;
     background-color: #D98324;
-    position: relative; /* Ensure the button is positioned relative to this container */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the element */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for better visual separation */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.table-container {
+    width: 95%;
+    height: 95%;
+    margin: 1em;
+    overflow-y: auto;
+    position: relative;
 }
 
 .table-container table {
@@ -21,9 +35,9 @@
 
 .table-container th {
     background-color: #f2f2f2;
-    position: sticky; /* Ensure that the header is always displayed */
+    position: sticky;
     top: 0;
-    z-index: 2; /* Ensure the header is above the sticky row */
+    z-index: 2;
 }
 
 .table-container tr {
@@ -34,11 +48,10 @@
     background-color: #D98324;
 }
 
-/* we want the current selected row to still be on the screen when scrolling away from it */
 .table-container tr.selected {
     position: sticky;
-    top: 3em; /* Adjust this value based on the height of the header */
-    z-index: 1; /* Ensure the selected row is above other rows but below the header */
+    top: 3em;
+    z-index: 1;
     background-color: #EFDCAB;
 }
 
@@ -53,7 +66,7 @@
     border-radius: 5px;
     font-size: 1em;
     cursor: pointer;
-    position: sticky; /* Ensure the button stays at the bottom */
+    position: sticky;
     bottom: 0;
 }
 

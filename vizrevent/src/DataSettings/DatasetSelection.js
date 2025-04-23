@@ -10,7 +10,11 @@ const DatasetSelection = ({ datasetList, onDatasetSelect }) => {
     }
 
     const handleRowClick = (matchId) => {
-        setSelectedMatchId(matchId);
+        if (selectedMatchId === matchId) {
+            setSelectedMatchId(null); // Deselect if the same row is clicked again
+        } else {
+            setSelectedMatchId(matchId); // Select the row
+        }
     };
 
     const handleConfirmClick = () => {
@@ -20,34 +24,36 @@ const DatasetSelection = ({ datasetList, onDatasetSelect }) => {
     };
 
     return (
-        <div className="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Match ID</th>
-                        <th>Competition, Season, Stage</th>
-                        <th>Home Team vs Away Team</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {datasetList.map(dataset => (
-                        <tr
-                            key={dataset.match_id}
-                            onClick={() => handleRowClick(dataset.match_id)}
-                            className={selectedMatchId === dataset.match_id ? 'selected' : ''}
-                        >
-                            <MatchInfo
-                                key={dataset.match_id}
-                                dataset={dataset}
-                            />
+        <div className="dataset-selection">
+            <div className="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Match ID</th>
+                            <th>Competition, Season, Stage</th>
+                            <th>Home Team vs Away Team</th>
+                            <th>Date</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <button className="confirm-button" onClick={handleConfirmClick} disabled={!selectedMatchId}>
-                Confirm Selection
-            </button>
+                    </thead>
+                    <tbody>
+                        {datasetList.map(dataset => (
+                            <tr
+                                key={dataset.match_id}
+                                onClick={() => handleRowClick(dataset.match_id)}
+                                className={selectedMatchId === dataset.match_id ? 'selected' : ''}
+                            >
+                                <MatchInfo
+                                    key={dataset.match_id}
+                                    dataset={dataset}
+                                />
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <button className="confirm-button" onClick={handleConfirmClick} disabled={!selectedMatchId}>
+                    Confirm Selection
+                </button>
+            </div>
         </div>
     );
 };
