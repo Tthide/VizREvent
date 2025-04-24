@@ -18,6 +18,7 @@ const Viz = (props) => {
         const fetchData = async () => {
             try {
                 const result = await DatasetFetcher(state.datasetId);
+                console.log("Viz/Data Fetched");
                 setData(result);
             } catch (err) {
                 console.error('Error fetching dataset:', err);
@@ -27,7 +28,7 @@ const Viz = (props) => {
         if (state.datasetId) {
             fetchData();
         }
-    }, []);
+    }, [state.datasetId]);
 
     console.log("Viz/data:", data);
     //Ensuring data format for Vega - Lite, Draco and Vega-lite requires different data format so we convert it here to fit Vega-lite
