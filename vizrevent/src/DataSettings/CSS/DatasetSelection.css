@@ -8,11 +8,11 @@
     left: 50%;
     transform: translate(-50%, -50%); /* Center the element */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for better visual separation */
-
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .table-container {
     width: 95%;
     height: 95%;
@@ -50,7 +50,7 @@
 
 .table-container tr.selected {
     position: sticky;
-    top: 3em;
+    top: 2em; /* Adjust this value to the height of your header row */
     z-index: 1;
     background-color: #EFDCAB;
 }

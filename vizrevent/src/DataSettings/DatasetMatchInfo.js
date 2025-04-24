@@ -19,14 +19,14 @@ const MatchInfo = ({ dataset }) => {
 
     return (
         <>
-            <td style={{ border: '1px solid #ccc', padding: '10px' }}>{match_id}</td>
-            <td style={{ border: '1px solid #ccc', padding: '10px' }}>
+            <td >{match_id}</td>
+            <td >
                 {competition.competition_name} {season.season_name} {competition_stage.name}
             </td>
-            <td style={{ border: '1px solid #ccc', padding: '10px' }}>
+            <td >
                 {home_team.home_team_name} {home_score} - {away_score} {away_team.away_team_name}
             </td>
-            <td style={{ border: '1px solid #ccc', padding: '10px' }}>{match_date}</td>
+            <td >{match_date}</td>
         </>
     );
 };
