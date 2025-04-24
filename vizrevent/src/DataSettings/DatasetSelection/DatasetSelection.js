@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MatchInfo from './DatasetMatchInfo';
-import './CSS/DatasetSelection.css';
+import './DatasetSelection.css';
 
 const DatasetSelection = ({ datasetList, onDatasetSelect,onSelectionConfirm }) => {
     const [selectedMatchId, setSelectedMatchId] = useState(null);
