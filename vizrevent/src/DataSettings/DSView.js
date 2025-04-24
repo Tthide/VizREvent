@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import DatasetSelection from './DatasetSelection';
+import DatasetSelection from './DatasetSelection/DatasetSelection.js';
+import DataFieldSelection from './DataFieldSelection/DataFieldSelection.js';
 
 const DSView = (props) => {
 
@@ -50,8 +51,12 @@ const DSView = (props) => {
             <h1>DSView</h1>
             <button onClick={handleDatasetSelectionOpen}>Change Dataset</button>
             {isDatasetSelectionOpen && (
-                <DatasetSelection datasetList={datasetList} onDatasetSelect={handleDatasetSelect} onSelectionConfirm={handleDatasetSelectionOpen}/>
+                <DatasetSelection datasetList={datasetList} onDatasetSelect={handleDatasetSelect} onSelectionConfirm={handleDatasetSelectionOpen} />
             )}
+
+            {/* only displayed when selectedViz !== null */}
+            <DataFieldSelection></DataFieldSelection>
+
             {//we only display the settings inputs if a viz has been selected
                 hasSelectedViz ?
                     <>
