@@ -3,6 +3,7 @@ import RECView from './RECView'
 import { useStoreSelector } from '../Store/VizreventStore';
 import DracoRecProcess from './DracoUtils';
 import { v4 as uuidv4 } from 'uuid';
+import { DatasetFetcher } from '../DataSettings/DatasetUtils';
 
 
 
@@ -18,30 +19,41 @@ const RECController = () => {
     //Creating local state 
     const [isOpened, setIsOpened] = useState(false);
     const [recList, setRecList] = useState([]); //example values
+    const [recDataset, setRecDataset] = useState(null);
 
     //function that actually computes the recommendation
     const recCompute = async (recList, vizParam, recSettings, dataset) => {
 
+
         try {
             // Call DracoRecProcess with the dataset
-            const solutionSet = await DracoRecProcess(dataset);
+            const solutionSet = await DatasetFetcher(state.datasetId)
+                .then(RecData => {
+                    setRecDataset(RecData)
+                    console.log("RecData:", RecData);
+                    DracoRecProcess(RecData);
+                });
 
-            console.log(solutionSet);
+            console.log("Draco solutionSet", solutionSet);
             // Update recList based on the solutionSet
-            const newRecList = solutionSet.specs.map(item => (
+            const newRecList = solutionSet.specs.map(item => {
                 //the draco spec output doesn't the contain the dataset input in the prepareData, therefore we have to update this here
                 //And because Draco and Vega-Lite require different data property format, we also change it to fit Vega-Lite
-                item.data={
-                    values: state.datasetId
-                }, 
-                {
-                id: uuidv4(),
-                vizQuery: item,
-                // You can use solutionSet to update the vizQuery or other properties
-            }));
+                item.data = {
+                    values: recDataset
+                };
+                
+                return {
+                    id: uuidv4(),
+                    vizQuery: item
+                    // You can use solutionSet to update the vizQuery or other properties
+                }
+            });
 
             return newRecList;
+
         } catch (error) {
+
             console.error('Error computing recommendations:', error);
             return recList; // Return the original recList in case of error
         }
@@ -75,6 +87,7 @@ const RECController = () => {
     useEffect(() => {
         if (isOpened) {
             const computeRecommendations = async () => {
+
                 const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.datasetId);
                 setRecList(newRecList);
             };
