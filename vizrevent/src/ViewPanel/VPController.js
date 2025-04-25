@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import VPView from './VPView'
 import { useStoreSelector } from '../Store/VizreventStore';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,23 +17,21 @@ const VPController = () => {
     //Creating local state 
     const [vizList, setVizList] = useState([]);
 
-    //createViz and automatically selects it
-    const createViz = (vizQuery =null) => {
-
+    //create a Viz and automatically selects it
+    const createViz = useCallback((vizQuery = null) => {
         if (state.datasetId) {
-
-        const newViz = {
-            id: uuidv4(),
-            vizQuery: vizQuery
-        };
-        setVizList(preVizList => [...preVizList, newViz]);
-        dispatch.setVizParam(newViz.vizQuery);
-        dispatch.setSelectedViz(newViz);
-        dispatch.setInputViz(null);
-    } else {
-        console.warn("Error//VPController: No dataset selected. Cannot create visualizations.");
-    }
-    };
+            const newViz = {
+                id: uuidv4(),
+                vizQuery: vizQuery
+            };
+            setVizList(preVizList => [...preVizList, newViz]);
+            dispatch.setVizParam(newViz.vizQuery);
+            dispatch.setSelectedViz(newViz);
+            dispatch.setInputViz(null);
+        } else {
+            console.warn("Error//VPController: No dataset selected. Cannot create visualizations.");
+        }
+    }, [state.datasetId, dispatch]);
 
     // Handle new Viz creation from RECController 
     useEffect(() => {
@@ -89,7 +87,6 @@ const VPController = () => {
 
     // Handle updating the vizQuery of the selected visualization
     useEffect(() => {
-
         //vizParam is updated when a new viz is added from REC, we put this additional condition to not 
         // update the selectedView from REC(without that, the selected view becomes like the selected REC viz)
         if (state.selectedViz && state.vizParam && !state.inputViz) {

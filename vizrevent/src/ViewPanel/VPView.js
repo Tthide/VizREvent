@@ -46,21 +46,18 @@ const VPView = (props) => {
       <div>
         <h3>Visualizations:</h3>
 
+
         {vizList.map((viz, index) => (
-          <div
-            key={viz.id}
-            onClick={handleVizSelect(viz)}
-            style={{
-              backgroundColor: vizSelected && viz.id === vizSelected.id ? 'blue' : 'white',
-              color: vizSelected && viz.id === vizSelected.id ? 'white' : 'black',
-
-            }}>
+          <div key={viz.id} onClick={handleVizSelect(viz)}>
             <Viz
-              vizQuery={viz.vizQuery}>
+              key={viz.id}
+              vizQuery={viz.vizQuery}
+              isSelected={vizSelected && vizSelected.id === viz.id}
 
-            </Viz>
+            />
           </div>
         ))}
+
 
       </div>
     </div>
