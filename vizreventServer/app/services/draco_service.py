@@ -10,8 +10,16 @@ from .dataset_filtering import dataset_df_cleaning,preprocess_events
 
 
 def get_draco_dataframe(unformatted_data):
+    """
+    Converts unformatted data into a DataFrame suitable for Draco.
 
+    Parameters:
+    unformatted_data (JSON): The raw input data that needs to be preprocessed.
 
+    Returns:
+    pd.DataFrame: A DataFrame representation of the dataset, ready for Draco.
+    """
+    
     #the base datasets are not in format to be able to be read by draco
     #we first need to convert them to dataframe before becoming a draco schema
     preprocessed_data=preprocess_events(unformatted_data)
@@ -44,11 +52,13 @@ def get_draco_dataframe(unformatted_data):
     # Apply the conversion to the entire DataFrame
     df = df.map(make_hashable)
 
+    """Debug
     print("/////////////////////DF_hashed:\n",df)
         # Write the DataFrame to a CSV file
-    df.to_csv('output_after_hash.csv', index=False)
+    df.to_csv('output_after_hash.csv', index=False)"""
     
     # Handle NaN values by filling them with appropriate default scalar values
+    #it also ensures that the entropy won't be equal to 0 which is a requirement of Draco/Clingo
     default_values = {
     'id': '',
     'index': 0,
@@ -142,7 +152,9 @@ def get_draco_dataframe(unformatted_data):
     # Ensure numerical columns do not contain NaN values
     for col in df.select_dtypes(include=[np.number]).columns:
         df[col] = df[col].fillna(0)
-    df.to_csv('output_before_schema.csv', index=False)
+    
+    #Debug
+    #df.to_csv('output_before_schema.csv', index=False)
     
     #some property names have dots in them which leads to parsing error in clingo
     df.columns = [col.replace(".", "_") for col in df.columns]
@@ -150,42 +162,57 @@ def get_draco_dataframe(unformatted_data):
 
 
 def get_draco_schema(draco_data):
+    """
+    Generates a Draco schema from a DataFrame.
 
-    def fix_entropy(df: pd.DataFrame) -> pd.DataFrame:
-        """Ensure entropy values are strictly > 0 to satisfy Draco validation."""
-        entropy_cols = [col for col in df.columns if 'entropy' in col.lower()]
-        for col in entropy_cols:
-            df[col] = pd.to_numeric(df[col], errors='coerce')  # Convert if necessary
-            df[col] = df[col].apply(lambda x: 0.0001 if (pd.isna(x) or x <= 0) else x)
-        return df
-    draco_data=fix_entropy(draco_data)
+    Parameters:
+    draco_data (pd.DataFrame): The DataFrame containing the preprocessed data.
+
+    Returns:
+    dict: A Draco schema derived from the input DataFrame.
+    """   
     #processing draco schema 
     schema = draco.schema_from_dataframe(draco_data)
     
-    #print(type(schema))  
-    # Print the JSON string
+    #Debug
     #print("\n\n\n/////////////////Schema\n",schema)  
     return schema
 
 
 def get_draco_facts(draco_schema):
-    
+    """
+    Converts a Draco schema into Draco facts.
+
+    Parameters:
+    draco_schema (dict): The Draco schema to be converted into facts.
+
+    Returns:
+    list: A list of Draco facts derived from the input schema.
+    """
     data_schema_facts = draco.dict_to_facts(draco_schema)
+    #Debug
     #print("\n\n\n///////////Draco_facts_from_schema:\n",data_schema_facts)
     return data_schema_facts
 
 
-
-
 def draco_rec_compute(data,num_chart:int = 5):
+    """
+    Computes and recommends Draco charts based on the input data.
+
+    Parameters:
+    data (JSON): The raw input data to be processed.
+    num_chart (int, optional): The number of charts to recommend. Default is 5.
+
+    Returns:
+    dict: A dictionary containing the recommended chart specifications and their renderings.
+    """
+    
     d = draco.Draco()
     renderer = AltairRenderer()
     
     draco_data=get_draco_dataframe(data)
     draco_facts=get_draco_facts(get_draco_schema(draco_data))
-    for fact in draco_facts:
-     print(repr(fact))  # <--- show full raw string
-
+    
 
     input_spec_base = draco_facts + ["entity(view,root,v0).","entity(mark,v0,m0).",]
     
@@ -195,26 +222,31 @@ def draco_rec_compute(data,num_chart:int = 5):
 ) -> dict[str, tuple[list[str], dict]]:
         # Dictionary to store the generated recommendations, keyed by chart name
         chart_specs = {}
+        
         for i, model in enumerate(drc.complete_spec(spec, num)):
+            
             chart_name = labeler(i)
-            print("\n\n\ncomplete_spec",chart_name)
-            spec = draco.answer_set_to_dict(model.answer_set)
-            chart_specs[chart_name] = draco.dict_to_facts(spec), spec
+            schema = draco.answer_set_to_dict(model.answer_set)
 
-            #print(chart_name)
+            #print("draco spec",chart_specs[chart_name])
             #print(f"COST: {model.cost}")
-            chart = renderer.render(spec=spec, data=draco_data)
-            #print("Recommended Chart Vega-Lite",chart.to_url())
+            
+            #computing vega lite spec for current recommendation
+            chart_vega_lite = renderer.render(spec=schema, data=draco_data)
+            
+            chart_specs[chart_name] = chart_vega_lite
+            
+            """Debug, write into json file to test vega lite specs
             with open(chart_name+'_output.json', 'w') as f:
-                f.write(chart.to_json())  # indent=4 makes it pretty
+                f.write(chart_vega_lite.to_json())  # indent=4 makes it pretty"""
 
 
         return chart_specs
 
     return recommend_charts(input_spec_base,d,num_chart)
 
-"""
-#Example
+
+"""#Usage Example
 file_path = create_temp_file("3857256")
 with open(file_path, 'r') as file:
     data = json.load(file)
