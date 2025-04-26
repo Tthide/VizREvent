@@ -147,17 +147,16 @@ def get_draco_dataframe(unformatted_data):
     'bad_behaviour.card': '',
     'type.shot.aerial_won': 0,
 }
-
+    # Ensure numerical columns do not contain NaN values
     df = df.fillna(default_values)
     # Ensure numerical columns do not contain NaN values
     for col in df.select_dtypes(include=[np.number]).columns:
         df[col] = df[col].fillna(0)
+    #Some property names have dots in them which leads to parsing error in clingo
+    df.columns = df.columns.str.replace('.', '_', regex=False)
     
     #Debug
     #df.to_csv('output_before_schema.csv', index=False)
-    
-    #some property names have dots in them which leads to parsing error in clingo
-    df.columns = [col.replace(".", "_") for col in df.columns]
     return df
 
 
@@ -236,11 +235,9 @@ def draco_rec_compute(data,num_chart:int = 5):
             
             chart_specs[chart_name] = chart_vega_lite
             
-            """Debug, write into json file to test vega lite specs
-            with open(chart_name+'_output.json', 'w') as f:
+            """#Debug, write into json file to test vega lite specs
+            with open("./data/events/temps/"+chart_name+'_output.json', 'w') as f:
                 f.write(chart_vega_lite.to_json())  # indent=4 makes it pretty"""
-
-
         return chart_specs
 
     return recommend_charts(input_spec_base,d,num_chart)
