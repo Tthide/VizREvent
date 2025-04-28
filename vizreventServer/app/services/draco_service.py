@@ -54,16 +54,17 @@ def get_draco_dataframe(unformatted_data):
     """Debug
     print("/////////////////////DF_hashed:\n",df)
         # Write the DataFrame to a CSV file"""
-    df.to_csv('output_after_hash.csv', index=False)
+    #df.to_csv('output_after_hash.csv', index=False)
     
     # Handle NaN values by filling them with appropriate default scalar values
     #it also ensures that the entropy won't be equal to 0 which is a requirement of Draco/Clingo
     df=fill_dataframe_empty_cells(df)
     #Some property names have dots in them which leads to parsing error in clingo
     df.columns = df.columns.str.replace('.', '_', regex=False)
-    
+    # now prefix any name that starts with a digit (again it creates parsing errors in Clingo)
+    df.columns = df.columns.str.replace(r'^(?=\d)', 'e_', regex=True)
     #Debug
-    df.to_csv('output_before_schema.csv', index=False)
+    #df.to_csv('output_before_schema.csv', index=False)
     return df
 
 
@@ -100,7 +101,8 @@ def get_draco_facts(draco_schema):
     #print("\n\n\n///////////Draco_facts_from_schema:\n",data_schema_facts)
     return data_schema_facts
 
-default_input_spec =["entity(view,root,v0).","entity(mark,v0,m0).",]
+default_input_spec =["entity(view,root,v0).",
+                     "entity(mark,v0,m0).",]
 
 def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5,Debug: bool=False):
     """
@@ -120,13 +122,13 @@ def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5
     
     draco_data=get_draco_dataframe(data)
     draco_facts=get_draco_facts(get_draco_schema(draco_data))
-    
+    input_spec_base = draco_facts + ["entity(view,root,v0).","entity(mark,v0,m0)."] #+ specs
+    #print("\n\n\n///////////input_spec_base:\n",input_spec_base)
 
-    input_spec_base = draco_facts + specs
     
     def recommend_charts(
-    spec: list[str], drc: draco.Draco, num: int = 5, labeler=lambda i: f"CHART {i + 1}"
-) -> dict[str, tuple[list[str], dict]]:
+    spec: list[str], drc: draco.Draco, num: int = 2, labeler=lambda i: f"CHART {i + 1}"
+):
         # Dictionary to store the generated recommendations, keyed by chart name
         chart_specs = {}
         
