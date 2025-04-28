@@ -51,16 +51,5 @@ def remove_column(df, column_name):
         print(f"Column '{column_name}' not found in DataFrame.")
         return df
 
-#Removing non essential or redundant data columns from the dataset's DataFrame.
-def dataset_df_cleaning(df):
-    
-    with open("./data/data_columns_to_remove.json", 'r') as file:
-        data = json.load(file)
-        columns_to_remove = data.get("columns_to_remove", [])
-
-        for column in columns_to_remove:
-            df = remove_column(df, column)
-
-    return df
 
             
