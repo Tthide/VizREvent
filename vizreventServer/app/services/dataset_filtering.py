@@ -1,6 +1,7 @@
 import os
 import json
-
+import pandas as pd
+import numpy as np
 
 #preprocessing of the dataset to make it easier to transform after
 def preprocess_events(dataset):
@@ -44,7 +45,7 @@ def preprocess_events(dataset):
 
 
 #Remove a specified column from a DataFrame.
-def remove_column(df, column_name):
+def remove_column(df: pd.DataFrame, column_name: str)-> pd.DataFrame:
     if column_name in df.columns:
         return df.drop(columns=[column_name])
     else:
@@ -52,4 +53,34 @@ def remove_column(df, column_name):
         return df
 
 
+def fill_dataframe_empty_cells(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Fill empty/missing cells in a DataFrame based on column data types.
+    Numbers -> 0
+    Strings -> ""
+    Lists/Tuples -> [] or ()
+    """
+    filled_df = df.copy()
+
+    for col in filled_df.columns:
+        col_dtype = filled_df[col].dtype
+
+        if np.issubdtype(col_dtype, np.number):
+            filled_df[col] = filled_df[col].fillna(0)
+        elif col_dtype == object:
+            sample_nonnull_series = filled_df[col].dropna()
+            sample_nonnull = sample_nonnull_series.iloc[0] if not sample_nonnull_series.empty else ""
+
+            if isinstance(sample_nonnull, (list, tuple)):
+                default_value = [] if isinstance(sample_nonnull, list) else ()
+
+                filled_df[col] = filled_df[col].apply(
+                    lambda x: default_value if pd.isna(x) else x
+                )
+            else:
+                filled_df[col] = filled_df[col].fillna("")
+        else:
+            filled_df[col] = filled_df[col].fillna(0)
+
+    return filled_df
             
