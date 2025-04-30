@@ -20,21 +20,17 @@ def preprocess_events(dataset):
             for item in obj:
                 delete_ids(item, False)
 
-    #Moving(grouping) additional event type info to event property
     def move_additional_info(event):
-        # Check if the 'type' key exists in the object
-        if 'type' in event:
-            type_value = event['type'].lower()  # Convert the type value to lowercase
-            # Check if the value of the 'type' key exists as another key in the object
+        if 'type' in event and isinstance(event['type'], str):
+            type_value = event['type'].lower()
             if type_value in event:
-                # Move the corresponding value to the 'type' key
                 event['type'] = {
                     'name': type_value,
                     type_value: event[type_value]
                 }
-                # Remove the original key
                 del event[type_value]
         return event
+
 
     #applying to all events of the dataset
     for event in dataset:
@@ -52,6 +48,17 @@ def remove_column(df: pd.DataFrame, column_name: str)-> pd.DataFrame:
         print(f"Column '{column_name}' not found in DataFrame.")
         return df
 
+#Removing non essential or redundant data columns from the dataset's DataFrame.
+def dataset_df_cleaning(df):
+    
+    with open("./data/data_columns_to_remove.json", 'r') as file:
+        data = json.load(file)
+        columns_to_remove = data.get("columns_to_remove", [])
+
+        for column in columns_to_remove:
+            df = remove_column(df, column)
+
+    return df
 
 def fill_dataframe_empty_cells(df: pd.DataFrame) -> pd.DataFrame:
     """

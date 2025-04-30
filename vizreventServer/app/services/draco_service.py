@@ -4,8 +4,8 @@ import pandas as pd
 import numpy as np
 from draco.renderer import AltairRenderer
 import altair as alt
-from .dataset_filtering import preprocess_events,fill_dataframe_empty_cells
-
+from .dataset_filtering import preprocess_events, fill_dataframe_empty_cells,dataset_df_cleaning
+from .temp_file_management import create_temp_file
 
 
 def get_draco_dataframe(unformatted_data):
@@ -33,11 +33,13 @@ def get_draco_dataframe(unformatted_data):
     
     #Uncomment to remove unnecessary data fields column
     #Put data field names to remove in vizreventServer/data/data_columns_to_remove.json
-    #df=dataset_df_cleaning(df)
-    """Debugging
-    print("/////////////////////DF_filtered:\n",df)
+    df=dataset_df_cleaning(df)
+    
+    
+    #Debugging
+    #print("/////////////////////DF_filtered:\n",df)
     # Write the DataFrame to a CSV file
-    df.to_csv('output_after_clean.csv', index=False)"""
+    #df.to_csv('output_after_clean.csv', index=False)
     
     # Function to convert non-hashable types to hashable types
     def make_hashable(value):
@@ -64,7 +66,7 @@ def get_draco_dataframe(unformatted_data):
     # now prefix any name that starts with a digit (again it creates parsing errors in Clingo)
     df.columns = df.columns.str.replace(r'^(?=\d)', 'e_', regex=True)
     #Debug
-    #df.to_csv('output_before_schema.csv', index=False)
+   #df.to_csv('output_before_schema.csv', index=False)
     return df
 
 
@@ -104,7 +106,7 @@ def get_draco_facts(draco_schema):
 default_input_spec =["entity(view,root,v0).",
                      "entity(mark,v0,m0).",]
 
-def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5,Debug: bool=False):
+def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5, labeler=lambda i: f"CHART {i + 1}", Debug: bool=False):
     """
     Computes and recommends Draco charts based on the input data.
 
@@ -119,15 +121,13 @@ def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5
     
     d = draco.Draco()
     renderer = AltairRenderer()
-    
     draco_data=get_draco_dataframe(data)
     draco_facts=get_draco_facts(get_draco_schema(draco_data))
-    input_spec_base = draco_facts + ["entity(view,root,v0).","entity(mark,v0,m0)."] #+ specs
+    input_spec_base = draco_facts + specs
     #print("\n\n\n///////////input_spec_base:\n",input_spec_base)
-
     
     def recommend_charts(
-    spec: list[str], drc: draco.Draco, num: int = 2, labeler=lambda i: f"CHART {i + 1}"
+    spec: list[str], drc: draco.Draco, num: int = 5, labeler=lambda i: f"CHART {i + 1}"
 ):
         # Dictionary to store the generated recommendations, keyed by chart name
         chart_specs = {}
@@ -142,12 +142,12 @@ def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5
             
             #computing vega lite spec for current recommendation
             chart_vega_lite = renderer.render(spec=schema, data=draco_data)
-            
+            #chart_specs[chart_name] = draco.dict_to_facts(schema), schema
             chart_specs[chart_name] = chart_vega_lite
             
             #Debug, write into json file to test vega lite specs
             if(Debug):
-                with open("./data/events/temps/"+chart_name+'_output.json', 'w') as f:
+                with open("./data/events/temps/"+chart_name+'_output.vg.json', 'w') as f:
                     f.write(chart_vega_lite.to_json())  # indent=4 makes it pretty
         return chart_specs
 
@@ -155,8 +155,8 @@ def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5
 
 
 
-"""#Usage Example
+#Usage Example
 file_path = create_temp_file("3857256")
 with open(file_path, 'r') as file:
     data = json.load(file)
-    draco_rec_compute(data)"""
+    draco_rec_compute(data)
