@@ -3,19 +3,16 @@ import json
 import pandas as pd
 import numpy as np
 
-#preprocessing of the dataset to make it easier to transform after
-
-            
+#preprocessing of the dataset to make it easier to transform after    
 def preprocess_events(events,
-                    keep_keys=None,
-                    flatten_keys=None,
-                    payload_key='payload'):
+                     keep_keys=None,
+                     payload_key='payload'):
     """
     For each event dict:
-    1. Copy any key in `keep_keys` verbatim into the output.
-    2. For any key in `flatten_keys`, if its value is a dict with a 'name',
-        set that key to the name string.
-    3. All other keys go into a sub‑dict under `payload_key`.
+      1. Copy any key in `keep_keys` verbatim into the output.
+      2. For any other key whose value is a dict containing 'name', set that key
+         to the name string.
+      3. All remaining keys go into a sub‑dict under `payload_key`.
     """
     if keep_keys is None:
         keep_keys = [
@@ -23,8 +20,6 @@ def preprocess_events(events,
             'minute','second','possession',
             'location','duration'
         ]
-    if flatten_keys is None:
-        flatten_keys = ['type','possession_team','play_pattern','team']
 
     transformed = []
     for ev in events:
@@ -32,11 +27,15 @@ def preprocess_events(events,
         payload = {}
         for k, v in ev.items():
             if k in keep_keys:
+                # keep these fields as-is
                 new_ev[k] = v
-            elif k in flatten_keys and isinstance(v, dict) and 'name' in v:
+            elif isinstance(v, dict) and 'name' in v:
+                # automatically flatten any {"id":…, "name":…} objects
                 new_ev[k] = v['name']
             else:
+                # everything else goes into payload
                 payload[k] = v
+
         new_ev[payload_key] = payload
         transformed.append(new_ev)
 
