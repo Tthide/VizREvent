@@ -4,42 +4,37 @@ import pandas as pd
 import numpy as np
 from draco.renderer import AltairRenderer
 import altair as alt
-from .dataset_filtering import preprocess_events
+from .dataset_filtering import is_preprocessed,preprocess_events
 from .temp_file_management import create_temp_file
+from .data_service import write_into_temp_dataset
 
 
-def get_draco_dataframe(unformatted_data):
+def get_draco_dataframe(preprocessed_data):
     """
     Converts unformatted data into a DataFrame suitable for Draco.
 
     Parameters:
-    unformatted_data (JSON): The raw input data that needs to be preprocessed.
+    preprocessed_data (JSON): The pre_processed input data that needs to be reformatted.
 
     Returns:
     pd.DataFrame: A DataFrame representation of the dataset, ready for Draco.
     """
-    
-    #the base datasets are not in format to be able to be read by draco
-    #we first need to convert them to dataframe before becoming a draco schema
-    preprocessed_data=preprocess_events(unformatted_data)
-
-    
     #Debugging
     """json_dump = json.dumps(preprocessed_data, indent=4)
     # Writing to sample.json
     with open("preprocessed_dataset.json", "w") as outfile:
         outfile.write(json_dump)"""
 
-
+    #checking if the data is indeed preprocessed or not
+    if not is_preprocessed(preprocessed_data):
+        preprocessed_data=preprocess_events(preprocessed_data)
+        
     #Creating the dataframe from the preprocessed json
     df = pd.json_normalize(preprocessed_data)
     
-    #Uncomment to remove unnecessary data fields column
-    #Put data field names to remove in vizreventServer/data/data_columns_to_remove.json
-    #df=dataset_df_cleaning(df)
-    #df.to_csv('output_before_clean.csv', index=False)
     
-    #removing all columns that have at least one empty cell (basically removing the payload but also any errors in the dataset)
+    #Removing all columns that have at least one empty cell.
+    # Because Draco needs the df to not have any empty cell. (Basically removes the payload but also any errors in the dataset)
     df=df.dropna(axis=1,how='any')
     return df
 

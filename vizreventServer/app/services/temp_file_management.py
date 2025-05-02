@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+from .dataset_filtering import preprocess_events
 
 #we need the unused temp files to be deleted when switching to another dataset
 #we already suppose in this function, that the folder exists
@@ -26,22 +27,29 @@ def create_temp_file(dataset_name):
         os.makedirs(temp_folder_path)
 
 
-    # Check if the original file exists
+    # Creating temp file if doesn't already exists
     if not os.path.exists(temp_file_path):
         # Clean other temporary files
         clean_temp_files(temp_folder_path)
         
-        # Create a temporary file that is a copy of the original file
+        # Create a temporary file
         if os.path.exists(original_file_path):
-            shutil.copyfile(original_file_path, temp_file_path)
+            
             print(f"Temporary file created as a copy of the original file: {temp_file_path}")
+            #Processing the data before writing it in the file
+            with open(original_file_path,"r") as original_file:
+                data= json.load(original_file)
+
+            with open(temp_file_path,"w") as temp_file:
+                json.dump(preprocess_events(data),temp_file,indent=4)
+            
         else:
             print(f"Original file does not exist: {original_file_path}")
             # Handle the case where the original file does not exist
             # You can create a default temp file or raise an error
             default_data = {"default_key": "default_value"}
             with open(temp_file_path, 'w') as temp_file:
-                json.dump(default_data, temp_file)
+                json.dump(default_data, temp_file,indent=4)
             print(f"Temporary file created with default data: {temp_file_path}")
 
     return temp_file_path

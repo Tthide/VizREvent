@@ -1,6 +1,7 @@
 import os
 import json
 from .temp_file_management import create_temp_file 
+import glob
 
 def get_data(dataset_name):
     #checking whether the temp dataset already exist
@@ -28,7 +29,30 @@ def list_datasets():
                 else:
                     datasets.append(data)
     return datasets
-    
-def process_data(data):
-    # Example: Return only the first 50 items
-    return data[:50]
+
+def write_into_temp_dataset(payload: str):
+    """
+    Writes the provided JSON payload into a the temp dataset JSON file.
+    The function assumes there is exactly one such file in the folder.
+
+    Parameters:
+    payload (str): The JSON content to be written into the file.
+
+    Returns:
+    None
+    """
+    # Define the folder path
+    folder_path = "./data/events/temps/"
+
+    # Use glob to find the file that matches the pattern
+    file_pattern = os.path.join(folder_path, "[0-9]*.json")
+    matching_files = glob.glob(file_pattern)
+
+    if len(matching_files) == 1:
+        file_path = matching_files[0]
+        with open(file_path, 'w') as f:
+            print(f"Writing output to {f.name}")
+            f.write(payload)  # Write the payload to the file
+    else:
+        print("Error: Either no file or multiple files match the pattern.")
+

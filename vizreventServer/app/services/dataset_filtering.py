@@ -41,4 +41,41 @@ def preprocess_events(events: list[dict],
 
     return transformed
 
+
+def is_preprocessed(data: list[dict[str, any]], config_path: str = DEFAULT_CONF) -> bool:
+    """
+    Returns True if data appears to be preprocessed correctly:
+    - Each item is a dict.
+    - Contains 'payload' key.
+    - All other keys match expected keep_keys or are flat values.
+    """
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"Config file not found: {config_path}")
+
+    with open(config_path, 'r') as f:
+        CONFIG = json.load(f)
+
+    KEEP_KEYS = CONFIG.get('keep_keys', [])
+
+    for i, item in enumerate(data):
+        if not isinstance(item, dict):
+            print(f"[Validation Error] Item at index {i} is not a dict.")
+            return False
+
+        if 'payload' not in item:
+            print(f"[Validation Error] Item at index {i} missing 'payload'.")
+            return False
+
+        for k, v in item.items():
+            if k == 'payload':
+                if not isinstance(v, dict):
+                    print(f"[Validation Error] 'payload' at index {i} is not a dict.")
+                    return False
+            elif k in KEEP_KEYS:
+                continue  # valid
+            elif isinstance(v, dict):
+                print(f"[Validation Warning] Unexpected nested dict at key '{k}' in index {i}.")
+                return False
+
+    return True
             
