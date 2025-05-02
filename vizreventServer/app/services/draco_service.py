@@ -28,6 +28,10 @@ def get_draco_dataframe(preprocessed_data):
     #checking if the data is indeed preprocessed or not
     if not is_preprocessed(preprocessed_data):
         preprocessed_data=preprocess_events(preprocessed_data)
+    
+    #Removing the payloads before formatting data to pandas dataframe
+    for event in preprocessed_data:
+        event.pop("payload")
         
     #Creating the dataframe from the preprocessed json
     df = pd.json_normalize(preprocessed_data)
@@ -41,7 +45,7 @@ def get_draco_dataframe(preprocessed_data):
     # Convert the 'timestamp' column to datetime
     df['timestamp'] = pd.to_datetime(df['timestamp'])   
     #Debug
-    #df.to_csv('output_before_schema.csv', index=False)
+    df.to_csv('output_before_schema.csv', index=False)
     return df
 
 
@@ -59,7 +63,7 @@ def get_draco_schema(draco_data):
     schema = draco.schema_from_dataframe(draco_data)
     
     #Debug
-    print("\n\n\n/////////////////Schema\n",schema)  
+    #print("\n\n\n/////////////////Schema\n",schema)  
     return schema
 
 
@@ -75,7 +79,7 @@ def get_draco_facts(draco_schema):
     """
     data_schema_facts = draco.dict_to_facts(draco_schema)
     #Debug
-    print("\n\n\n///////////Draco_facts_from_schema:\n",data_schema_facts)
+    #print("\n\n\n///////////Draco_facts_from_schema:\n",data_schema_facts)
     return data_schema_facts
 
 default_input_spec =["entity(view,root,v0).",
