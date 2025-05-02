@@ -9,9 +9,10 @@
       "possession",
       "location",
       "duration",
-      "type"
-
-
+      "type",
+      "possession_team",
+      "play_pattern",
+      "team"
     ]
   }
   
