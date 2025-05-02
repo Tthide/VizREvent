@@ -3,40 +3,40 @@ import json
 import pandas as pd
 import numpy as np
 
-#preprocessing of the dataset to make it easier to transform after    
-def preprocess_events(events,
-                     keep_keys=None,
-                     payload_key='payload'):
+# Compute the default config path once, relative to this script’s location
+SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_CONF = os.path.join(SCRIPT_DIR, 'preprocessing_config.json')
+
+def preprocess_events(events: list[dict], 
+                      config_path: str = DEFAULT_CONF) -> list[dict]:
     """
-    For each event dict:
-      1. Copy any key in `keep_keys` verbatim into the output.
-      2. For any other key whose value is a dict containing 'name', set that key
-         to the name string.
-      3. All remaining keys go into a sub‑dict under `payload_key`.
+    1. Loads keep_keys from 'preprocessing_config.json' stored alongside this script.
+    2. Copies any key in keep_keys verbatim into the output.
+    3. Flattens any dict-with-['name'] into its name string.
+    4. Packs all other fields into the 'payload' dict.
     """
-    if keep_keys is None:
-        keep_keys = [
-            'id','index','period','timestamp',
-            'minute','second','possession',
-            'location','duration'
-        ]
+
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(f"Config file not found: {config_path}")
+
+    with open(config_path, 'r') as f:
+        CONFIG = json.load(f)
+
+    KEEP_KEYS = CONFIG.get('keep_keys', [])
 
     transformed = []
     for ev in events:
-        new_ev = {}
+        new_ev  = {}
         payload = {}
         for k, v in ev.items():
-            if k in keep_keys:
-                # keep these fields as-is
+            if k in KEEP_KEYS:
                 new_ev[k] = v
             elif isinstance(v, dict) and 'name' in v:
-                # automatically flatten any {"id":…, "name":…} objects
                 new_ev[k] = v['name']
             else:
-                # everything else goes into payload
                 payload[k] = v
 
-        new_ev[payload_key] = payload
+        new_ev['payload'] = payload
         transformed.append(new_ev)
 
     return transformed

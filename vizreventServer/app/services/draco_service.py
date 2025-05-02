@@ -34,14 +34,13 @@ def get_draco_dataframe(unformatted_data):
     #Creating the dataframe from the preprocessed json
     df = pd.json_normalize(preprocessed_data)
     
-    
     #Uncomment to remove unnecessary data fields column
     #Put data field names to remove in vizreventServer/data/data_columns_to_remove.json
     #df=dataset_df_cleaning(df)
-    df.to_csv('output_before_clean.csv', index=False)
-    print(len(df.columns))
+    #df.to_csv('output_before_clean.csv', index=False)
+    
+    #removing all columns that have at least one empty cell (basically removing the payload but also any errors in the dataset)
     df=df.dropna(axis=1,how='any')
-
     return df
 
 
