@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from draco.renderer import AltairRenderer
 import altair as alt
-from .dataset_filtering import preprocess_events, fill_dataframe_empty_cells,dataset_df_cleaning
+from .dataset_filtering import preprocess_events
 from .temp_file_management import create_temp_file
 
 
@@ -122,6 +122,7 @@ def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5
             #Debug, write into json file to test vega lite specs
             if(Debug):
                 with open("./data/events/temps/"+chart_name+'_output.vg.json', 'w') as f:
+                    print(f"Writing output {chart_name} in {f.name}")
                     f.write(chart_vega_lite.to_json())  # indent=4 makes it pretty
         return chart_specs
 
@@ -132,4 +133,4 @@ def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5
 file_path = create_temp_file("3857256")
 with open(file_path, 'r') as file:
     data = json.load(file)
-    draco_rec_compute(data)
+    draco_rec_compute(data,Debug=True)
