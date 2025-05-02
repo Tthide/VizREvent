@@ -4,40 +4,43 @@ import pandas as pd
 import numpy as np
 
 #preprocessing of the dataset to make it easier to transform after
-def preprocess_events(dataset):
-    #deleting unnecessary id keys
-    def delete_ids(obj, first_level=True):
-        if isinstance(obj, dict):
-            keys_to_delete = [key for key in obj if key == 'id' and not first_level]
-            for key in keys_to_delete:
-                del obj[key]
-            for key, value in list(obj.items()):
-                if isinstance(value, dict) and 'id' in value and 'name' in value:
-                    obj[key] = value['name']
-                else:
-                    delete_ids(value, False)
-        elif isinstance(obj, list):
-            for item in obj:
-                delete_ids(item, False)
 
-    def move_additional_info(event):
-        if 'type' in event and isinstance(event['type'], str):
-            type_value = event['type'].lower()
-            if type_value in event:
-                event['type'] = {
-                    'name': type_value,
-                    type_value: event[type_value]
-                }
-                del event[type_value]
-        return event
+            
+def preprocess_events(events,
+                    keep_keys=None,
+                    flatten_keys=None,
+                    payload_key='payload'):
+    """
+    For each event dict:
+    1. Copy any key in `keep_keys` verbatim into the output.
+    2. For any key in `flatten_keys`, if its value is a dict with a 'name',
+        set that key to the name string.
+    3. All other keys go into a sub‑dict under `payload_key`.
+    """
+    if keep_keys is None:
+        keep_keys = [
+            'id','index','period','timestamp',
+            'minute','second','possession',
+            'location','duration'
+        ]
+    if flatten_keys is None:
+        flatten_keys = ['type','possession_team','play_pattern','team']
 
+    transformed = []
+    for ev in events:
+        new_ev = {}
+        payload = {}
+        for k, v in ev.items():
+            if k in keep_keys:
+                new_ev[k] = v
+            elif k in flatten_keys and isinstance(v, dict) and 'name' in v:
+                new_ev[k] = v['name']
+            else:
+                payload[k] = v
+        new_ev[payload_key] = payload
+        transformed.append(new_ev)
 
-    #applying to all events of the dataset
-    for event in dataset:
-        delete_ids(event)
-        move_additional_info(event)
-
-    return dataset
+    return transformed
 
 
 #Remove a specified column from a DataFrame.
