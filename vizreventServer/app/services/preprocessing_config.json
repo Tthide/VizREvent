@@ -8,7 +8,10 @@
       "second",
       "possession",
       "location",
-      "duration"
+      "duration",
+      "type"
+
+
     ]
   }
   
