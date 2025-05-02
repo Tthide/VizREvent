@@ -36,6 +36,9 @@ def get_draco_dataframe(preprocessed_data):
     #Removing all columns that have at least one empty cell.
     # Because Draco needs the df to not have any empty cell. (Basically removes the payload but also any errors in the dataset)
     df=df.dropna(axis=1,how='any')
+    
+    #Debug
+    #df.to_csv('output_before_schema.csv', index=False)
     return df
 
 
@@ -75,7 +78,7 @@ def get_draco_facts(draco_schema):
 default_input_spec =["entity(view,root,v0).",
                      "entity(mark,v0,m0).",]
 
-def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5, labeler=lambda i: f"CHART {i + 1}", Debug: bool=False):
+def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= default_input_spec,num_chart:int = 5, labeler=lambda i: f"CHART {i + 1}", Debug: bool=False):
     """
     Computes and recommends Draco charts based on the input data.
 
@@ -88,7 +91,7 @@ def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5
     dict: A dictionary containing the recommended chart specifications and their renderings.
     """
     
-    d = draco.Draco()
+
     renderer = AltairRenderer()
     draco_data=get_draco_dataframe(data)
     draco_facts=get_draco_facts(get_draco_schema(draco_data))
@@ -125,7 +128,7 @@ def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5
 
 
 #Usage Example
-file_path = create_temp_file("3857256")
+"""file_path = create_temp_file("3857256")
 with open(file_path, 'r') as file:
     data = json.load(file)
-    draco_rec_compute(data,Debug=True)
+    draco_rec_compute(data,Debug=True)"""
