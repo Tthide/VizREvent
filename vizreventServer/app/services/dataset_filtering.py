@@ -30,9 +30,10 @@ def preprocess_events(events: list[dict],
         payload = {}
         for k, v in ev.items():
             if k in KEEP_KEYS:
-                new_ev[k] = v
-            elif isinstance(v, dict) and 'name' in v:
-                new_ev[k] = v['name']
+                if isinstance(v, dict) and 'name' in v:
+                    new_ev[k] = v['name']
+                else:
+                    new_ev[k] = v
             else:
                 payload[k] = v
 
