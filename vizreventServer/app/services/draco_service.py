@@ -33,10 +33,13 @@ def get_draco_dataframe(preprocessed_data):
     df = pd.json_normalize(preprocessed_data)
     
     
+    
     #Removing all columns that have at least one empty cell.
     # Because Draco needs the df to not have any empty cell. (Basically removes the payload but also any errors in the dataset)
     df=df.dropna(axis=1,how='any')
     
+    # Convert the 'timestamp' column to datetime
+    df['timestamp'] = pd.to_datetime(df['timestamp'])   
     #Debug
     #df.to_csv('output_before_schema.csv', index=False)
     return df
@@ -56,7 +59,7 @@ def get_draco_schema(draco_data):
     schema = draco.schema_from_dataframe(draco_data)
     
     #Debug
-    #print("\n\n\n/////////////////Schema\n",schema)  
+    print("\n\n\n/////////////////Schema\n",schema)  
     return schema
 
 
@@ -72,7 +75,7 @@ def get_draco_facts(draco_schema):
     """
     data_schema_facts = draco.dict_to_facts(draco_schema)
     #Debug
-    #print("\n\n\n///////////Draco_facts_from_schema:\n",data_schema_facts)
+    print("\n\n\n///////////Draco_facts_from_schema:\n",data_schema_facts)
     return data_schema_facts
 
 default_input_spec =["entity(view,root,v0).",
