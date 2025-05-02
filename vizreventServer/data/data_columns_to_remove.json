@@ -1,7 +1,0 @@
-{
-    "columns_to_remove": [
-        "index",
-        "minute",
-        "second"
-    ]
-}
