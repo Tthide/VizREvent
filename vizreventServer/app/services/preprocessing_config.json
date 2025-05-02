@@ -1,11 +1,8 @@
 {
     "keep_keys": [
       "id",
-      "index",
       "period",
       "timestamp",
-      "minute",
-      "second",
       "possession",
       "location",
       "duration",
