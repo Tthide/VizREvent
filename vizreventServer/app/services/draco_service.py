@@ -22,51 +22,26 @@ def get_draco_dataframe(unformatted_data):
     #the base datasets are not in format to be able to be read by draco
     #we first need to convert them to dataframe before becoming a draco schema
     preprocessed_data=preprocess_events(unformatted_data)
+
     
-    """Debugging
-    json_dump = json.dumps(preprocessed_data, indent=4)
+    #Debugging
+    """json_dump = json.dumps(preprocessed_data, indent=4)
     # Writing to sample.json
     with open("preprocessed_dataset.json", "w") as outfile:
         outfile.write(json_dump)"""
-    
+
+
+    #Creating the dataframe from the preprocessed json
     df = pd.json_normalize(preprocessed_data)
+    
     
     #Uncomment to remove unnecessary data fields column
     #Put data field names to remove in vizreventServer/data/data_columns_to_remove.json
-    df=dataset_df_cleaning(df)
-    
-    
-    #Debugging
-    #print("/////////////////////DF_filtered:\n",df)
-    # Write the DataFrame to a CSV file
-    #df.to_csv('output_after_clean.csv', index=False)
-    
-    # Function to convert non-hashable types to hashable types
-    def make_hashable(value):
-        if isinstance(value, list):
-            return tuple(make_hashable(item) for item in value)
-        elif isinstance(value, dict):
-            return json.dumps(value, sort_keys=True)
-        else:
-            return value
+    #df=dataset_df_cleaning(df)
+    df.to_csv('output_before_clean.csv', index=False)
+    print(len(df.columns))
+    df=df.dropna(axis=1,how='any')
 
-    # Apply the conversion to the entire DataFrame
-    df = df.map(make_hashable)
-
-    """Debug
-    print("/////////////////////DF_hashed:\n",df)
-        # Write the DataFrame to a CSV file"""
-    #df.to_csv('output_after_hash.csv', index=False)
-    
-    # Handle NaN values by filling them with appropriate default scalar values
-    #it also ensures that the entropy won't be equal to 0 which is a requirement of Draco/Clingo
-    df=fill_dataframe_empty_cells(df)
-    #Some property names have dots in them which leads to parsing error in clingo
-    df.columns = df.columns.str.replace('.', '_', regex=False)
-    # now prefix any name that starts with a digit (again it creates parsing errors in Clingo)
-    df.columns = df.columns.str.replace(r'^(?=\d)', 'e_', regex=True)
-    #Debug
-   #df.to_csv('output_before_schema.csv', index=False)
     return df
 
 
@@ -152,7 +127,6 @@ def draco_rec_compute(data,specs:list[str]= default_input_spec,num_chart:int = 5
         return chart_specs
 
     return recommend_charts(input_spec_base,d,num_chart)
-
 
 
 #Usage Example
