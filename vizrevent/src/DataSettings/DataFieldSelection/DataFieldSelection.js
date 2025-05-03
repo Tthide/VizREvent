@@ -9,7 +9,7 @@ const DataFieldSelection = () => {
     const [selectedFields, setSelectedFields] = useState([]);
 
     //connecting to store
-    const { state, dispatch } = useStoreSelector(state => ({
+    const { state } = useStoreSelector(state => ({
         vizParam: state.vizParam,
         datasetId: state.datasetId,
         selectedViz: state.selectedViz,
@@ -18,8 +18,12 @@ const DataFieldSelection = () => {
 
     const getFieldList = async () => {
         try {
-            const fieldList = await DatafieldsList(state.datasetId);
-            setDataFields(fieldList);
+            if (state.datasetId) {
+                console.log('Fetching data fields...');
+                const fieldList = await DatafieldsList(state.datasetId);
+                console.log('Fetched data fields:', fieldList);
+                setDataFields(fieldList);
+            }
         } catch (error) {
             console.error("Error fetching data fields:", error);
         }
@@ -51,18 +55,17 @@ const DataFieldSelection = () => {
     return (
         <>
             <div>
-                {dataFields && state.selectedViz!==null ? (
-                    Object.keys(dataFields).map(field => (
-                        <div key={field}>
+                {dataFields && state.selectedViz !== null ? (
+                    dataFields.map(field => (
+                        <div key={field.name}>
                             <label>
                                 <input
                                     type="checkbox"
                                     checked={selectedFields.includes(field)}
                                     onChange={() => handleCheckboxChange(field)}
                                 />
-                                <b>{dataFields[field].type}  // </b>
-                                {field}
-
+                                <b>{field.type} - </b>
+                                {field.name}
                             </label>
                         </div>
                     ))
