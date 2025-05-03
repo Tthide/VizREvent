@@ -120,7 +120,9 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
             #computing vega lite spec for current recommendation
             chart_vega_lite = renderer.render(spec=schema, data=draco_data)
             #chart_specs[chart_name] = draco.dict_to_facts(schema), schema
-            chart_specs[chart_name] = chart_vega_lite
+            
+            #converting the altair object to json for export to frontend
+            chart_specs[chart_name] = chart_vega_lite.to_json()
             
             #Debug, write into json file to test vega lite specs
             if(Debug):
