@@ -61,19 +61,6 @@ def get_draco_schema(draco_data):
     
     #Now writing the datafields' properties to a json file for frontend access
     
-    # Function to convert non-serializable objects to serializable format
-    def convert_to_serializable(obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        raise TypeError(f"Type {type(obj)} not serializable")
-
-    # Convert the 'field' part of the schema to a JSON string with indentation
-    json_object = json.dumps(schema["field"], indent=4, default=convert_to_serializable)
-
-    # Write the JSON string to a file
-    with open("./data/events/temps/draco_dataframe.json", "w") as outfile:
-        outfile.write(json_object)
-    
     #Debug
     #print("\n\n\n/////////////////Schema\n",schema)  
     return schema

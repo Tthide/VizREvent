@@ -53,3 +53,20 @@ def create_temp_file(dataset_name):
             print(f"Temporary file created with default data: {temp_file_path}")
 
     return temp_file_path
+
+def create_temp_data_schema(schema_data,file_path="./data/events/temps/draco_dataframe.json"):
+    
+        # Function to convert non-serializable objects to serializable format
+    def convert_to_serializable(obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        raise TypeError(f"Type {type(obj)} not serializable")
+
+    # Convert the 'field' part of the schema to a JSON string with indentation
+    json_object = json.dumps(schema_data["field"], indent=4, default=convert_to_serializable)
+
+    # Write the JSON string to a file
+    with open(file_path, "w") as outfile:
+        outfile.write(json_object)
+        
+    return file_path

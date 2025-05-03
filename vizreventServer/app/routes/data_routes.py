@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from ..services.data_service import get_data, list_datasets
+from ..services.data_service import get_data, list_datasets,get_data_fields
 import json
 import traceback
 from ..services.draco_service import draco_rec_compute
@@ -23,16 +23,13 @@ def get_dataset():
 @data_bp.route('/api/datafields', methods=['GET'])
 def get_datafields():
     try:
-        # Open and read the JSON file
-        with open("./data/events/temps/draco_dataframe.json", "r") as file:
-            data = json.load(file)
-
-        # Extract the 'field' property
-        fields = data.get("field", [])
-
+        #every API request from react will contain the current chosen dataset
+        dataset_id = request.args.get('datasetId')
+        print(f"Dataset: {dataset_id}")
+        data = get_data_fields(dataset_id)
         # Return the fields as a JSON response
-        return jsonify(fields)
-
+        return jsonify(data)
+    
     except FileNotFoundError:
         return jsonify({"error": "File not found"}), 404
     except json.JSONDecodeError:
