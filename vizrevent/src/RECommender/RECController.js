@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import RECView from './RECView'
 import { useStoreSelector } from '../Store/VizreventStore';
-import DracoRecProcess from './DracoUtils';
+import {DracoRecProcess,DracoRecRequest} from './DracoUtils';
 import { v4 as uuidv4 } from 'uuid';
-import { DatasetFetcher } from '../DataSettings/DatasetUtils';
 
 
 
@@ -27,25 +26,17 @@ const RECController = () => {
 
         try {
             // Call DracoRecProcess with the dataset
-            const solutionSet = await DatasetFetcher(state.datasetId)
-                .then(RecData => {
-                    setRecDataset(RecData)
-                    console.log("RecData:", RecData);
-                    DracoRecProcess(RecData);
-                });
+            const solutionSet = await DracoRecRequest(state.datasetId)
 
-            console.log("Draco solutionSet", solutionSet);
             // Update recList based on the solutionSet
-            const newRecList = solutionSet.specs.map(item => {
+            const newRecList = solutionSet.map(item => {
                 //the draco spec output doesn't the contain the dataset input in the prepareData, therefore we have to update this here
                 //And because Draco and Vega-Lite require different data property format, we also change it to fit Vega-Lite
-                item.data = {
-                    values: recDataset
-                };
+
                 
                 return {
                     id: uuidv4(),
-                    vizQuery: item
+                    vizQuery: JSON.parse(item)
                     // You can use solutionSet to update the vizQuery or other properties
                 }
             });

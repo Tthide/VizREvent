@@ -17,7 +17,11 @@ const RECView = (props) => {
   //display one recommendation item
   const displayRECItem = (recItem) => {
     //button to be replaced by RecViz component
-    return <RecViz key={recItem.id} recItem={recItem} onRecItemSelect={() => handleRecItemSelect(recItem)}>recommendation n°{recItem.id}</RecViz>;
+    return <RecViz 
+    key={recItem.id}
+    recItem={recItem} 
+    onRecItemSelect={() => handleRecItemSelect(recItem)}>
+    recommendation n°{recItem.id}</RecViz>;
 
 
   }
