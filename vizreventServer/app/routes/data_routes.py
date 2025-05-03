@@ -20,12 +20,12 @@ def get_dataset():
         traceback.print_exc()  # Print the traceback to the console
         return jsonify({"error": str(e)}), 500
 
+
 @data_bp.route('/api/datafields', methods=['GET'])
 def get_datafields():
     try:
         #every API request from react will contain the current chosen dataset
-        dataset_id = request.args.get('datasetId')
-        print(f"Dataset: {dataset_id}")
+        dataset_id = request.args.get('dataset_id')
         data = get_data_fields(dataset_id)
         # Return the fields as a JSON response
         return jsonify(data)

@@ -3,9 +3,14 @@ import json
 from .temp_file_management import create_temp_file,create_temp_data_schema
 import glob
 import csv
-from .draco_service import get_draco_schema
+from .draco_service import get_draco_schema,get_draco_dataframe
 
 def get_data(dataset_name):
+    
+        # Check if the input is a string composed of numbers and nothing else
+    if not isinstance(dataset_name, str) or not dataset_name.isdigit():
+        raise ValueError("dataset_name must be a string composed of numbers only.")
+    
     #checking whether the temp dataset already exist
     file_path = create_temp_file(dataset_name)
     with open(file_path, 'r') as file:
@@ -34,9 +39,13 @@ def list_datasets():
 
 
 def get_data_fields(dataset_name,file_path="./data/events/temps/draco_dataframe.json"):
+            # Check if the input is a string composed of numbers and nothing else
+    if not isinstance(dataset_name, str) or not dataset_name.isdigit():
+        raise ValueError("dataset_name must be a string composed of numbers only.")
     
     data=get_data(dataset_name)
-    schema_data = get_draco_schema(data)
+    draco_data=get_draco_dataframe(data)
+    schema_data = get_draco_schema(draco_data)
     file_path=create_temp_data_schema(schema_data)
     
     with open(file_path, 'r') as file:

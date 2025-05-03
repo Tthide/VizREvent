@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 from .dataset_filtering import preprocess_events
+import numpy as np
 
 #we need the unused temp files to be deleted when switching to another dataset
 #we already suppose in this function, that the folder exists
