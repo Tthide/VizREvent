@@ -1,17 +1,22 @@
-export const DatasetFetcher = async (params = {}, serverUrl = 'http://localhost:5000/api/dataset') => {
-    try {
+export const DatasetFetcher = async (datasetId = null, serverUrl = 'http://localhost:5000/api/dataset') => {
+    if (datasetId) {
+        try {
 
-        const queryString = new URLSearchParams(params);
-
-        const response = await fetch(`${serverUrl}?${queryString}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            // Construct the URL with the dataset_id if provided
+            const url = datasetId ? `${serverUrl}?dataset_id=${datasetId}` : serverUrl;
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const jsonData = await response.json();
+            return jsonData;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            throw error;
         }
-        const jsonData = await response.json();
-        return jsonData;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        throw error;
+    }
+    else{
+        console.warn("No datasetId passed when trying to fetch dataset")
     }
 };
 
@@ -29,14 +34,14 @@ export const DatasetListFetcher = async (serverUrl = 'http://localhost:5000/api/
     }
 
 }
-export const DatafieldsList = async (dataset_id = null, serverUrl = 'http://localhost:5000/api/datafields') => {
-    
-    if (dataset_id) {
+export const DatafieldsList = async (datasetId = null, serverUrl = 'http://localhost:5000/api/datafields') => {
+
+    if (datasetId) {
         try {
 
 
             // Construct the URL with the dataset_id if provided
-            const url = dataset_id ? `${serverUrl}?dataset_id=${dataset_id}` : serverUrl;
+            const url = datasetId ? `${serverUrl}?dataset_id=${datasetId}` : serverUrl;
 
             // Send a GET request to the server
             const response = await fetch(url);
@@ -56,5 +61,8 @@ export const DatafieldsList = async (dataset_id = null, serverUrl = 'http://loca
             console.error('Error fetching data fields:', error);
             throw error;
         }
+    }
+    else{
+        console.warn("No datasetId passed when trying to fetch data fields")
     }
 };

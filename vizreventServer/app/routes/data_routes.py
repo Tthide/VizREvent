@@ -10,7 +10,7 @@ data_bp = Blueprint('data', __name__)
 def get_dataset():
     try:
         #every API request from react will contain the current chosen dataset
-        dataset_id = request.args.get('datasetId')
+        dataset_id = request.args.get('dataset_id')
         print(f"Dataset: {dataset_id}")
         dataset=get_data(dataset_id)
         draco_rec_compute(dataset,Debug=True)
