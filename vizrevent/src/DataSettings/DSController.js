@@ -32,7 +32,7 @@ const DSController = () => {
     // Takes selected dataset and dispatch it to store
     const handleDatasetSelect =  (datasetId) => {
 
-        dispatch.setDatasetId({datasetId:datasetId});
+        dispatch.setDatasetId(datasetId);
     };
     //Convert selected Datafields to new vizParam and recSettings value
     const handleDatafieldSelect = (datafields) => {
