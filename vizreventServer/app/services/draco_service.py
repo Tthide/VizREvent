@@ -6,7 +6,6 @@ from draco.renderer import AltairRenderer
 import altair as alt
 from .dataset_filtering import is_preprocessed,preprocess_events
 from .temp_file_management import create_temp_file
-from .data_service import write_into_temp_dataset
 
 
 def get_draco_dataframe(preprocessed_data):
@@ -60,6 +59,21 @@ def get_draco_schema(draco_data):
     #processing draco schema 
     schema = draco.schema_from_dataframe(draco_data)
     
+    #Now writing the datafields' properties to a json file for frontend access
+    
+    # Function to convert non-serializable objects to serializable format
+    def convert_to_serializable(obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        raise TypeError(f"Type {type(obj)} not serializable")
+
+    # Convert the 'field' part of the schema to a JSON string with indentation
+    json_object = json.dumps(schema["field"], indent=4, default=convert_to_serializable)
+
+    # Write the JSON string to a file
+    with open("./data/events/temps/draco_dataframe.json", "w") as outfile:
+        outfile.write(json_object)
+    
     #Debug
     #print("\n\n\n/////////////////Schema\n",schema)  
     return schema
@@ -102,7 +116,6 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     draco_facts=get_draco_facts(get_draco_schema(draco_data))
     input_spec_base = draco_facts + specs
     #print("\n\n\n///////////input_spec_base:\n",input_spec_base)
-    
     def recommend_charts(
     spec: list[str], drc: draco.Draco, num: int = 5, labeler=lambda i: f"CHART {i + 1}"
 ):

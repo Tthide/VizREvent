@@ -2,6 +2,7 @@ import os
 import json
 from .temp_file_management import create_temp_file 
 import glob
+import csv
 
 def get_data(dataset_name):
     #checking whether the temp dataset already exist
@@ -29,6 +30,14 @@ def list_datasets():
                 else:
                     datasets.append(data)
     return datasets
+
+
+def get_data_fields(file_path="./data/events/temps/draco_dataframe.json"):
+    with open(file_path, 'r') as file:
+        reader = csv.reader(file)
+        # Read the first row, which contains the column headers
+        headers = next(reader)
+    return headers
 
 def write_into_temp_dataset(payload: str):
     """
