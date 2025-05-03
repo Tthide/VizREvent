@@ -22,7 +22,7 @@ def get_draco_dataframe(preprocessed_data):
     #Debugging
     """json_dump = json.dumps(preprocessed_data, indent=4)
     # Writing to sample.json
-    with open("preprocessed_dataset.json", "w") as outfile:
+    with open("debug/preprocessed_dataset.json", "w") as outfile:
         outfile.write(json_dump)"""
 
     #checking if the data is indeed preprocessed or not
@@ -42,10 +42,8 @@ def get_draco_dataframe(preprocessed_data):
     # Because Draco needs the df to not have any empty cell. (Basically removes the payload but also any errors in the dataset)
     df=df.dropna(axis=1,how='any')
     
-    # Convert the 'timestamp' column to datetime
-    df['timestamp'] = pd.to_datetime(df['timestamp'])   
     #Debug
-    df.to_csv('output_before_schema.csv', index=False)
+    df.to_csv('debug/output_before_schema.csv', index=False)
     return df
 
 
@@ -126,7 +124,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
             
             #Debug, write into json file to test vega lite specs
             if(Debug):
-                with open("./data/events/temps/"+chart_name+'_output.vg.json', 'w') as f:
+                with open("debug/"+chart_name+'_output.vg.json', 'w') as f:
                     print(f"Writing output {chart_name} in {f.name}")
                     f.write(chart_vega_lite.to_json())  # indent=4 makes it pretty
         return chart_specs
