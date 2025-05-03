@@ -19,7 +19,26 @@ def get_dataset():
     except Exception as e:
         traceback.print_exc()  # Print the traceback to the console
         return jsonify({"error": str(e)}), 500
-    
+
+@data_bp.route('/api/datafields', methods=['GET'])
+def get_datafields():
+    try:
+        # Open and read the JSON file
+        with open("./data/events/temps/draco_dataframe.json", "r") as file:
+            data = json.load(file)
+
+        # Extract the 'field' property
+        fields = data.get("field", [])
+
+        # Return the fields as a JSON response
+        return jsonify(fields)
+
+    except FileNotFoundError:
+        return jsonify({"error": "File not found"}), 404
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON format"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @data_bp.route('/api/datasetList', methods=['GET'])
 def list_datasets_route():
