@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import DSView from './DSView'
 import { useStoreSelector } from '../Store/VizreventStore';
-import { DatasetFetcher, DatasetListFetcher } from './DatasetUtils';
+import { DatasetListFetcher } from './DatasetUtils';
 
 
 
