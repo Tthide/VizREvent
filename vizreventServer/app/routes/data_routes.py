@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, request
 from ..services.data_service import get_data, list_datasets,get_data_fields
 import json
 import traceback
-from ..services.draco_service import draco_rec_compute
 
 data_bp = Blueprint('data', __name__)
 
@@ -13,7 +12,6 @@ def get_dataset():
         dataset_id = request.args.get('dataset_id')
         print(f"Dataset: {dataset_id}")
         dataset=get_data(dataset_id)
-        draco_rec_compute(dataset,Debug=True)
 
         return jsonify(dataset)
     except Exception as e:
