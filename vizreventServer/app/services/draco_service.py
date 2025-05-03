@@ -107,7 +107,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     spec: list[str], drc: draco.Draco, num: int = 5, labeler=lambda i: f"CHART {i + 1}"
 ):
         # Dictionary to store the generated recommendations, keyed by chart name
-        chart_specs = {}
+        chart_specs = []
         
         for i, model in enumerate(drc.complete_spec(spec, num)):
             
@@ -122,7 +122,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
             #chart_specs[chart_name] = draco.dict_to_facts(schema), schema
             
             #converting the altair object to json for export to frontend
-            chart_specs[chart_name] = chart_vega_lite.to_json()
+            chart_specs.append(chart_vega_lite.to_json())
             
             #Debug, write into json file to test vega lite specs
             if(Debug):
