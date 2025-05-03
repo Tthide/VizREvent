@@ -8,5 +8,8 @@ def create_app():
     # Register blueprints
     from .routes.data_routes import data_bp
     app.register_blueprint(data_bp)
+    from .routes.draco_routes import draco_bp
+    app.register_blueprint(draco_bp)
+
 
     return app
