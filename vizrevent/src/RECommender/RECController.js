@@ -18,7 +18,7 @@ const RECController = () => {
     //Creating local state 
     const [isOpened, setIsOpened] = useState(false);
     const [recList, setRecList] = useState([]); //example values
-    const [recDataset, setRecDataset] = useState(null);
+    const [loading, setLoading] = useState(false)
 
     //function that actually computes the recommendation
     const recCompute = async (recList, vizParam, recSettings, dataset) => {
@@ -78,18 +78,25 @@ const RECController = () => {
     useEffect(() => {
         if (isOpened) {
             const computeRecommendations = async () => {
-
+                setLoading(true) //Start loading animation
                 const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.datasetId);
                 setRecList(newRecList);
+                setLoading(false) //stops loading animation
+
             };
 
-            computeRecommendations();
+
+            computeRecommendations().catch(err => {
+                console.error(err)
+                setLoading(false) //Ensure loading ends on error
+              })
         }
     }, [isOpened, state.vizParam, state.recSettings, state.datasetId]);
 
     return (
         <>
             <RECView isOpened={isOpened}
+                loading={loading}
                 onPanelOpenerClick={handlePanelOpener}
                 recList={recList}
                 onRecItemSelect={handleRecSelection} />

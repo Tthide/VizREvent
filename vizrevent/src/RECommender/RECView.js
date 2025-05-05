@@ -1,8 +1,10 @@
 import React from 'react';
 import RecViz from '../Viz/RecViz';
+import {OrbitProgress} from "react-loading-indicators"
+
 const RECView = (props) => {
 
-  const { isOpened, onPanelOpenerClick, recList, onRecItemSelect } = props;
+  const { isOpened,loading, onPanelOpenerClick, recList, onRecItemSelect } = props;
 
 
   const handlePanelExpandClick = () => {
@@ -32,11 +34,13 @@ const RECView = (props) => {
       {isOpened && (
         <div className='RECPanel' style={{ backgroundColor: 'blue' }}>
           <div className='RECVizList'>
-            {recList.map(recItem => displayRECItem(recItem))}
+            {loading && (
+              <OrbitProgress color="#FFFFFF" size="medium" text="" textColor="#ffffff" />
+            )}
+            {!loading && recList.map(recItem => displayRECItem(recItem))}
           </div>
         </div>
       )}
-
       {/* Expanding panel button, this could also be but in RECController but to respect MVC we put it here*/}
       <button onClick={handlePanelExpandClick}>
         {isOpened ? "Close Panel" : " Open panel"}
