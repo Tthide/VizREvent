@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect,useRef, useState } from 'react'
 import RECView from './RECView'
 import { useStoreSelector } from '../Store/VizreventStore';
-import {DracoRecProcess,DracoRecRequest} from './DracoUtils';
+import { DracoRecRequest } from './DracoUtils';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -20,6 +20,10 @@ const RECController = () => {
     const [recList, setRecList] = useState([]); //example values
     const [loading, setLoading] = useState(false)
 
+    // Track last recSettings and datasetId used for computation
+    const lastRecSettingsRef = useRef(null)
+    const lastDatasetIdRef = useRef(null)
+
     //function that actually computes the recommendation
     const recCompute = async (recList, vizParam, recSettings, dataset) => {
 
@@ -33,7 +37,7 @@ const RECController = () => {
                 //the draco spec output doesn't the contain the dataset input in the prepareData, therefore we have to update this here
                 //And because Draco and Vega-Lite require different data property format, we also change it to fit Vega-Lite
 
-                
+
                 return {
                     id: uuidv4(),
                     vizQuery: JSON.parse(item)
@@ -77,21 +81,30 @@ const RECController = () => {
     // Use useEffect to update recList when store properties change
     useEffect(() => {
         if (isOpened) {
+
+            const recChanged = JSON.stringify(state.recSettings) !== JSON.stringify(lastRecSettingsRef.current)
+            const datasetChanged = state.datasetId !== lastDatasetIdRef.current
+
+            const shouldShowLoading = recChanged || datasetChanged
+
             const computeRecommendations = async () => {
-                setLoading(true) //Start loading animation
-                const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.datasetId);
-                setRecList(newRecList);
-                setLoading(false) //stops loading animation
+                if (shouldShowLoading) setLoading(true)
+                const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.datasetId)
+                setRecList(newRecList)
+                if (shouldShowLoading) setLoading(false)
+
+                lastRecSettingsRef.current = state.recSettings
+                lastDatasetIdRef.current = state.datasetId
 
             };
 
 
             computeRecommendations().catch(err => {
                 console.error(err)
-                setLoading(false) //Ensure loading ends on error
-              })
+            })
         }
-    }, [isOpened, state.vizParam, state.recSettings, state.datasetId]);
+    }, [isOpened,state.vizParam]);
+
 
     return (
         <>
