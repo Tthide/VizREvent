@@ -24,13 +24,9 @@ def get_draco_dataframe(preprocessed_data):
     with open("debug/preprocessed_dataset.json", "w") as outfile:
         outfile.write(json_dump)"""
 
-    #checking if the data is indeed preprocessed or not
-    if not is_preprocessed(preprocessed_data):
-        preprocessed_data=preprocess_events(preprocessed_data)
+
+    #preprocessed_data=preprocess_events(preprocessed_data)
     
-    #Removing the payloads before formatting data to pandas dataframe
-    for event in preprocessed_data:
-        event.pop("payload")
         
     #Creating the dataframe from the preprocessed json
     df = pd.json_normalize(preprocessed_data)

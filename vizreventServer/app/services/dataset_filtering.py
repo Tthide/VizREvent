@@ -34,10 +34,10 @@ def preprocess_events(events: list[dict],
                     new_ev[k] = v['name']
                 else:
                     new_ev[k] = v
-            else:
-                payload[k] = v
+            #else:
+                #payload[k] = v
 
-        new_ev['payload'] = payload
+        #new_ev['payload'] = payload
         transformed.append(new_ev)
 
     return transformed
