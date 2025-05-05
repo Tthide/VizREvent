@@ -1,4 +1,4 @@
-import React, { useEffect,useRef, useState } from 'react'
+import React, { useEffect,useRef,useCallback, useState } from 'react'
 import RECView from './RECView'
 import { useStoreSelector } from '../Store/VizreventStore';
 import { DracoRecRequest } from './DracoUtils';
@@ -25,7 +25,7 @@ const RECController = () => {
     const lastDatasetIdRef = useRef(null)
 
     //function that actually computes the recommendation
-    const recCompute = async (recList, vizParam, recSettings, dataset) => {
+    const recCompute = useCallback(async (recList, vizParam, recSettings, dataset) => {
 
 
         try {
@@ -55,7 +55,7 @@ const RECController = () => {
         /* recommendation provided in the past could influence futur recommendation here (be mindfull of infinite recursive loops)
         const newRecSettings="";
         dispatch.setRecSettings(newRecSettings)*/
-    }
+    }, [state.datasetId]);
 
     ///////Event Handlers
 
@@ -103,6 +103,7 @@ const RECController = () => {
                 console.error(err)
             })
         }
+    // eslint-disable-next-line
     }, [isOpened,state.vizParam]);
 
 
