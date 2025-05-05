@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import VPView from './VPView'
 import { useStoreSelector } from '../Store/VizreventStore';
 import { v4 as uuidv4 } from 'uuid';
+import { DatasetFetcher } from '../DataSettings/DatasetUtils';
+
 
 
 const VPController = () => {
@@ -16,13 +18,14 @@ const VPController = () => {
 
     //Creating local state 
     const [vizList, setVizList] = useState([]);
+    const [data, setData] = useState([]);
 
     //create a Viz and automatically selects it
     const createViz = useCallback((vizQuery = null) => {
         if (state.datasetId) {
             const newViz = {
                 id: uuidv4(),
-                vizQuery: vizQuery
+                vizQuery: vizQuery? vizQuery.spec : null
             };
             setVizList(preVizList => [...preVizList, newViz]);
             dispatch.setVizParam(newViz.vizQuery);
@@ -106,6 +109,30 @@ const VPController = () => {
 
     }, [state.vizParam]);
 
+
+    //fetching the data on creation (if not already passed by parent component)
+    //only for non RecViz
+    useEffect(() => {
+
+
+        if (state.datasetId) {
+            const fetchData = async () => {
+                try {
+                    const result = await DatasetFetcher(state.datasetId);
+                    console.log("Viz/Data Fetched");
+
+                    setData({ "dataset": [{ ...result }] });
+                } catch (err) {
+                    console.error('Error fetching dataset:', err);
+                }
+            };
+
+
+            fetchData();
+        }
+
+    }, [state.datasetId]);
+
     return (
         <>
             <VPView
@@ -114,9 +141,12 @@ const VPController = () => {
                 onVizSelect={handleVizSelect}
                 onVizCreate={handleEmptyVizCreate}
                 onVizDelete={handleVizDelete}
+                data={data}
             />
 
             <pre>VPControllerPseudoState:{JSON.stringify({ state, vizList }, null, 2)}</pre>
+            <pre>local state:{JSON.stringify({ vizList, data }, null, 2)}</pre>
+
         </>
     )
 }

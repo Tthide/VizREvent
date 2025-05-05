@@ -2,7 +2,7 @@ import React from 'react';
 import Viz from '../Viz/Viz';
 
 const VPView = (props) => {
-  const { vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete } = props;
+  const { vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, data } = props;
 
 
   const handleVizCreateClick = () => {
@@ -47,13 +47,13 @@ const VPView = (props) => {
         <h3>Visualizations:</h3>
 
 
-        {vizList.map((viz, index) => (
+        {vizList.map((viz) => (
           <div key={viz.id} onClick={handleVizSelect(viz)}>
             <Viz
               key={viz.id}
-              vizQuery={viz.vizQuery}
+              spec={viz.vizQuery}
               isSelected={vizSelected && vizSelected.id === viz.id}
-
+              data={data}
             />
           </div>
         ))}
