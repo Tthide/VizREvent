@@ -24,6 +24,18 @@ const RECController = () => {
     const lastRecSettingsRef = useRef(null)
     const lastDatasetIdRef = useRef(null)
 
+    //to be able to use react-vega, we need to format the chart specs given by draco
+    function splitVegaLiteSpec(chartRecItem) {
+        const { datasets, ...specWithoutData } = chartRecItem;
+    
+        // Rename 'datasets' to 'data'
+        const data = datasets;
+        return {
+            spec: { ...specWithoutData },
+            data
+        };
+    }
+
     //function that actually computes the recommendation
     const recCompute = useCallback(async (recList, vizParam, recSettings, dataset) => {
 
@@ -40,7 +52,7 @@ const RECController = () => {
 
                 return {
                     id: uuidv4(),
-                    vizQuery: JSON.parse(item)
+                    vizQuery: splitVegaLiteSpec(JSON.parse(item))
                     // You can use solutionSet to update the vizQuery or other properties
                 }
             });
