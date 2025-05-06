@@ -121,7 +121,7 @@ const VPController = () => {
                     const result = await DatasetFetcher(state.datasetId);
                     console.log("Viz/Data Fetched");
 
-                    setData({ "dataset": [{ ...result }] });
+                    setData({ "dataset": [ ...result ] });
                 } catch (err) {
                     console.error('Error fetching dataset:', err);
                 }

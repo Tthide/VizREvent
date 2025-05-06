@@ -44,18 +44,19 @@ def preprocess_events(events: list[dict],
 
 
 def split_vega_lite_spec(chart_rec_item_json):
-    # Parse the JSON string into a dictionary
     chart_rec_item = json.loads(chart_rec_item_json)
 
-    # Extract datasets and the rest of the spec
     datasets = chart_rec_item.get("datasets", {})
+    data_ref = chart_rec_item.get("data", {})
+    original_name = data_ref.get("name")
     spec_without_data = {k: v for k, v in chart_rec_item.items() if k != "datasets"}
 
-    # Rename the dynamic dataset key to 'dataset'
-    data = {}
-    for key in datasets:
-        data["dataset"] = datasets[key]
-        break  # Assuming only one dataset
+    # Expecting only one dataset key
+    if len(datasets) != 1:
+        raise ValueError("Expected exactly one dataset in 'datasets'")
+
+    # Extract the nested dictionary from the datasets
+    dataset_values = datasets[original_name]
 
     # Update the spec to refer to the renamed dataset
     spec_without_data["data"] = {
@@ -64,9 +65,10 @@ def split_vega_lite_spec(chart_rec_item_json):
 
     return {
         "spec": spec_without_data,
-        "data": data
+        "data": {
+            "dataset": dataset_values
+        }
     }
-
 
 
 def is_preprocessed(data: list[dict[str, any]], config_path: str = DEFAULT_CONF) -> bool:
