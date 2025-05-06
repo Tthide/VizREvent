@@ -28,7 +28,7 @@ const VPController = () => {
                 vizQuery: vizQuery? vizQuery.spec : null
             };
             setVizList(preVizList => [...preVizList, newViz]);
-            dispatch.setVizParam(newViz.vizQuery);
+            dispatch.setRecSettings(newViz.vizQuery);
             dispatch.setSelectedViz(newViz);
             dispatch.setInputViz(null);
         } else {
@@ -64,7 +64,7 @@ const VPController = () => {
         //Resetting these properties since the selected viz doesn't exist anymore
         dispatch.setSelectedViz(null);
         dispatch.setInputViz(null);
-        dispatch.setVizParam(null);
+        dispatch.setRecSettings(null);
     };
 
     //Takes selected viz and dispatch its properties to store
@@ -78,11 +78,11 @@ const VPController = () => {
 
         //deselecting current selectedViz by clicking on it again
         if (state.selectedViz && vizSelected === state.selectedViz) {
-            dispatch.setVizParam(null);
+            dispatch.setRecSettings(null);
             dispatch.setSelectedViz(null);
         }
         else {
-            dispatch.setVizParam(vizSelected.vizQuery);
+            dispatch.setRecSettings(vizSelected.vizQuery);
             dispatch.setSelectedViz(vizSelected);
         }
     };
