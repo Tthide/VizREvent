@@ -60,20 +60,23 @@ const RECController = () => {
         }
     };
 
-    /*Dispatch selected recommendation to store for creation in VP, dispatch item's vizParam for display in DS
-    and dispatch new recSettings to recommend related view of current selected Viz*/
+    /*Dispatch selected recommendation to store for creation in VP, dispatch item's vizParam for display in DS*/
     const handleRecSelection = (recVizSelect) => {
         dispatch.setInputViz(recVizSelect);
         dispatch.setVizParam(recVizSelect.vizQuery);
     }
 
     useEffect(() => {
+        //we compute the recommendation only if the panel is opened.
         if (isOpened) {
+
+            //checking if the recSettings (or more unlikely the dataset) changed or not from last opening or rerenders
             const recChanged = JSON.stringify(state.recSettings) !== JSON.stringify(lastRecSettingsRef.current);
             const datasetChanged = state.datasetId !== lastDatasetIdRef.current;
     
             const shouldCompute = recChanged || datasetChanged;
     
+            //computing only if there was a change
             if (shouldCompute) {
 
                 console.log("Is computing draco")
