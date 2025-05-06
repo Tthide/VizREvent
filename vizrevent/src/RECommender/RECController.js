@@ -27,8 +27,6 @@ const RECController = () => {
 
     //function that actually computes the recommendation
     const recCompute = useCallback(async (recList, vizParam, recSettings, dataset) => {
-
-
         try {
             // Call DracoRecProcess with the dataset
             const solutionSet = await DracoRecRequest(state.datasetId)
@@ -40,11 +38,8 @@ const RECController = () => {
                     vizQuery: item
                 }
             });
-
             return newRecList;
-
         } catch (error) {
-
             console.error('Error computing recommendations:', error);
             return recList; // Return the original recList in case of error
         }
@@ -73,34 +68,36 @@ const RECController = () => {
         dispatch.setRecSettings(recVizSelect);
     }
 
-    // We only compute the recommendation when the panel is opened to save up on some performance
-    // Use useEffect to update recList when store properties change
     useEffect(() => {
         if (isOpened) {
+            const recChanged = JSON.stringify(state.recSettings) !== JSON.stringify(lastRecSettingsRef.current);
+            const datasetChanged = state.datasetId !== lastDatasetIdRef.current;
+    
+            const shouldCompute = recChanged || datasetChanged;
+    
+            if (shouldCompute) {
 
-            const recChanged = JSON.stringify(state.recSettings) !== JSON.stringify(lastRecSettingsRef.current)
-            const datasetChanged = state.datasetId !== lastDatasetIdRef.current
-
-            const shouldShowLoading = recChanged || datasetChanged
-
-            const computeRecommendations = async () => {
-                if (shouldShowLoading) setLoading(true)
-                const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.datasetId)
-                setRecList(newRecList)
-                if (shouldShowLoading) setLoading(false)
-
-                lastRecSettingsRef.current = state.recSettings
-                lastDatasetIdRef.current = state.datasetId
-
-            };
-
-
-            computeRecommendations().catch(err => {
-                console.error(err)
-            })
+                console.log("Is computing draco")
+                const computeRecommendations = async () => {
+                    setLoading(true);
+                    try {
+                        const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.datasetId);
+                        setRecList(newRecList);
+                    } catch (err) {
+                        console.error(err);
+                    } finally {
+                        setLoading(false);
+                    }
+    
+                    lastRecSettingsRef.current = state.recSettings;
+                    lastDatasetIdRef.current = state.datasetId;
+                };
+    
+                computeRecommendations();
+            }
         }
         // eslint-disable-next-line
-    }, [isOpened, state.vizParam]);
+    }, [isOpened, state.recSettings, state.datasetId]);
 
 
     return (
