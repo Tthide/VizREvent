@@ -1,23 +1,16 @@
 import React from 'react';
 import { VegaLite } from 'react-vega';
 
-const Viz = ({ spec, isSelected, data }) => {
+const Viz = ({ spec, data }) => {
     //Since Draco gives us direct visualizations specs, we handle the RecViz cases a bit differently
 
+    console.log("In Viz");
     console.log("Viz/spec:", spec);
     console.log("Viz/data:", data);
 
 
     return (
-        <div
-            style={{
-                backgroundColor: isSelected ? 'blue' : 'white',
-                color: isSelected ? 'white' : 'black',
-                padding: '10px',
-                border: '1px solid black',
-                cursor: 'pointer',
-            }}
-        >
+        <>
             {
                 spec ? (
                     <VegaLite data={data} spec={spec} />
@@ -27,7 +20,8 @@ const Viz = ({ spec, isSelected, data }) => {
                     </div>
                 )
             }
-        </div>
+    
+        </>
     );
 };
 
