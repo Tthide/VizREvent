@@ -65,7 +65,6 @@ const RECController = () => {
     const handleRecSelection = (recVizSelect) => {
         dispatch.setInputViz(recVizSelect);
         dispatch.setVizParam(recVizSelect.vizQuery);
-        dispatch.setRecSettings(recVizSelect);
     }
 
     useEffect(() => {
