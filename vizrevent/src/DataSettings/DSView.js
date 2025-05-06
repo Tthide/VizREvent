@@ -69,4 +69,4 @@ const DSView = (props) => {
     );
 };
 
-export default DSView;
+export default React.memo(DSView);

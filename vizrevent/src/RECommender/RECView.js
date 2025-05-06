@@ -48,4 +48,4 @@ const RECView = (props) => {
     </div>
   );
 };
-export default RECView;
+export default React.memo(RECView);

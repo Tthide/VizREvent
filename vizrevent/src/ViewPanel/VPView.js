@@ -64,4 +64,4 @@ const VPView = (props) => {
   );
 };
 
-export default VPView;
+export default React.memo(VPView);
