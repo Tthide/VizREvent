@@ -32,7 +32,7 @@ const VPView = (props) => {
     <div style={{ backgroundColor: 'gray', padding: '20px' }}>
       <h2>VPView</h2>
       <button onClick={handleVizCreateClick}>Create Visualization</button>
-      {vizSelected && vizSelected !== null && (
+      {vizSelected && (
         <button onClick={handleVizDelete}>
           Delete Selected Visualization
         </button>
