@@ -10,7 +10,6 @@ const RECController = () => {
 
     //connecting to store
     const { state, dispatch } = useStoreSelector(state => ({
-        vizParam: state.vizParam,
         recSettings: state.recSettings,
         datasetId: state.datasetId,
     }));
@@ -26,7 +25,7 @@ const RECController = () => {
 
 
     //function that actually computes the recommendation
-    const recCompute = useCallback(async (recList, vizParam, recSettings, dataset) => {
+    const recCompute = useCallback(async (recList, recSettings, dataset) => {
         try {
             // Call DracoRecProcess with the dataset
             const solutionSet = await DracoRecRequest(state.datasetId)
@@ -60,10 +59,9 @@ const RECController = () => {
         }
     };
 
-    /*Dispatch selected recommendation to store for creation in VP, dispatch item's vizParam for display in DS*/
+    /*Dispatch selected recommendation to store for creation in VP*/
     const handleRecSelection = (recVizSelect) => {
         dispatch.setInputViz(recVizSelect);
-        dispatch.setVizParam(recVizSelect.vizQuery);
     }
 
     useEffect(() => {
@@ -83,7 +81,7 @@ const RECController = () => {
                 const computeRecommendations = async () => {
                     setLoading(true);
                     try {
-                        const newRecList = await recCompute(recList, state.vizParam, state.recSettings, state.datasetId);
+                        const newRecList = await recCompute(recList, state.recSettings, state.datasetId);
                         setRecList(newRecList);
                     } catch (err) {
                         console.error(err);
