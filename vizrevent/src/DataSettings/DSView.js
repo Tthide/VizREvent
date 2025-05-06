@@ -4,7 +4,7 @@ import DataFieldSelection from './DataFieldSelection/DataFieldSelection.js';
 
 const DSView = (props) => {
 
-    const { hasSelectedViz, datasetList, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
+    const { hasSelectedViz, datasetList,dataFields,selectedFields, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
     // State to manage the visibility of the DatasetSelection component
     const [isDatasetSelectionOpen, setIsDatasetSelectionOpen] = useState(false);
 
@@ -19,17 +19,8 @@ const DSView = (props) => {
         onDatasetChange(datasetId);
     };
 
-    const handleDataFieldSelect = () => {
-        // List of data field selected to be passed to DSController
-        // Example datafields input
-        const exampleDatafields = {
-            mark: "arc",
-            encoding: {
-                theta: { field: "b", type: "quantitative" },
-                color: { field: "a", type: "nominal", title: "Category" }
-            }
-        };
-        onDatafieldSelect(exampleDatafields);
+    const handleDataFieldSelect = (dataField) => {
+        onDatafieldSelect(dataField);
     };
 
     const handleVizEncoderSelect = () => {
@@ -55,7 +46,7 @@ const DSView = (props) => {
             )}
 
             {/* only displayed when selectedViz !== null */}
-            <DataFieldSelection></DataFieldSelection>
+            <DataFieldSelection dataFields={dataFields} selectedFields={selectedFields} handleCheckboxChange={handleDataFieldSelect} hasSelectedViz={hasSelectedViz}></DataFieldSelection>
 
             {//we only display the settings inputs if a viz has been selected
                 hasSelectedViz ?
