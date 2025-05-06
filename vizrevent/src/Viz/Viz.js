@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
-import { useStoreSelector } from '../Store/VizreventStore';
+import React from 'react';
 import { VegaLite } from 'react-vega';
-import { DatasetFetcher } from '../DataSettings/DatasetUtils';
 
 const Viz = ({ spec, isSelected, data }) => {
     //Since Draco gives us direct visualizations specs, we handle the RecViz cases a bit differently
