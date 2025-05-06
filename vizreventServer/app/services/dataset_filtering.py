@@ -1,7 +1,6 @@
 import os
 import json
-import pandas as pd
-import numpy as np
+
 
 # Compute the default config path once, relative to this script’s location
 SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +40,33 @@ def preprocess_events(events: list[dict],
         transformed.append(new_ev)
 
     return transformed
+
+
+
+def split_vega_lite_spec(chart_rec_item_json):
+    # Parse the JSON string into a dictionary
+    chart_rec_item = json.loads(chart_rec_item_json)
+
+    # Extract datasets and the rest of the spec
+    datasets = chart_rec_item.get("datasets", {})
+    spec_without_data = {k: v for k, v in chart_rec_item.items() if k != "datasets"}
+
+    # Rename the dynamic dataset key to 'dataset'
+    data = {}
+    for key in datasets:
+        data["dataset"] = datasets[key]
+        break  # Assuming only one dataset
+
+    # Update the spec to refer to the renamed dataset
+    spec_without_data["data"] = {
+        "name": "dataset"
+    }
+
+    return {
+        "spec": spec_without_data,
+        "data": data
+    }
+
 
 
 def is_preprocessed(data: list[dict[str, any]], config_path: str = DEFAULT_CONF) -> bool:

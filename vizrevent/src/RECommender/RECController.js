@@ -24,29 +24,6 @@ const RECController = () => {
     const lastRecSettingsRef = useRef(null)
     const lastDatasetIdRef = useRef(null)
 
-    //to be able to use react-vega, we need to format the chart specs given by draco
-    function splitVegaLiteSpec(chartRecItem) {
-        const { datasets ,...specWithoutData } = chartRecItem;
-
-        // Rename the dynamic key to 'current-dataset'
-        //this is done to uniformise the name of the data property that will later be passed to Vega-lite
-        const data = {};
-        for (const key in datasets) {
-            if (datasets.hasOwnProperty(key)) {
-                data['dataset'] = datasets[key];
-                break; // Assuming there's only one dataset, exit the loop after renaming
-            }
-        }
-        //also updating the specs pointer to the new name
-        specWithoutData.data={
-            "name": "dataset"
-          };
-
-        return {
-            spec: { ...specWithoutData },
-            data
-        };
-    }
 
     //function that actually computes the recommendation
     const recCompute = useCallback(async (recList, vizParam, recSettings, dataset) => {
@@ -58,14 +35,9 @@ const RECController = () => {
 
             // Update recList based on the solutionSet
             const newRecList = solutionSet.map(item => {
-                //the draco spec output doesn't the contain the dataset input in the prepareData, therefore we have to update this here
-                //And because Draco and Vega-Lite require different data property format, we also change it to fit Vega-Lite
-
-
                 return {
                     id: uuidv4(),
-                    vizQuery: splitVegaLiteSpec(JSON.parse(item))
-                    // You can use solutionSet to update the vizQuery or other properties
+                    vizQuery: item
                 }
             });
 

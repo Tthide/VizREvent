@@ -1,11 +1,9 @@
-import json
 import draco
 import pandas as pd
-import numpy as np
 from draco.renderer import AltairRenderer
 import altair as alt
-from .dataset_filtering import is_preprocessed,preprocess_events
-from .temp_file_management import create_temp_file
+from .dataset_filtering import split_vega_lite_spec,is_preprocessed,preprocess_events
+#from .temp_file_management import create_temp_file
 
 
 def get_draco_dataframe(preprocessed_data):
@@ -117,8 +115,9 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
             chart_vega_lite = renderer.render(spec=schema, data=draco_data)
             #chart_specs[chart_name] = draco.dict_to_facts(schema), schema
             
-            #converting the altair object to json for export to frontend
-            chart_specs.append(chart_vega_lite.to_json())
+            #converting the altair object to json and formatting it for export to frontend
+            chart_vega_lite_json=split_vega_lite_spec(chart_vega_lite.to_json())
+            chart_specs.append(chart_vega_lite_json)
             
             #Debug, write into json file to test vega lite specs
             if(Debug):
