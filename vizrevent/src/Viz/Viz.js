@@ -4,9 +4,9 @@ import { VegaLite } from 'react-vega';
 const Viz = ({ spec, data }) => {
     //Since Draco gives us direct visualizations specs, we handle the RecViz cases a bit differently
 
-    console.log("In Viz");
+    /*console.log("In Viz");
     console.log("Viz/spec:", spec);
-    console.log("Viz/data:", data);
+    console.log("Viz/data:", data);*/
 
 
     return (

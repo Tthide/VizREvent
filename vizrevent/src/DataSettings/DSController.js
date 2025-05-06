@@ -72,10 +72,6 @@ const DSController = () => {
             });
             setSelectedFields(newSelectedFields);
 
-
-            console.log("DS/extractFieldsFromSpec Input", state.selectedViz.vizQuery);
-
-            console.log("DS/extractFieldsFromSpec Output", extractFieldsFromSpec(state.selectedViz.vizQuery));
         }
     }, [state.selectedViz]);
 

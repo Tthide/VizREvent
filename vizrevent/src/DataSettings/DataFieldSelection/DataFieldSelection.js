@@ -26,7 +26,6 @@ const DataFieldSelection = ({dataFields,selectedFields,handleCheckboxChange,hasS
                     <p>Loading data fields...</p>
                 )}
             </div>
-            <pre>Selected Fields: {JSON.stringify(selectedFields)}</pre>
         </>
     );
 };
