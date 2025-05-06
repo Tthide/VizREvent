@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DSView from './DSView'
 import { useStoreSelector } from '../Store/VizreventStore';
 import { DatasetListFetcher, DatafieldsList } from './DatasetUtils';
+import { extractFieldsFromSpec } from './DataFieldSelection/DataFieldUtils';
 
 
 const DSController = () => {
@@ -40,7 +41,7 @@ const DSController = () => {
 
     //fetching the dataFields only when the dataset changes
     useEffect(() => {
-        const getFieldList = async (datasetId) => {
+        const getFieldList = async () => {
             try {
                 if (state.datasetId) {
                     console.log('Fetching data fields...');
@@ -59,7 +60,23 @@ const DSController = () => {
 
     //Updating the selectedFields in accordance with the selectedViz
     useEffect(() => {
+        if (state.selectedViz && dataFields) {
 
+            //getting list of field names used in current viz
+            const vizCurrentFields = extractFieldsFromSpec(state.selectedViz.vizQuery);
+
+            //adding all data fields to local state selectedFields
+            var newSelectedFields = [];
+            dataFields.forEach(field => {
+                if (vizCurrentFields.includes(field.name)) { newSelectedFields.push(field); }
+            });
+            setSelectedFields(newSelectedFields);
+
+
+            console.log("DS/extractFieldsFromSpec Input", state.selectedViz.vizQuery);
+
+            console.log("DS/extractFieldsFromSpec Output", extractFieldsFromSpec(state.selectedViz.vizQuery));
+        }
     }, [state.selectedViz]);
 
     const handleDatafieldSelect = (field) => {
@@ -70,22 +87,6 @@ const DSController = () => {
                 return [...prevSelectedFields, field];
             }
         });
-    };
-
-
-    //Convert selected Datafields to new vizParam and recSettings value
-    const test = (datafields) => {
-
-        //Selected Datafields needs to be converted to new vizParam and recSettings value
-        //Placeholder exemple value
-        const newVizParam = datafields;
-
-        const newRecSettings = datafields;
-
-        /* New vizParam and recSettings will be computed here */
-
-        dispatch.setVizParam(newVizParam);
-        dispatch.setRecSettings(newRecSettings);
     };
 
     //Convert selected Visualization Encoder to new vizParam and recSettings value
