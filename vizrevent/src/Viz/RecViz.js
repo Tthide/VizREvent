@@ -20,4 +20,4 @@ const RecViz = (props) => {
     )
 }
 
-export default RecViz;
+export default React.memo(RecViz);
