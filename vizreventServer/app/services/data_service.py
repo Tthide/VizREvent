@@ -2,8 +2,8 @@ import os
 import json
 from .temp_file_management import create_temp_file,create_temp_data_schema
 import glob
-import csv
 from .draco_service import get_draco_schema,get_draco_dataframe
+import time
 
 def get_data(dataset_name):
     
@@ -13,6 +13,11 @@ def get_data(dataset_name):
     
     #checking whether the temp dataset already exist
     file_path = create_temp_file(dataset_name)
+    
+    # Wait for the file to be written
+    while not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
+        time.sleep(0.1)  # Wait for a short period before checking again
+        
     with open(file_path, 'r') as file:
         data = json.load(file)
         print("data_service/get_data" + str(file.name))
@@ -48,8 +53,13 @@ def get_data_fields(dataset_name,file_path="./data/events/temps/draco_dataframe.
     schema_data = get_draco_schema(draco_data)
     file_path=create_temp_data_schema(schema_data)
     
+        # Wait for the file to be written
+    while not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
+        time.sleep(0.1)  # Wait for a short period before checking again
+    
     with open(file_path, 'r') as file:
         output_schema = json.load(file)
+    
     return output_schema
 
 def write_into_temp_dataset(payload: str):

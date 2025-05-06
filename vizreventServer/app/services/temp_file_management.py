@@ -31,7 +31,7 @@ def create_temp_file(dataset_name):
     # Creating temp file if doesn't already exists
     if not os.path.exists(temp_file_path):
         # Clean other temporary files
-        clean_temp_files(temp_folder_path)
+        #clean_temp_files(temp_folder_path)
         
         # Create a temporary file
         if os.path.exists(original_file_path):
