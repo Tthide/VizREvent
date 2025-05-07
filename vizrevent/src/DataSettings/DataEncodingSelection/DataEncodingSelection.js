@@ -20,7 +20,7 @@ const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelect
     const [mark, setMark] = useState(null);
     const [xField, setXField] = useState({});
     const [yField, setYField] = useState({});
-    const [encodingProperties, setEncodingProperties] = useState([{ channel: '', field: '' }]);
+    const [encodingProperties, setEncodingProperties] = useState([]);
 
     //Draco and Vega-lite don't exactly use the same type format for their data, thus we need to convert it
     function convertTypeFormat(measurementType) {
@@ -63,11 +63,14 @@ const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelect
             //here could add additional properties like aggregate or others
             encodingProperties.forEach(property => {
                 if (Object.keys(property).length > 0) {
-                    newSpec.encoding[property.channel] = {"field":property.field};
+                    newSpec.encoding[property.channel] = { "field": property.field };
                 }
             });
         }
         console.log("newSpec:", newSpec)
+
+        //to make sure that, on first renders and afterward, only possible specs are sent to the controller
+        if (Object.keys(selectedFields).length > 0) { handleEncodingChange(newSpec); }
     }, [mark, xField, yField, encodingProperties]);
 
     const handleSelectChange = (type, value) => {
