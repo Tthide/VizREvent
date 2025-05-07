@@ -73,6 +73,12 @@ const DSController = () => {
             setSelectedFields(newSelectedFields);
 
         }
+        //resetting the local state when deselecting a viz component
+        else if (!state.selectedViz){
+            setSelectedFields([]);
+        }
+
+
     }, [state.selectedViz]);
 
     const handleDatafieldSelect = (field) => {

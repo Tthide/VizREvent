@@ -32,6 +32,22 @@ const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelect
 
         return typeMapping[measurementType] || "unknown";
     }
+
+    //if no fields are selected, we reset the state
+    useEffect(() => {
+        if(selectedFields.length===0){
+            setMark(null);
+            setXField({});
+            setYField({});
+            setEncodingProperties([{}]);
+    
+        }
+    }, [selectedFields])
+    
+
+
+
+
     //dispatching new selected properties on update
     useEffect(() => {
 
@@ -72,6 +88,7 @@ const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelect
         //to make sure that, on first renders and afterward, only possible specs are sent to the controller
         if (Object.keys(selectedFields).length > 0) { handleEncodingChange(newSpec); }
     }, [mark, xField, yField, encodingProperties]);
+    
 
     const handleSelectChange = (type, value) => {
         const selectedField = selectedFields.find(f => f.name === value);
