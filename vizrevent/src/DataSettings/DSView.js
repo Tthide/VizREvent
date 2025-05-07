@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import DatasetSelection from './DatasetSelection/DatasetSelection.js';
 import DataFieldSelection from './DataFieldSelection/DataFieldSelection.js';
+import DataEncodingSelection from './DataEncodingSelection/DataEncodingSelection.js';
 
 const DSView = (props) => {
 
-    const { hasSelectedViz, datasetList,dataFields,selectedFields, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
+    const { hasSelectedViz, datasetList, dataFields, selectedFields, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
     // State to manage the visibility of the DatasetSelection component
     const [isDatasetSelectionOpen, setIsDatasetSelectionOpen] = useState(false);
 
@@ -23,18 +24,9 @@ const DSView = (props) => {
         onDatafieldSelect(dataField);
     };
 
-    const handleVizEncoderSelect = () => {
-        // List of data field selected to be passed to DSController
-        // Example encoder input
-        const exampleEncoder = {
-            mark: "bar",
-            encoding: {
-                x: { field: "a", type: "nominal", axis: { title: "Category" } },
-                y: { field: "b", type: "quantitative", axis: { title: "Value" }, stack: "zero" },
-                color: { field: "a", type: "nominal", title: "Category" }
-            }
-        };
-        onEncoderSelect(exampleEncoder);
+    const handleVizEncoderSelect = (encodings) => {
+
+        onEncoderSelect(encodings);
     };
 
     return (
@@ -46,17 +38,25 @@ const DSView = (props) => {
             )}
 
             {/* only displayed when selectedViz !== null */}
-            <DataFieldSelection dataFields={dataFields} selectedFields={selectedFields} handleCheckboxChange={handleDataFieldSelect} hasSelectedViz={hasSelectedViz}></DataFieldSelection>
-
+            <DataFieldSelection 
+            dataFields={dataFields} 
+            selectedFields={selectedFields} 
+            handleCheckboxChange={handleDataFieldSelect} 
+            hasSelectedViz={hasSelectedViz}/>
+            <DataEncodingSelection 
+            selectedFields={selectedFields} 
+            handleEncodingChange={handleVizEncoderSelect} 
+            hasSelectedViz={hasSelectedViz}/>
             {//we only display the settings inputs if a viz has been selected
-                hasSelectedViz ?
+                hasSelectedViz?
                     <>
-                        <button onClick={handleDataFieldSelect}>Change DataField</button>
+                        < button onClick = { handleDataFieldSelect } > Change DataField</button >
 
-                        <button onClick={handleVizEncoderSelect}>Change VizEncoder</button></> : <>
-                    </>}
+        <button onClick={handleVizEncoderSelect}>Change VizEncoder</button></> : <>
+        </>
+}
 
-        </div>
+        </div >
     );
 };
 

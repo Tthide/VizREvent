@@ -76,6 +76,8 @@ const DSController = () => {
     }, [state.selectedViz]);
 
     const handleDatafieldSelect = (field) => {
+        //this function will only be called by UI interaction that are displayed when a viz is selected
+
         setSelectedFields(prevSelectedFields => {
             if (prevSelectedFields.includes(field)) {
                 return prevSelectedFields.filter(f => f !== field);
@@ -83,11 +85,24 @@ const DSController = () => {
                 return [...prevSelectedFields, field];
             }
         });
+
+        //use case new empty viz created
+        if (state.selectedViz.vizQuery===null) {
+            const newSpec =   {"$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+            "config": {"view": {"continuousHeight": 300, "continuousWidth": 300}},
+            "data": {"name": "dataset"},"encoding": {},  "mark": {},
+        };
+            
+        }
+        //modifying existing or partial viz
+        else {
+            const newSpec = state.selectedViz;
+
+        }
     };
 
     //Convert selected Visualization Encoder to new vizParam and recSettings value
     const handleEncoderSelect = (vizEncoder) => {
-        dispatch.setVizParam(vizEncoder);
         dispatch.setRecSettings(vizEncoder);
     };
 
