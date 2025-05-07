@@ -20,7 +20,7 @@ const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelect
     const [mark, setMark] = useState(null);
     const [xField, setXField] = useState({});
     const [yField, setYField] = useState({});
-    const [encodingProperties, setEncodingProperties] = useState([]);
+    const [encodingProperties, setEncodingProperties] = useState([{}]);
 
     //Draco and Vega-lite don't exactly use the same type format for their data, thus we need to convert it
     function convertTypeFormat(measurementType) {
