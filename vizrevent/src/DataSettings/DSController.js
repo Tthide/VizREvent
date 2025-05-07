@@ -94,7 +94,7 @@ const DSController = () => {
 
     };
 
-    //Convert selected Visualization Encoder to new vizParam and recSettings value
+    //Convert selected Visualization Encoder to new vizParam value
     const handleEncoderSelect = (vizEncoder) => {
 
         const defaultSpec = {
@@ -105,9 +105,9 @@ const DSController = () => {
 
         const newSpec = { ...defaultSpec, ...vizEncoder };
 
-        dispatch.setRecSettings(newSpec);
-        dispatch.setVizParam(newSpec);
 
+        //We only dispatch to vizParam because it triggers rerender in VP and this will call for a draco update on its own.
+        dispatch.setVizParam(newSpec);
     };
 
 
