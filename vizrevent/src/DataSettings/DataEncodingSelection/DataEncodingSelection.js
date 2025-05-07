@@ -41,6 +41,9 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
             setYField({});
             setEncodingProperties([{}]);
 
+            //we also reset vizParam
+            buildAndDispatch(mark, xField, selectedFields, encodingProperties);
+
         }
     }, [selectedFields])
 
@@ -84,7 +87,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
         });
         // always keep an empty row for new property
         setEncodingProperties([...otherProps, {}]);
-    }, [currentSpec]);
+    }, [currentSpec,selectedFields]);
 
 
   // Helper to build and dispatch spec
