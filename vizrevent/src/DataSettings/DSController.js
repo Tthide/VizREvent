@@ -74,7 +74,7 @@ const DSController = () => {
 
         }
         //resetting the local state when deselecting a viz component
-        else if (!state.selectedViz){
+        else if (!state.selectedViz) {
             setSelectedFields([]);
         }
 
@@ -97,12 +97,13 @@ const DSController = () => {
     //Convert selected Visualization Encoder to new vizParam and recSettings value
     const handleEncoderSelect = (vizEncoder) => {
 
-        const defaultSpec=   {"$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
-            "config": {"view": {"continuousHeight": 300, "continuousWidth": 300}},
-            "data": {"name": "dataset"}
+        const defaultSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
+            "config": { "view": { "continuousHeight": 300, "continuousWidth": 300 } },
+            "data": { "name": "dataset" }
         };
 
-        const newSpec={...defaultSpec,...vizEncoder};
+        const newSpec = { ...defaultSpec, ...vizEncoder };
 
         dispatch.setRecSettings(newSpec);
         dispatch.setVizParam(newSpec);
@@ -117,6 +118,7 @@ const DSController = () => {
                 datasetList={datasetList}
                 dataFields={dataFields}
                 selectedFields={selectedFields}
+                currentSpec={state.selectedViz !== null ? state.selectedViz.vizQuery : {}}
                 onDatasetChange={handleDatasetSelect}
                 onDatafieldSelect={handleDatafieldSelect}
                 onEncoderSelect={handleEncoderSelect} />

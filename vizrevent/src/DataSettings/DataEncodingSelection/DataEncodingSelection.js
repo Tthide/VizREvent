@@ -16,7 +16,7 @@ const PROPERTY_CHANNELS = [
     'color', 'opacity', 'fillOpacity', 'size', 'angle', 'shape', 'facet'
 ];
 
-const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelectedViz }) => {
+const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChange, hasSelectedViz }) => {
     const [mark, setMark] = useState(null);
     const [xField, setXField] = useState({});
     const [yField, setYField] = useState({});
@@ -35,87 +35,101 @@ const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelect
 
     //if no fields are selected, we reset the state
     useEffect(() => {
-        if(selectedFields.length===0){
+        if (selectedFields.length === 0) {
             setMark(null);
             setXField({});
             setYField({});
             setEncodingProperties([{}]);
-    
+
         }
     }, [selectedFields])
-    
 
-
-
-
-    //dispatching new selected properties on update
+    // parse incoming currentSpec to update local state
     useEffect(() => {
+        if (!currentSpec || !currentSpec.encoding) return;
 
-        //building the spec 
-        let newSpec = {
-            "mark": {},
-            "encoding": {}
-        };
-        if (mark) {
-            newSpec.mark = mark
+        // mark
+        if (currentSpec.mark) {
+            setMark(currentSpec.mark);
+        } else {
+            setMark(null);
         }
-        if (Object.keys(xField).length > 0) {
-            //here could add additional properties like aggregate or others
-            const xType = convertTypeFormat(xField.type)
-            newSpec.encoding["x"] = {
-                "field": xField.name,
-                "type": xType
+
+        // encoding.x
+        const enc = currentSpec.encoding;
+        if (enc.x) {
+            const name = enc.x.field;
+            const fieldObj = selectedFields.find(f => f.name === name) || { name, type: 'unknown' };
+            setXField(fieldObj);
+        } else {
+            setXField({});
+        }
+
+        // encoding.y
+        if (enc.y) {
+            const name = enc.y.field;
+            const fieldObj = selectedFields.find(f => f.name === name) || { name, type: 'unknown' };
+            setYField(fieldObj);
+        } else {
+            setYField({});
+        }
+
+        // other encoding properties
+        const otherProps = [];
+        Object.entries(enc).forEach(([channel, spec]) => {
+            if (['x', 'y'].includes(channel)) return;
+            if (spec.field) {
+                otherProps.push({ channel, field: spec.field });
             }
-        }
-        if (Object.keys(yField).length > 0) {
-            //here could add additional properties like aggregate or others
-            const yType = convertTypeFormat(yField.type);
-            newSpec.encoding["y"] = {
-                "field": yField.name,
-                "type": yType
-            };
-        }
-        if (Object.keys(encodingProperties).length > 0) {
-            //here could add additional properties like aggregate or others
-            encodingProperties.forEach(property => {
-                if (Object.keys(property).length > 0) {
-                    newSpec.encoding[property.channel] = { "field": property.field };
-                }
-            });
-        }
-        console.log("newSpec:", newSpec)
-
-        //to make sure that, on first renders and afterward, only possible specs are sent to the controller
-        if (Object.keys(selectedFields).length > 0) { handleEncodingChange(newSpec); }
-    }, [mark, xField, yField, encodingProperties]);
-    
-
-    const handleSelectChange = (type, value) => {
-        const selectedField = selectedFields.find(f => f.name === value);
-        if (type === 'x') {
-            setXField(selectedField || {});
-        } else if (type === 'y') {
-            setYField(selectedField || {});
-        } else if (type === 'mark') {
-            setMark(value);
-        }
-    };
-
-    const handlePropertyChange = (index, key, value) => {
-
-        console.log({ index, key, value })
-        const updated = [...encodingProperties];
-        updated[index][key] = value;
-        setEncodingProperties(updated);
-
-        // Add new selector if the last one is fully filled
-        const last = updated[updated.length - 1];
-        if (last.channel && last.field && updated.length === index + 1) {
-            setEncodingProperties([...updated, {}]);
-        }
-    };
+        });
+        // always keep an empty row for new property
+        setEncodingProperties([...otherProps, {}]);
+    }, [currentSpec]);
 
 
+  // Helper to build and dispatch spec
+  const buildAndDispatch = (newMark, newX, newY, newProps) => {
+
+    //building new spec
+    if (!hasSelectedViz || selectedFields.length === 0) return;
+
+    const newSpec = { mark: newMark || undefined, encoding: {} };
+
+    if (newX.name) newSpec.encoding.x = { field: newX.name, type: convertTypeFormat(newX.type) };
+
+    if (newY.name) newSpec.encoding.y = { field: newY.name, type: convertTypeFormat(newY.type) };
+
+    newProps.forEach(p => {
+      if (p.channel && p.field) newSpec.encoding[p.channel] = { field: p.field };
+    });
+
+    //dispatching newSpec to DSController
+    handleEncodingChange(newSpec);
+  };
+
+  const handleSelectChange = (type, value) => {
+    const selectedField = selectedFields.find(f => f.name === value) || {};
+    if (type === 'mark') {
+      setMark(value || null);
+      buildAndDispatch(value || null, xField, yField, encodingProperties);
+    } else if (type === 'x') {
+      setXField(selectedField);
+      buildAndDispatch(mark, selectedField, yField, encodingProperties);
+    } else if (type === 'y') {
+      setYField(selectedField);
+      buildAndDispatch(mark, xField, selectedField, encodingProperties);
+    }
+  };
+
+  const handlePropertyChange = (index, key, value) => {
+    const updated = [...encodingProperties];
+    updated[index] = { ...updated[index], [key]: value };
+    setEncodingProperties(updated);
+    // if last row filled, append new empty row
+    const last = updated[updated.length - 1];
+    if (last.channel && last.field) setEncodingProperties([...updated, {}]);
+    buildAndDispatch(mark, xField, yField, updated);
+  };
     if (!hasSelectedViz) {
         return (
             <div >
@@ -130,15 +144,11 @@ const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelect
     return (
         <div>
             {/* Mark Selector */}
-            <div >
-                <span >Mark</span>
-                <select
-                    onChange={(e) => handleSelectChange('mark', e.target.value)}
-                >
-                    {MARK_OPTIONS.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                        </option>
+            <div>
+                <span>Mark</span>
+                <select value={mark || ''} onChange={e => handleSelectChange('mark', e.target.value)}>
+                    {MARK_OPTIONS.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
                 </select>
             </div>
@@ -146,14 +156,10 @@ const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelect
             {/* X-Axis Selector */}
             <div>
                 <span>X Axis</span>
-                <select
-                    onChange={(e) => handleSelectChange('x', e.target.value)}
-                >
+                <select value={xField.name || ''} onChange={e => handleSelectChange('x', e.target.value)}>
                     <option value="">Select a Field</option>
-                    {selectedFields.map((field) => (
-                        <option key={field.name} value={field.name}>
-                            {field.name} ({convertTypeFormat(field.type)})
-                        </option>
+                    {selectedFields.map(field => (
+                        <option key={field.name} value={field.name}>{field.name} ({convertTypeFormat(field.type)})</option>
                     ))}
                 </select>
             </div>
@@ -161,46 +167,34 @@ const DataEncodingSelection = ({ selectedFields, handleEncodingChange, hasSelect
             {/* Y-Axis Selector */}
             <div>
                 <span>Y Axis</span>
-                <select
-                    onChange={(e) => handleSelectChange('y', e.target.value)}
-                >
+                <select value={yField.name || ''} onChange={e => handleSelectChange('y', e.target.value)}>
                     <option value="">Select a Field</option>
-                    {selectedFields.map((field) => (
-                        <option key={field.name} value={field.name}>
-                            {field.name} ({convertTypeFormat(field.type)})
-                        </option>
+                    {selectedFields.map(field => (
+                        <option key={field.name} value={field.name}>{field.name} ({convertTypeFormat(field.type)})</option>
                     ))}
                 </select>
             </div>
 
             {/* Additional Property Channels */}
             {encodingProperties.map((enc, idx) => (
-                <div
-                    key={idx}
-                >
-                    <select
-                        onChange={(e) => handlePropertyChange(idx, 'channel', e.target.value)}
-                    >
+                <div key={idx}>
+                    <select value={enc.channel || ''} onChange={e => handlePropertyChange(idx, 'channel', e.target.value)}>
                         <option value="">Select Property Channel</option>
-                        {PROPERTY_CHANNELS.map((ch) => (
+                        {PROPERTY_CHANNELS.map(ch => (
                             <option key={ch} value={ch}>{ch}</option>
                         ))}
                     </select>
 
-                    <select
-                        onChange={(e) => handlePropertyChange(idx, 'field', e.target.value)}
-                    >
+                    <select value={enc.field || ''} onChange={e => handlePropertyChange(idx, 'field', e.target.value)}>
                         <option value="">Select Field</option>
-                        {selectedFields.map((field) => (
-                            <option key={field.name} value={field.name}>
-                                {field.name} ({convertTypeFormat(field.type)})
-                            </option>
+                        {selectedFields.map(field => (
+                            <option key={field.name} value={field.name}>{field.name} ({convertTypeFormat(field.type)})</option>
                         ))}
                     </select>
                 </div>
             ))}
-            <pre>DSControllerPseudoState:{JSON.stringify({ mark, xField, yField, encodingProperties }, null, 2)}</pre>
 
+            <pre>DSControllerPseudoState:{JSON.stringify({ mark, xField, yField, encodingProperties }, null, 2)}</pre>
         </div>
     );
 };
