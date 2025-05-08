@@ -5,7 +5,7 @@ import DataEncodingSelection from './DataEncodingSelection/DataEncodingSelection
 
 const DSView = (props) => {
 
-    const { hasSelectedViz, datasetList, dataFields, selectedFields,currentSpec, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
+    const { hasSelectedViz, datasetList, dataFields, selectedFields,dataEncodingState, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
     // State to manage the visibility of the DatasetSelection component
     const [isDatasetSelectionOpen, setIsDatasetSelectionOpen] = useState(false);
 
@@ -24,9 +24,8 @@ const DSView = (props) => {
         onDatafieldSelect(dataField);
     };
 
-    const handleVizEncoderSelect = (encodings) => {
-
-        onEncoderSelect(encodings);
+    const handleVizEncoderSelect = (category, payload) => {
+        onEncoderSelect(category, payload);
     };
 
     return (
@@ -44,10 +43,8 @@ const DSView = (props) => {
             handleCheckboxChange={handleDataFieldSelect} 
             hasSelectedViz={hasSelectedViz}/>
             <DataEncodingSelection 
-            dataFields={dataFields} 
-            selectedFields={selectedFields} 
-            currentSpec={currentSpec}
-            handleEncodingChange={handleVizEncoderSelect} 
+            dataEncodingState={dataEncodingState}
+            onEncodingChange={handleVizEncoderSelect} 
             hasSelectedViz={hasSelectedViz}/>
             {//we only display the settings inputs if a viz has been selected
                 hasSelectedViz?

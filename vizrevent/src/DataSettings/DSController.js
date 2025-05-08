@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import DSView from './DSView'
 import { useStoreSelector } from '../Store/VizreventStore';
 import { DatasetListFetcher, DatafieldsList } from './DatasetUtils';
-import { extractFieldsFromSpec } from './DataFieldSelection/DataFieldUtils';
-
+import { buildNewSpec, parseSpec } from './DataEncodingSelection/DataEncodingUtils';
 
 const DSController = () => {
 
@@ -17,11 +16,93 @@ const DSController = () => {
     const [datasetList, setDatasetList] = useState([]);
     const [dataFields, setDataFields] = useState(null);
     const [selectedFields, setSelectedFields] = useState([]);
+    const [mark, setMark] = useState(null);
+    const [xField, setXField] = useState({});
+    const [yField, setYField] = useState({});
+    const [encodingProperties, setEncodingProperties] = useState([{}]);
 
-    // Ref to keep track of the previous spec (vizQuery)
-    const prevSpecRef = useRef();
-    //Ref to keep track of whether spec changes originates from encoding selection
-    const encodingSpecRef = useRef(false);
+
+    // ref to skip our own dispatch updates
+    const skipNextVizSelectEffect = useRef(false);
+
+    // Reset all local encoding state
+    const resetEncodingLocal = () => {
+        setMark(null);
+        setXField({});
+        setYField({});
+        setEncodingProperties([{}]);
+        setSelectedFields([]);
+    };
+
+    const encodingState = { dataFields, selectedFields, mark, xField, yField, encodingProperties }
+    const encodingStateSetters = { setDataFields, setSelectedFields, setMark, setXField, setYField, setEncodingProperties, resetEncodingLocal }
+
+
+
+    /**
+     * Unified change handler for mark, x, y, and property dropdowns.
+     * Updates local state and then re-dispatches a new spec.
+     */
+    const handleEncoderChange = (category, payload) => {
+        //we use a state copy so that the spec is actually built on the futur state and not on the current one
+        let newEncoding = null;
+        let copyState = { ...encodingState };
+
+        if (category === 'mark') {
+            newEncoding = payload;
+            setMark(newEncoding);
+
+            copyState.mark = newEncoding;
+        }
+        if (category === 'x') {
+            const newEncoding = dataFields.find(f => f.name === payload) || {};
+            setXField(newEncoding);
+
+            copyState.xField = newEncoding;
+        }
+        if (category === 'y') {
+            const newEncoding = dataFields.find(f => f.name === payload) || {};
+            setYField(newEncoding);
+
+            copyState.yField = newEncoding;
+        }
+        if (category === 'property') {
+            let newEncoding = [...encodingProperties];
+            const { index, key, value } = payload;
+            newEncoding[index] = { ...newEncoding[index], [key]: value };
+            // auto-add an empty row if the last one is filled
+            const last = newEncoding[newEncoding.length - 1];
+            if (last.channel && last.field) newEncoding = [...newEncoding, {}];
+            setEncodingProperties(newEncoding);
+
+            copyState.encodingProperties = newEncoding;
+        }
+        // before dispatching, tell the effect to skip once
+        skipNextVizSelectEffect.current = true;
+
+        const newSpec = buildNewSpec(state.selectedViz !== null, copyState);
+        dispatch.setVizParam(newSpec);
+
+    };
+
+
+    useEffect(() => {
+
+        // if this change was triggered by our own dispatch, ignore it once
+        if (skipNextVizSelectEffect.current) {
+            skipNextVizSelectEffect.current = false;
+            return;
+        }
+
+        if (state.selectedViz !== null) {
+            //resetting local encoding just to be sure
+            resetEncodingLocal();
+            // parse the new vizParam and update it
+            parseSpec(state.selectedViz.vizQuery, dataFields, selectedFields, encodingStateSetters);
+        }
+
+    }, [state.selectedViz]);
+
 
     // Getting dataset list when mounting the component 
     useEffect(() => {
@@ -37,10 +118,10 @@ const DSController = () => {
         fetchDatasets();
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
-
-    // Takes selected dataset and dispatch it to store
+    /**
+    *Takes selected datasetId and dispatch it to store.
+    */
     const handleDatasetSelect = (datasetId) => {
-
         dispatch.setDatasetId(datasetId);
     };
 
@@ -63,70 +144,26 @@ const DSController = () => {
     }, [state.datasetId]);
 
 
-    //Updating the selectedFields in accordance with the selectedViz
-    useEffect(() => {
 
-        const currentSpec = state.selectedViz?.vizQuery;
-
-        console.log("encodingSpecRef",encodingSpecRef.current)
-        //only run if the spec has changed
-        if (!encodingSpecRef.current && currentSpec && currentSpec !== prevSpecRef.current && dataFields) {
-
-            //getting list of field names used in current viz
-            const vizCurrentFields = extractFieldsFromSpec(currentSpec);
-
-            //adding all data fields to local state selectedFields
-            var newSelectedFields = [];
-            dataFields.forEach(field => {
-                if (vizCurrentFields.includes(field.name)) { newSelectedFields.push(field); }
-            });
-            setSelectedFields(newSelectedFields);
-
-            // Update the ref for next comparison
-            prevSpecRef.current = currentSpec;
-        }
-        //resetting the local state when deselecting a viz component
-        else if (!currentSpec) {
-            setSelectedFields([]);
-            prevSpecRef.current = undefined;
-
-        }
-        encodingSpecRef.current = false;
-
-    }, [state.selectedViz, dataFields]);
-
+    /**
+    *Takes selected datafield and updates local state.
+    */
     const handleDatafieldSelect = (field) => {
         //this function will only be called by UI interaction that are displayed when a viz is selected
-
         setSelectedFields(prevSelectedFields => {
+            //deselection case
             if (prevSelectedFields.includes(field)) {
+
+                //otherwise just remove it
                 return prevSelectedFields.filter(f => f !== field);
-            } else {
+            }
+            //selection case
+            else {
                 return [...prevSelectedFields, field];
             }
         });
 
     };
-
-    //Convert selected Visualization Encoder to new vizParam value
-    const handleEncoderSelect = (vizEncoder) => {
-
-        const defaultSpec = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
-            "config": { "view": { "continuousHeight": 300, "continuousWidth": 300 } },
-            "data": { "name": "dataset" }
-        };
-
-        const newSpec = { ...defaultSpec, ...vizEncoder };
-
-        //changing this flag so that the datafield selected don't get changed on encoding changes
-        encodingSpecRef.current = true;
-
-
-        //We only dispatch to vizParam because it triggers rerender in VP and this will call for a draco update on its own.
-        dispatch.setVizParam(newSpec);
-    };
-
 
     return (
         <>
@@ -135,10 +172,10 @@ const DSController = () => {
                 datasetList={datasetList}
                 dataFields={dataFields}
                 selectedFields={selectedFields}
-                currentSpec={state.selectedViz !== null ? state.selectedViz.vizQuery : {}}
+                dataEncodingState={encodingState}
                 onDatasetChange={handleDatasetSelect}
                 onDatafieldSelect={handleDatafieldSelect}
-                onEncoderSelect={handleEncoderSelect} />
+                onEncoderSelect={handleEncoderChange} />
             <pre>Local state:{JSON.stringify(selectedFields, null, 2)}</pre>
 
             <pre>DSControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>
