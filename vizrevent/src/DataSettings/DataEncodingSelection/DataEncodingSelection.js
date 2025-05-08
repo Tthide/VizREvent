@@ -121,7 +121,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
   const buildAndDispatch = (newMark, newX, newY, newProps) => {
     //building new spec
     if (!hasSelectedViz || !selectedFields.length) return;
-    const spec = { mark: newMark || undefined, encoding: {} };
+    const spec = { mark: {"type": newMark} || undefined, encoding: {} };
     if (newX.name) spec.encoding.x = { field: newX.name, type: convertTypeFormat(newX.type) };
     if (newY.name) spec.encoding.y = { field: newY.name, type: convertTypeFormat(newY.type) };
     newProps.forEach(p => p.channel && p.field && (spec.encoding[p.channel] = { field: p.field }));
@@ -173,7 +173,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
       {/* Mark selector */}
       <div>
         <span>Mark</span>
-        <select value={mark || ''} onChange={e => handleChange('mark', e.target.value)}>
+        <select value={mark? (mark.type? mark.type : mark) : ''} onChange={e => handleChange('mark', e.target.value)}>
           {MARK_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
       </div>
