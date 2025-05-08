@@ -192,7 +192,17 @@ const DataEncodingSelection = ({ dataFields, selectedFields, currentSpec, handle
         <span>X Axis</span>
         <select value={xField.name || ''} onChange={e => handleChange('x', e.target.value)}>
           <option value="">No specific Field</option>
-          {dataFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
+          {[
+            ...selectedFields,
+            ...dataFields.filter(f => !selectedFields.find(sf => sf.name === f.name))
+          ].map(f => (
+            <option
+              key={f.name}
+              value={f.name}
+              style={selectedFields.find(sf => sf.name === f.name) ? { backgroundColor: '#d3f9d8' } : {}}>
+              {f.name} ({convertTypeFormat(f.type)})
+            </option>
+          ))}
         </select>
       </div>
 
@@ -201,10 +211,19 @@ const DataEncodingSelection = ({ dataFields, selectedFields, currentSpec, handle
         <span>Y Axis</span>
         <select value={yField.name || ''} onChange={e => handleChange('y', e.target.value)}>
           <option value="">No specific Field</option>
-          {dataFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
+          {[
+            ...selectedFields,
+            ...dataFields.filter(f => !selectedFields.find(sf => sf.name === f.name))
+          ].map(f => (
+            <option
+              key={f.name}
+              value={f.name}
+              style={selectedFields.find(sf => sf.name === f.name) ? { backgroundColor: '#d3f9d8' } : {}}>
+              {f.name} ({convertTypeFormat(f.type)})
+            </option>
+          ))}
         </select>
       </div>
-
       {/* Additional property channels */}
       {encodingProperties.map((enc, i) => (
         <div key={i}>
@@ -214,7 +233,17 @@ const DataEncodingSelection = ({ dataFields, selectedFields, currentSpec, handle
           </select>
           <select value={enc.field || ''} onChange={e => handleChange('property', { index: i, key: 'field', value: e.target.value })}>
             <option value="">No specific Field</option>
-            {dataFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
+            {[
+              ...selectedFields,
+              ...dataFields.filter(f => !selectedFields.find(sf => sf.name === f.name))
+            ].map(f => (
+              <option
+                key={f.name}
+                value={f.name}
+                style={selectedFields.find(sf => sf.name === f.name) ? { backgroundColor: '#d3f9d8' } : {}}>
+                {f.name} ({convertTypeFormat(f.type)})
+              </option>
+            ))}
           </select>
         </div>
       ))}
