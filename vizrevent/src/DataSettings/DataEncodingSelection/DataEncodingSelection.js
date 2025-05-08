@@ -121,7 +121,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
   const buildAndDispatch = (newMark, newX, newY, newProps) => {
     //building new spec
     if (!hasSelectedViz || !selectedFields.length) return;
-    const spec = { mark: {"type": newMark} || undefined, encoding: {} };
+    const spec = { mark: { "type": newMark } || undefined, encoding: {} };
     if (newX.name) spec.encoding.x = { field: newX.name, type: convertTypeFormat(newX.type) };
     if (newY.name) spec.encoding.y = { field: newY.name, type: convertTypeFormat(newY.type) };
     newProps.forEach(p => p.channel && p.field && (spec.encoding[p.channel] = { field: p.field }));
@@ -173,7 +173,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
       {/* Mark selector */}
       <div>
         <span>Mark</span>
-        <select value={mark? (mark.type? mark.type : mark) : ''} onChange={e => handleChange('mark', e.target.value)}>
+        <select value={mark ? (mark.type ? mark.type : mark) : ''} onChange={e => handleChange('mark', e.target.value)}>
           {MARK_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
       </div>
@@ -182,7 +182,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
       <div>
         <span>X Axis</span>
         <select value={xField.name || ''} onChange={e => handleChange('x', e.target.value)}>
-          <option value="">Select a Field</option>
+          <option value="">No specific Field</option>
           {selectedFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
         </select>
       </div>
@@ -191,7 +191,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
       <div>
         <span>Y Axis</span>
         <select value={yField.name || ''} onChange={e => handleChange('y', e.target.value)}>
-          <option value="">Select a Field</option>
+          <option value="">No specific Field</option>
           {selectedFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
         </select>
       </div>
@@ -204,7 +204,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
             {PROPERTY_CHANNELS.map(ch => <option key={ch} value={ch}>{ch}</option>)}
           </select>
           <select value={enc.field || ''} onChange={e => handleChange('property', { index: i, key: 'field', value: e.target.value })}>
-            <option value="">Select Field</option>
+            <option value="">No specific Field</option>
             {selectedFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
           </select>
         </div>
