@@ -15,7 +15,7 @@ const MARK_OPTIONS = [
 // Channels available for additional encodings
 const PROPERTY_CHANNELS = ['color', 'opacity', 'fillOpacity', 'size', 'angle', 'shape', 'facet'];
 
-const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChange, hasSelectedViz }) => {
+const DataEncodingSelection = ({ dataFields, selectedFields, currentSpec, handleEncodingChange, hasSelectedViz }) => {
   const [mark, setMark] = useState(null);
   const [xField, setXField] = useState({});
   const [yField, setYField] = useState({});
@@ -43,16 +43,23 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
    * Handles mark, x/y channels, and any additional property channels.
    */
   const parseSpec = (spec) => {
-    //if spec or has no encoding, then we are facing a empty viz so we reset the local state
-    if (!spec || !spec.encoding) return resetLocal();
+    //if spec is empty, then we are facing a empty viz so we reset the local state
+    if (!spec) {
+      resetLocal();
+      return;
+    }
 
+    //Mark
     setMark(spec.mark || null);
 
+    //When building viz, we might leave one instance with just a mark value, but we could still want to
+    //modify it later on, so we still allow the code to progress, at least to this point
+    if(!spec.encoding) return;
     const enc = spec.encoding;
 
     // X field
     if (enc.x && enc.x.field) {
-      const found = selectedFields.find(f => f.name === enc.x.field);
+      const found = dataFields.find(f => f.name === enc.x.field);
       if (found) {
         setXField(found);
       } else {
@@ -64,7 +71,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
 
     // Y field
     if (enc.y && enc.y.field) {
-      const found = selectedFields.find(f => f.name === enc.y.field);
+      const found = dataFields.find(f => f.name === enc.y.field);
       if (found) {
         setYField(found);
       } else {
@@ -93,6 +100,8 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
       skipParse.current = false;
       return;
     }
+    //resetting if empty viz
+    if(!currentSpec)return resetLocal();
     if (currentSpec !== prevSpec.current) {
       setPendingSpec(currentSpec);
       prevSpec.current = currentSpec;
@@ -100,19 +109,19 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
   }, [currentSpec]);
 
   /**
-   * Effect: once we have both pendingSpec and selectedFields loaded,
+   * Effect: once we have both pendingSpec loaded,
    * and all required fields are available, parse the spec.
    */
   useEffect(() => {
     if (!pendingSpec) return;
     const enc = pendingSpec.encoding || {};
     const fieldsNeeded = Object.values(enc).map(sp => sp.field).filter(Boolean);
-    const ready = fieldsNeeded.every(name => selectedFields.some(sf => sf.name === name));
+    const ready = fieldsNeeded.every(name => dataFields.some(sf => sf.name === name));
     if (ready) {
       parseSpec(pendingSpec);
       setPendingSpec(null);
     }
-  }, [selectedFields, pendingSpec]);
+  }, [dataFields, pendingSpec]);
 
   /**
    * Build a new spec object from local state and dispatch it upstream.
@@ -120,7 +129,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
    */
   const buildAndDispatch = (newMark, newX, newY, newProps) => {
     //building new spec
-    if (!hasSelectedViz || !selectedFields.length) return;
+    if (!hasSelectedViz) return;
     const spec = { mark: { "type": newMark } || undefined, encoding: {} };
     if (newX.name) spec.encoding.x = { field: newX.name, type: convertTypeFormat(newX.type) };
     if (newY.name) spec.encoding.y = { field: newY.name, type: convertTypeFormat(newY.type) };
@@ -141,11 +150,11 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
       setMark(payload);
     }
     if (category === 'x') {
-      nx = selectedFields.find(f => f.name === payload) || {};
+      nx = dataFields.find(f => f.name === payload) || {};
       setXField(nx);
     }
     if (category === 'y') {
-      ny = selectedFields.find(f => f.name === payload) || {};
+      ny = dataFields.find(f => f.name === payload) || {};
       setYField(ny);
     }
     if (category === 'property') {
@@ -183,7 +192,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
         <span>X Axis</span>
         <select value={xField.name || ''} onChange={e => handleChange('x', e.target.value)}>
           <option value="">No specific Field</option>
-          {selectedFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
+          {dataFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
         </select>
       </div>
 
@@ -192,7 +201,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
         <span>Y Axis</span>
         <select value={yField.name || ''} onChange={e => handleChange('y', e.target.value)}>
           <option value="">No specific Field</option>
-          {selectedFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
+          {dataFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
         </select>
       </div>
 
@@ -205,7 +214,7 @@ const DataEncodingSelection = ({ selectedFields, currentSpec, handleEncodingChan
           </select>
           <select value={enc.field || ''} onChange={e => handleChange('property', { index: i, key: 'field', value: e.target.value })}>
             <option value="">No specific Field</option>
-            {selectedFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
+            {dataFields.map(f => <option key={f.name} value={f.name}>{f.name} ({convertTypeFormat(f.type)})</option>)}
           </select>
         </div>
       ))}

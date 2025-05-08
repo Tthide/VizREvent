@@ -44,6 +44,7 @@ const DSView = (props) => {
             handleCheckboxChange={handleDataFieldSelect} 
             hasSelectedViz={hasSelectedViz}/>
             <DataEncodingSelection 
+            dataFields={dataFields} 
             selectedFields={selectedFields} 
             currentSpec={currentSpec}
             handleEncodingChange={handleVizEncoderSelect} 

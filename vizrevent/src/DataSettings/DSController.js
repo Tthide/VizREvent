@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import DSView from './DSView'
 import { useStoreSelector } from '../Store/VizreventStore';
 import { DatasetListFetcher, DatafieldsList } from './DatasetUtils';
@@ -17,6 +17,11 @@ const DSController = () => {
     const [datasetList, setDatasetList] = useState([]);
     const [dataFields, setDataFields] = useState(null);
     const [selectedFields, setSelectedFields] = useState([]);
+
+    // Ref to keep track of the previous spec (vizQuery)
+    const prevSpecRef = useRef();
+    //Ref to keep track of whether spec changes originates from encoding selection
+    const encodingSpecRef = useRef(false);
 
     // Getting dataset list when mounting the component 
     useEffect(() => {
@@ -60,10 +65,15 @@ const DSController = () => {
 
     //Updating the selectedFields in accordance with the selectedViz
     useEffect(() => {
-        if (state.selectedViz && dataFields) {
+
+        const currentSpec = state.selectedViz?.vizQuery;
+
+        console.log("encodingSpecRef",encodingSpecRef.current)
+        //only run if the spec has changed
+        if (!encodingSpecRef.current && currentSpec && currentSpec !== prevSpecRef.current && dataFields) {
 
             //getting list of field names used in current viz
-            const vizCurrentFields = extractFieldsFromSpec(state.selectedViz.vizQuery);
+            const vizCurrentFields = extractFieldsFromSpec(currentSpec);
 
             //adding all data fields to local state selectedFields
             var newSelectedFields = [];
@@ -72,14 +82,18 @@ const DSController = () => {
             });
             setSelectedFields(newSelectedFields);
 
+            // Update the ref for next comparison
+            prevSpecRef.current = currentSpec;
         }
         //resetting the local state when deselecting a viz component
-        else if (!state.selectedViz) {
+        else if (!currentSpec) {
             setSelectedFields([]);
+            prevSpecRef.current = undefined;
+
         }
+        encodingSpecRef.current = false;
 
-
-    }, [state.selectedViz]);
+    }, [state.selectedViz, dataFields]);
 
     const handleDatafieldSelect = (field) => {
         //this function will only be called by UI interaction that are displayed when a viz is selected
@@ -104,6 +118,9 @@ const DSController = () => {
         };
 
         const newSpec = { ...defaultSpec, ...vizEncoder };
+
+        //changing this flag so that the datafield selected don't get changed on encoding changes
+        encodingSpecRef.current = true;
 
 
         //We only dispatch to vizParam because it triggers rerender in VP and this will call for a draco update on its own.
