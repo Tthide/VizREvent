@@ -46,6 +46,8 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
         setMark,
         setXField,
         setYField,
+        setXAgr,
+        setYAgr,
         setEncodingProperties,
         setSelectedFields,
         resetEncodingLocal
@@ -65,6 +67,21 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
         if (!selectedFields.includes(found)) {
             newSelectedField.push(found);
         }
+
+        if (enc.x.bin) {
+            setXAgr(OPERATION_OPTIONS.find(op => op.type === "bin"));
+
+        }
+        else if (enc.x.aggregate) {
+            setXAgr(OPERATION_OPTIONS.find(op => op.type === "aggregate" && enc.x.aggregate === op.param));
+
+        }
+        else {
+            setXAgr({});
+        }
+
+
+
     }
     else setXField({});
 
@@ -74,8 +91,18 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
         //adding new datafield to selectedField list
         if (!selectedFields.includes(found)) {
             newSelectedField.push(found);
-
         }
+
+        if (enc.y.bin) {
+            setYAgr(OPERATION_OPTIONS.find(op => op.type === "bin"));
+        }
+        else if (enc.y.aggregate) {
+            setYAgr(OPERATION_OPTIONS.find(op => op.type === "aggregate" && enc.x.aggregate === op.param));
+        }
+        else {
+            setYAgr({});
+        }
+
     } else setYField({});
 
     const otherProps = [];
@@ -106,8 +133,8 @@ export const buildNewSpec = (hasSelectedViz, { mark, xField, yField, xAgr, yAgr,
     const newSpec = {
         mark,
         encoding: {
-            x:{},
-            y:{}
+            x: {},
+            y: {}
         },
     };
 
@@ -121,13 +148,13 @@ export const buildNewSpec = (hasSelectedViz, { mark, xField, yField, xAgr, yAgr,
     };
 
     //in vega-lite, if an aggregate method is used, there must not be a type property, so we remove it 
-    if (Object.keys(xAgr).length > 0 && xAgr.type!=="none") {
+    if (Object.keys(xAgr).length > 0 && xAgr.type !== "none") {
         newSpec.encoding.x[xAgr.type] = xAgr.param;
         // Remove the type property 
         delete newSpec.encoding.x.type;
     }
 
-    if (Object.keys(yAgr).length > 0 && yAgr.type!=="none") {
+    if (Object.keys(yAgr).length > 0 && yAgr.type !== "none") {
         newSpec.encoding.y[yAgr.type] = yAgr.param;
         // Remove the type property if yAgr is not empty
         delete newSpec.encoding.y.type;
