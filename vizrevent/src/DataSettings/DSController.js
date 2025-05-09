@@ -93,10 +93,10 @@ const DSController = () => {
             skipNextVizSelectEffect.current = false;
             return;
         }
-
+        //resetting local encoding just to be sure
+        resetEncodingLocal();
         if (state.selectedViz !== null) {
-            //resetting local encoding just to be sure
-            resetEncodingLocal();
+
             // parse the new vizParam and update it
             parseSpec(state.selectedViz.vizQuery, dataFields, selectedFields, encodingStateSetters);
         }

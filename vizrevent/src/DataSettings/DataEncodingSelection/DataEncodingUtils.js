@@ -91,7 +91,7 @@ export const buildNewSpec = (hasSelectedViz, { mark, xField, yField, encodingPro
     if (!hasSelectedViz) return;
 
     const newSpec = {
-        mark: { type: mark } || undefined,
+        mark,
         encoding: {}
     };
 
