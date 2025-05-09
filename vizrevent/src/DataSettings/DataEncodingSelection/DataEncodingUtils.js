@@ -12,6 +12,19 @@ export const MARK_OPTIONS = [
 
 export const PROPERTY_CHANNELS = ['color', 'opacity', 'fillOpacity', 'size', 'angle', 'shape', 'facet'];
 
+// Define available operations (type indicates grouping: 'aggregate', 'bin', or 'none')
+export const OPERATION_OPTIONS = [
+    { type: 'none', param: 'None' },
+    { type: 'bin', param: 'true' },
+    // Aggregation operations
+    ...[
+        'count', 'valid', 'missing', 'distinct', 'sum', 'product',
+        'mean', 'average', 'variance', 'variancep', 'stdev', 'stdevp',
+        'stderr', 'median', 'q1', 'q3', 'ci0', 'ci1', 'min', 'max'
+    ].map(param => ({ type: 'aggregate', param }))
+];
+
+
 export const convertTypeFormat = (type) => {
     return (
         {
@@ -86,17 +99,39 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
 /**
  * Convert state Visualization Encoder to new vega-lite spec and returns it.
  */
-export const buildNewSpec = (hasSelectedViz, { mark, xField, yField, encodingProperties }) => {
+export const buildNewSpec = (hasSelectedViz, { mark, xField, yField, xAgr, yAgr, encodingProperties }) => {
 
     if (!hasSelectedViz) return;
 
     const newSpec = {
         mark,
-        encoding: {}
+        encoding: {
+            x:{},
+            y:{}
+        },
     };
 
-    if (xField.name) newSpec.encoding.x = { field: xField.name, type: convertTypeFormat(xField.type) };
-    if (yField.name) newSpec.encoding.y = { field: yField.name, type: convertTypeFormat(yField.type) };
+    if (xField.name) {
+        newSpec.encoding.x["field"] = xField.name;
+        newSpec.encoding.x["type"] = convertTypeFormat(xField.type);
+    };
+    if (yField.name) {
+        newSpec.encoding.y["field"] = yField.name;
+        newSpec.encoding.y["type"] = convertTypeFormat(yField.type);
+    };
+
+    //in vega-lite, if an aggregate method is used, there must not be a type property, so we remove it 
+    if (Object.keys(xAgr).length > 0 && xAgr.type!=="none") {
+        newSpec.encoding.x[xAgr.type] = xAgr.param;
+        // Remove the type property 
+        delete newSpec.encoding.x.type;
+    }
+
+    if (Object.keys(yAgr).length > 0 && yAgr.type!=="none") {
+        newSpec.encoding.y[yAgr.type] = yAgr.param;
+        // Remove the type property if yAgr is not empty
+        delete newSpec.encoding.y.type;
+    }
     encodingProperties.forEach(p => {
         if (p.channel && p.field) newSpec.encoding[p.channel] = { field: p.field };
     });

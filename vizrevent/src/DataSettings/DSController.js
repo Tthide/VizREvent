@@ -19,6 +19,8 @@ const DSController = () => {
     const [mark, setMark] = useState(null);
     const [xField, setXField] = useState({});
     const [yField, setYField] = useState({});
+    const [xAgr, setXAgr] = useState({});
+    const [yAgr, setYAgr] = useState({});
     const [encodingProperties, setEncodingProperties] = useState([{}]);
 
 
@@ -30,12 +32,17 @@ const DSController = () => {
         setMark(null);
         setXField({});
         setYField({});
+        setXAgr({});
+        setYAgr({});
         setEncodingProperties([{}]);
         setSelectedFields([]);
     };
 
-    const encodingState = { dataFields, selectedFields, mark, xField, yField, encodingProperties }
-    const encodingStateSetters = { setDataFields, setSelectedFields, setMark, setXField, setYField, setEncodingProperties, resetEncodingLocal }
+    const encodingState = { dataFields, selectedFields, mark, xField, yField, xAgr, yAgr, encodingProperties }
+    const encodingStateSetters = {
+        setDataFields, setSelectedFields, setMark, setXField, setYField, setXAgr,
+        setYAgr, setEncodingProperties, resetEncodingLocal
+    }
 
 
 
@@ -65,6 +72,20 @@ const DSController = () => {
             setYField(newEncoding);
 
             copyState.yField = newEncoding;
+        }
+        if (category === 'xAgr') {
+
+            console.log(payload);
+            newEncoding =  JSON.parse(payload);
+            setXAgr(newEncoding);
+
+            copyState.xAgr = newEncoding;
+        }
+        if (category === 'yAgr') {
+            newEncoding = JSON.parse(payload);
+            setYAgr(newEncoding);
+
+            copyState.yAgr = newEncoding;
         }
         if (category === 'property') {
             let newEncoding = [...encodingProperties];
@@ -96,9 +117,9 @@ const DSController = () => {
         //resetting local encoding just to be sure
         resetEncodingLocal();
         if (state.selectedViz !== null) {
-
             // parse the new vizParam and update it
             parseSpec(state.selectedViz.vizQuery, dataFields, selectedFields, encodingStateSetters);
+
         }
 
     }, [state.selectedViz]);
