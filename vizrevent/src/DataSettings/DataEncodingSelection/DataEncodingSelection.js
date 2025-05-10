@@ -10,6 +10,9 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
   const handleDropdownChange = (category, payload) => {
     onEncodingChange(category, payload);
   };
+  const handleDeleteProperty = (index) => {
+    onEncodingChange('deleteProperty',index);
+  };
 
 
   // Helper to render field options
@@ -130,6 +133,8 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
             </select>
           </>
           )}
+          {encodingProperties.length-1>i &&enc.channel && 
+          (<button onClick={() => handleDeleteProperty(i)} style={{ color: 'red' }}>Delete</button>)}
         </div>
       ))}
 

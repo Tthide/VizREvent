@@ -89,13 +89,21 @@ const DSController = () => {
             let newEncoding = [...encodingProperties];
             const { index, key, value } = payload;
             newEncoding[index] = { ...newEncoding[index], [key]: value };
-            // auto-add an empty row if the last one is filled
+            // auto-add an empty row if the last one has at least a channel chosen
             const last = newEncoding[newEncoding.length - 1];
-            if (last.channel && last.field) newEncoding = [...newEncoding, {}];
+            if (last.channel) newEncoding = [...newEncoding, {}];
             setEncodingProperties(newEncoding);
 
             copyState.encodingProperties = newEncoding;
         }
+        if (category === 'deleteProperty') {
+            const newEncoding = [...encodingProperties];
+            newEncoding.splice(payload.index, 1);
+            setEncodingProperties(newEncoding);
+
+            copyState.encodingProperties = newEncoding;
+
+          }
         // before dispatching, tell the effect to skip once
         skipNextVizSelectEffect.current = true;
 
