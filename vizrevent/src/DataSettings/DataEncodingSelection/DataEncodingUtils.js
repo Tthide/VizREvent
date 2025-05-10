@@ -14,7 +14,6 @@ export const PROPERTY_CHANNELS = ['color', 'opacity', 'fillOpacity', 'size', 'an
 
 // Define available operations (type indicates grouping: 'aggregate', 'bin', or 'none')
 export const OPERATION_OPTIONS = [
-    { type: 'none', param: 'None' },
     { type: 'bin', param: 'true' },
     // Aggregation operations
     ...[
@@ -150,17 +149,21 @@ export const buildNewSpec = (hasSelectedViz, { mark, xField, yField, xAgr, yAgr,
     //in vega-lite, if an aggregate method is used, there must not be a type property, so we remove it 
     if (Object.keys(xAgr).length > 0 && xAgr.type !== "none") {
         newSpec.encoding.x[xAgr.type] = xAgr.param;
-        // Remove the type property 
-        delete newSpec.encoding.x.type;
+
     }
 
     if (Object.keys(yAgr).length > 0 && yAgr.type !== "none") {
         newSpec.encoding.y[yAgr.type] = yAgr.param;
-        // Remove the type property if yAgr is not empty
-        delete newSpec.encoding.y.type;
+
     }
     encodingProperties.forEach(p => {
-        if (p.channel && p.field) newSpec.encoding[p.channel] = { field: p.field };
+        if (p.channel && (p.field || p.aggregate || p.bin)) {
+            newSpec.encoding[p.channel] = {
+                ...(p.field && { field: p.field }),
+                ...(p.aggregate && { aggregate: p.aggregate }),
+                ...(p.bin && { bin: p.bin })
+            };
+        }
     });
 
     const defaultSpec = {

@@ -67,6 +67,7 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
             value={JSON.stringify(xAgr) || 'none'}
             onChange={e => handleDropdownChange('xAgr', e.target.value)}
           >
+            <option value="">Select Aggregation/Bin method</option>
             {OPERATION_OPTIONS.map(op => (
               <option key={op.param} value={JSON.stringify(op)}>{op.type}:{op.param}</option>
             ))}
@@ -88,6 +89,8 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
             value={JSON.stringify(yAgr) || 'none'}
             onChange={e => handleDropdownChange('yAgr', e.target.value)}
           >
+            <option value="">Select Aggregation/Bin method</option>
+
             {OPERATION_OPTIONS.map(op => (
               <option key={op.param} value={JSON.stringify(op)}>{op.type}:{op.param}</option>
             ))}
@@ -107,12 +110,26 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
               <option key={ch} value={ch}>{ch}</option>
             ))}
           </select>
-          <select
-            value={enc.field || ''}
-            onChange={e => handleDropdownChange('property', { index: i, key: 'field', value: e.target.value })}
-          >
-            {renderFieldOptions()}
-          </select>
+          {enc.channel && (<>
+            <select
+              value={enc.field || ''}
+              onChange={e => handleDropdownChange('property', { index: i, key: 'field', value: e.target.value })}
+            >
+              {renderFieldOptions()}
+
+            </select>
+            <select
+              value={enc.aggregate || ''}
+              onChange={e => handleDropdownChange('property', { index: i, key: 'aggregate', value: e.target.value })}
+            >
+              <option value="">Select Aggregation/Bin method</option>
+
+              {OPERATION_OPTIONS.map(op => (
+                <option key={op.param} value={op.param}>{op.type}:{op.param}</option>
+              ))}
+            </select>
+          </>
+          )}
         </div>
       ))}
 

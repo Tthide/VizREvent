@@ -74,15 +74,13 @@ const DSController = () => {
             copyState.yField = newEncoding;
         }
         if (category === 'xAgr') {
-
-            console.log(payload);
-            newEncoding =  JSON.parse(payload);
+            newEncoding =  payload!==""? JSON.parse(payload):{};
             setXAgr(newEncoding);
 
             copyState.xAgr = newEncoding;
         }
         if (category === 'yAgr') {
-            newEncoding = JSON.parse(payload);
+            newEncoding =  payload!==""? JSON.parse(payload):{};
             setYAgr(newEncoding);
 
             copyState.yAgr = newEncoding;
