@@ -106,10 +106,16 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
 
     const otherProps = [];
     Object.entries(enc).forEach(([channel, specObj]) => {
-        if (channel !== 'x' && channel !== 'y' && specObj && specObj.field) {
-            otherProps.push({ channel, field: specObj.field });
-
-
+        if (channel !== 'x' && channel !== 'y' && specObj) {
+            if (PROPERTY_CHANNELS.includes(channel)) {
+                otherProps.push({
+                    channel,
+                    field: specObj.field || null,
+                    aggregate: specObj.aggregate || null,
+                    bin: specObj.bin || null,
+                    type: specObj.type || null
+                });
+            }
         }
     });
     setEncodingProperties([...otherProps, {}]);
