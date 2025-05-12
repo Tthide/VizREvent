@@ -1,10 +1,10 @@
 import React from 'react';
 import RecViz from '../Viz/RecViz';
-import {OrbitProgress} from "react-loading-indicators"
+import { OrbitProgress } from "react-loading-indicators"
 
 const RECView = (props) => {
 
-  const { isOpened,loading, onPanelOpenerClick, recList, onRecItemSelect } = props;
+  const { isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect } = props;
 
 
   const handlePanelExpandClick = () => {
@@ -19,11 +19,11 @@ const RECView = (props) => {
   //display one recommendation item
   const displayRECItem = (recItem) => {
     //button to be replaced by RecViz component
-    return <RecViz 
-    key={recItem.id}
-    recItem={recItem} 
-    onRecItemSelect={() => handleRecItemSelect(recItem)}>
-    recommendation n°{recItem.id}</RecViz>;
+    return <RecViz
+      key={recItem.id}
+      recItem={recItem}
+      onRecItemSelect={() => handleRecItemSelect(recItem)}>
+      recommendation n°{recItem.id}</RecViz>;
 
 
   }
@@ -34,6 +34,7 @@ const RECView = (props) => {
       {isOpened && (
         <div className='RECPanel' style={{ backgroundColor: 'blue' }}>
           <div className='RECVizList'>
+            {!loading && recList.length === 0 && <h3>No recommendation possible</h3>}
             {loading && (
               <OrbitProgress color="#FFFFFF" size="medium" text="" textColor="#ffffff" />
             )}

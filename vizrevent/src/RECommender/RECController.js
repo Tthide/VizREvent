@@ -25,11 +25,12 @@ const RECController = () => {
 
 
     //function that actually computes the recommendation
-    const recCompute = useCallback(async (recList, recSettings, dataset) => {
+    const recCompute = useCallback(async (recList, recSettings) => {
         try {
-            // Call DracoRecProcess with the dataset
-            const solutionSet = await DracoRecRequest(state.datasetId)
 
+            // Call DracoRecProcess with the dataset
+            const solutionSet = await DracoRecRequest(state.datasetId,recSettings)
+            solutionSet.length >0 ? console.info("Recommendation compute done"):console.warn("No recommendation output")
             // Update recList based on the solutionSet
             const newRecList = solutionSet.map(item => {
                 return {
