@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify, request
-from flask_cors import CORS
+import json
+import traceback
+from flask import Blueprint, request, jsonify
 
 from ..services.data_service import get_data, list_datasets,get_data_fields
 import json
@@ -7,23 +8,29 @@ import traceback
 from ..services.draco_service import draco_rec_compute
 
 draco_bp = Blueprint('draco', __name__)
-@draco_bp.route('/api/draco', methods=['GET'])
+@draco_bp.route('/api/draco', methods=['POST'])
 def get_draco_recommendations():
 
     try:
-        # Retrieve query parameters
-        dataset_id = request.args.get('dataset_id')
-        specs = request.args.get('specs')
-        num_chart = request.args.get('num_chart')
+        # Parse & validate JSON payload
+        payload = request.get_json(force=True)
+        if not isinstance(payload, dict):
+            return jsonify({"error": "Request body must be a JSON object"}), 400
 
-        print(f"get_draco_recommendations/Dataset: {dataset_id}, Specs: {specs}, NumChart: {num_chart}")  # Debugging print statement
+        dataset_id = str(payload.get('dataset_id'))
+        specs      = payload.get('specs')
+        num_chart  = payload.get('num_chart', 5)
 
+        # Debug logging (truncate specs for brevity)
+        print(f"[Draco] dataset_id={dataset_id}, num_chart={num_chart}")
+        print(f"[Draco] specs excerpt: {json.dumps(specs)[:200]}...")
+        
         if dataset_id is None:
             return jsonify({"error": "dataset_id parameter is missing"}), 400
 
         data = get_data(dataset_id)
         
-        charts_spec=draco_rec_compute(data)
+        charts_spec=draco_rec_compute(data,specs=specs,num_chart=2,Debug=True)
         return jsonify(charts_spec)
 
     except FileNotFoundError:
