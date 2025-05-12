@@ -27,7 +27,7 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
         value={f.name}
         style={selectedFields.find(sf => sf.name === f.name) ? { backgroundColor: '#d3f9d8' } : {}}
       >
-        {f.name} ({convertTypeFormat(f.type)})
+        {f.name} ({convertTypeFormat(f)})
       </option>
     ))
   ];

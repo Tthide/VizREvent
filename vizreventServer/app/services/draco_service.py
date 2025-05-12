@@ -1,5 +1,6 @@
 import draco
 import pandas as pd
+import numpy as np
 from draco import dict_to_facts
 from draco.renderer import AltairRenderer
 import altair as alt
@@ -55,11 +56,34 @@ def get_draco_schema(draco_data):
     #processing draco schema 
     schema = draco.schema_from_dataframe(draco_data)
     
-    #Now writing the datafields' properties to a json file for frontend access
-    
+    #Some datafield are wrongly interpreted by Draco and their type don't fit the reality
+    # for instance, period works better as ordinal than quantitative
+    #therefore we convert some fields to different data type here 
+        # Define the type mapping
+    type_mapping = {
+        'period': 'string'
+    }
+    def change_field_types(data, type_mapping):
+        # Iterate over each field in the data
+        for field in data['field']:
+            field_name = field['name']
+            # Check if the field needs to be updated
+            if field_name in type_mapping:
+                # Update the type of the field
+                field['type'] = type_mapping[field_name]
+                
+                # If converting from number to string, remove additional properties
+                if field['type'] == 'string' and field.get('min') is not None:
+                    field.pop('min', None)
+                    field.pop('max', None)
+                    field.pop('std', None)
+
+        return data
+    updated_schema = change_field_types(schema, type_mapping)
+
     #Debug
-    #print("\n\n\n/////////////////Schema\n",schema)  
-    return schema
+    #print("\n\n\n/////////////////Schema\n",updated_schema)  
+    return updated_schema
 
 
 def get_draco_facts(draco_schema):

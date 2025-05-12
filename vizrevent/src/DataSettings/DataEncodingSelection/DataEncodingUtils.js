@@ -1,4 +1,3 @@
-
 export const MARK_OPTIONS = [
     { value: '', label: 'Select a Mark' },
     { value: 'bar', label: 'Bar' },
@@ -24,13 +23,17 @@ export const OPERATION_OPTIONS = [
 ];
 
 
-export const convertTypeFormat = (type) => {
+export const convertTypeFormat = (field) => {
+    //some fields are exceptions in terms of their type, therefore we include them here
+
+    const exceptions = { period: 'ordinal' };
+    if (field.name in exceptions)   return exceptions[field.name] ;
     return (
         {
             number: 'quantitative',
             datetime: 'temporal',
             string: 'nominal',
-        }[type]
+        }[field.type]
         || 'unknown');
 };
 
@@ -66,7 +69,7 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
             setXField(found || { name: enc.x.field, type: 'unknown' });
         }
         //adding new datafield to selectedField list
-        if (found &&!selectedFields.includes(found)) {
+        if (found && !selectedFields.includes(found)) {
             newSelectedField.push(found);
         }
 
@@ -151,11 +154,11 @@ export const buildNewSpec = (hasSelectedViz, { mark, xField, yField, xAgr, yAgr,
 
     if (xField.name) {
         newSpec.encoding.x["field"] = xField.name;
-        newSpec.encoding.x["type"] = convertTypeFormat(xField.type);
+        newSpec.encoding.x["type"] = convertTypeFormat(xField);
     };
     if (yField.name) {
         newSpec.encoding.y["field"] = yField.name;
-        newSpec.encoding.y["type"] = convertTypeFormat(yField.type);
+        newSpec.encoding.y["type"] = convertTypeFormat(yField);
     };
 
     //in vega-lite, if an aggregate method is used, there must not be a type property, so we remove it 
