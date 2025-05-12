@@ -65,7 +65,7 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
         >
           {renderFieldOptions()}
         </select>
-        {xField.name && (
+        { (
           <select
             value={JSON.stringify(xAgr) || 'none'}
             onChange={e => handleDropdownChange('xAgr', e.target.value)}
@@ -87,7 +87,7 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
         >
           {renderFieldOptions()}
         </select>
-        {yField.name && (
+        {(
           <select
             value={JSON.stringify(yAgr) || 'none'}
             onChange={e => handleDropdownChange('yAgr', e.target.value)}
