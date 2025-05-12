@@ -59,11 +59,14 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
     const enc = spec.encoding;
 
     const newSelectedField = [];
-    if (enc.x && enc.x.field) {
-        const found = dataFields.find(f => f.name === enc.x.field);
-        setXField(found || { name: enc.x.field, type: 'unknown' });
+    if (enc.x) {
+        let found = null;
+        if (enc.x.field) {
+            found = dataFields.find(f => f.name === enc.x.field);
+            setXField(found || { name: enc.x.field, type: 'unknown' });
+        }
         //adding new datafield to selectedField list
-        if (!selectedFields.includes(found)) {
+        if (found &&!selectedFields.includes(found)) {
             newSelectedField.push(found);
         }
 
@@ -84,11 +87,14 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
     }
     else setXField({});
 
-    if (enc.y && enc.y.field) {
-        const found = dataFields.find(f => f.name === enc.y.field);
-        setYField(found || { name: enc.y.field, type: 'unknown' });
+    if (enc.y) {
+        let found = null;
+        if (enc.y.field) {
+            found = dataFields.find(f => f.name === enc.y.field);
+            setYField(found || { name: enc.y.field, type: 'unknown' });
+        }
         //adding new datafield to selectedField list
-        if (!selectedFields.includes(found)) {
+        if (found && !selectedFields.includes(found)) {
             newSelectedField.push(found);
         }
 
