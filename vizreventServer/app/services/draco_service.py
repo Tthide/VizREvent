@@ -109,7 +109,10 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
     #extracting properties from the current selected spec
     mark = spec.get("mark", {}).get("type") or spec.get("spec", {}).get("mark", {}).get("type")
     encoding = spec.get("encoding") or spec.get("spec", {}).get("encoding", {})
+    
+    used_fields = {enc.get("field") for enc in encoding.values() if enc.get("field")}
 
+    print(used_fields)
     for channel, enc in encoding.items():
         field = enc.get("field")
         aggregate = enc.get("aggregate")
@@ -162,7 +165,12 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
 
         # Variant: Add aggregation if not present
         if not aggregate:
-            for agg in ["mean", "sum", "count", "min", "max"]:
+            for agg in [#"mean",
+                        #"sum",
+                        "count",
+                        #"min",
+                        #"max"
+                        ]:
                 clauses = []
                 clauses.append(f"attribute((encoding,channel),e0,{channel}).")
                 clauses.append(f"attribute((encoding,field),e0,{field}).")
@@ -179,12 +187,24 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
                     clauses.append(f"attribute((encoding,stack),e0,{s}).")
                     variants.append(base + clauses)
                     
+    # Variant: Add additional encoding using existing fields
     for channel in ["color", "size", "shape", "text"]:
-        clauses = ["entity(encoding,m0,e0)."]
+        for field in used_fields:
+            clauses = []
+            if mark:
+                clauses.append(f"attribute((mark,type),m0,{mark}).")
+            clauses.append(f"attribute((encoding,channel),e0,{channel}).")
+            clauses.append(f"attribute((encoding,field),e0,{field}).")
+            variants.append(base + clauses)
+
+    # Variant: Explore unused fields in a new encoding
+    for field in used_fields:
+        clauses = []
         if mark:
             clauses.append(f"attribute((mark,type),m0,{mark}).")
-        clauses.append(f"attribute((encoding,channel),e0,{channel}).")
+        clauses.append(f":- attribute((encoding,field),_,{field}).")
         variants.append(base + clauses)
+
 
     # Deduplicate variants
     # Use tuple of sorted clauses to ensure uniqueness
