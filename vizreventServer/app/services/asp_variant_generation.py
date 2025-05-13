@@ -2,13 +2,16 @@
 def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
     variants = []
 
+    print("\ncurrent spec:",spec)
+
     #extracting properties from the current selected spec
     mark = spec.get("mark", {}).get("type") or spec.get("spec", {}).get("mark", {}).get("type")
     encoding = spec.get("encoding") or spec.get("spec", {}).get("encoding", {})
     
     used_fields = {enc.get("field") for enc in encoding.values() if enc.get("field")}
 
-    print(used_fields)
+    print("\ncurrent spec fields:",used_fields)
+    print("\ncurrent spec encoding:",encoding.items())
     for channel, enc in encoding.items():
         field = enc.get("field")
         aggregate = enc.get("aggregate")
@@ -23,7 +26,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
         if mark:
             clauses.append(f"attribute((mark,type),m0,{mark}).")
         if channel:
-            clauses.append(f":- attribute((encoding,channel),e0,{channel}).")
+            clauses.append(f":- attribute((encoding,channel),_,{channel}).")
         if aggregate:
             clauses.append(f":- attribute((encoding,aggregate),e0,{aggregate}).")
         if binning:
@@ -31,7 +34,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
             clauses.append(bin_clause)
         if stack:
             clauses.append(f":- attribute((encoding,stack),e0,{stack}).")
-        variants.append((f"remove_{channel}", base + clauses))
+        variants.append((f"keep_mark_&_remove_{channel}", base + clauses))
 
         # Variant: Change mark type
         for alt_mark in ["bar", "line", "point", "area", "tick"]:

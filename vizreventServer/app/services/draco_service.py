@@ -115,7 +115,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
 
     Parameters:
     data (JSON): The raw input data to be processed.
-    num_chart (int, optional): The number of charts to recommend. Default is 5.
+    num_chart (int, optional): The number of charts to recommend.
     Debug(bool, optional):Debug mode, writes chart_specs_outpute to json files in ./data/events/temps/. Default is False.
     
     Returns:
@@ -128,15 +128,15 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     draco_facts=get_draco_facts(get_draco_schema(draco_data))
     
     spec_facts=[]
-            
+    print("specs==None",specs==None) 
     if specs==None :
-        input_specs=[draco_facts+default_input_spec]
+        chart_name= ''
+        input_specs=[(chart_name,draco_facts+default_input_spec)]
         num_chart=6
     else:
         spec_facts = generate_asp_variants(specs, default_input_spec)
         #print("spec_facts",spec_facts)
         input_specs = [(spec[0],draco_facts + spec[1]) for spec in spec_facts]
-        num_chart=1
 
 
         
@@ -149,24 +149,29 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     
     
     print("\n len input_specs",len(input_specs))
+    print("\n\n\n///////////input_specs:\n",input_specs)
 
     for i,spec in tqdm(enumerate(input_specs)):
         #print("\n\n\n///////////input_specs:\n",spec)
 
         for j, model in enumerate(d.complete_spec(spec[1], num_chart)):
-            chart_name = f"CHART {(i*num_chart+j)}_{spec[0]}"
+            if specs!=None:
+                chart_name=spec[0]+f"_{j}"
+            chart_debug_name  = f"CHART {(i*num_chart+j)}_{chart_name}"
             schema = draco.answer_set_to_dict(model.answer_set)
 
             chart_vega_lite = renderer.render(spec=schema, data=draco_data)
             
             #converting the altair object to json and formatting it for export to frontend
             chart_vega_lite_json=split_vega_lite_spec(chart_vega_lite.to_json())
-            chart_specs[chart_name] = spec[0],chart_vega_lite_json, model.cost
+            # Use a unique key for each entry
+            unique_key = f"{chart_name}_{i}_{j}"
+            chart_specs[unique_key] = chart_name,chart_vega_lite_json, model.cost
 
             #Debug, write into json file to test vega lite specs
             if(Debug):
-                with open("debug/"+chart_name+'_output.vg.json', 'w') as f:
-                    print(f"Writing output {chart_name} in {f.name}")
+                with open("debug/"+chart_debug_name +'_output.vg.json', 'w') as f:
+                    print(f"Writing output {chart_debug_name } in {f.name}")
                     print(f"Current chart cost:{model.cost}")
                     f.write(chart_vega_lite.to_json())  # indent=4 makes it pretty
     
