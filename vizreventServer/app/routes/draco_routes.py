@@ -2,7 +2,7 @@ import json
 import traceback
 from flask import Blueprint, request, jsonify
 
-from ..services.data_service import get_data, list_datasets,get_data_fields
+from ..services.data_service import get_data
 import json
 import traceback
 from ..services.draco_service import draco_rec_compute
@@ -30,7 +30,7 @@ def get_draco_recommendations():
 
         data = get_data(dataset_id)
         
-        charts_spec=draco_rec_compute(data,specs=specs,num_chart=2,Debug=True)
+        charts_spec=draco_rec_compute(data,specs=specs,num_chart=2)
         return jsonify(charts_spec)
 
     except FileNotFoundError:

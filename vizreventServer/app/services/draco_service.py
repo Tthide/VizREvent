@@ -105,9 +105,11 @@ def get_draco_facts(draco_schema):
 
 
 
-default_input_spec =["entity(view,root,v0).",
-                     "entity(mark,v0,m0).","entity(encoding,m0,e0).",
-                     ":- {entity(encoding,m0,_)} < 2."]
+default_input_spec =["entity(view,root,v0).", # a root has to exist to display anything
+                     "entity(mark,v0,m0).",   # likewise for a mark
+                     "entity(encoding,m0,e0).", #here we ensure that we have at least one encoding
+                     #':- attribute((scale,zero),_,true).', # we forbid to have this property because it creates visual duplicates (even if they are different vl specs)
+                     ":- {entity(encoding,m0,_)} < 2."]    # we want to have at least 2 encodings to produce interesting visualizations
 
 def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= default_input_spec,num_chart:int = 2, labeler=lambda i: f"CHART {i + 1}", Debug: bool=False):
     """
@@ -147,9 +149,8 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     # Dictionary to store the generated recommendations
     chart_specs = {}
     
-    
-    print("\n len input_specs",len(input_specs))
-    print("\n\n\n///////////input_specs:\n",input_specs)
+    #print("\n len input_specs",len(input_specs))
+    #print("\n\n\n///////////input_specs:\n",input_specs)
 
     for i,spec in tqdm(enumerate(input_specs)):
         #print("\n\n\n///////////input_specs:\n",spec)
@@ -159,6 +160,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
                 chart_name=spec[0]+f"_{j}"
             chart_debug_name  = f"CHART {(i*num_chart+j)}_{chart_name}"
             schema = draco.answer_set_to_dict(model.answer_set)
+
 
             chart_vega_lite = renderer.render(spec=schema, data=draco_data)
             

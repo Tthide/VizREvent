@@ -2,7 +2,7 @@
 def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
     variants = []
 
-    print("\ncurrent spec:",spec)
+    #print("\ncurrent spec:",spec)
 
     #extracting properties from the current selected spec
     mark = spec.get("mark", {}).get("type") or spec.get("spec", {}).get("mark", {}).get("type")
@@ -10,8 +10,8 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
     
     used_fields = {enc.get("field") for enc in encoding.values() if enc.get("field")}
 
-    print("\ncurrent spec fields:",used_fields)
-    print("\ncurrent spec encoding:",encoding.items())
+    #print("\ncurrent spec fields:",used_fields)
+    #print("\ncurrent spec encoding:",encoding.items())
     for channel, enc in encoding.items():
         field = enc.get("field")
         aggregate = enc.get("aggregate")
