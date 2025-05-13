@@ -14,9 +14,6 @@ def get_data(dataset_name):
     #checking whether the temp dataset already exist
     file_path = create_temp_file(dataset_name)
     
-    # Wait for the file to be written
-    while not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
-        time.sleep(0.1)  # Wait for a short period before checking again
         
     with open(file_path, 'r') as file:
         data = json.load(file)
