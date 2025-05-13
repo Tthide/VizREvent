@@ -11,9 +11,10 @@ const RecViz = (props) => {
 
 
     return (
-        <div style={{ backgroundColor:"cyan",border: '1px solid black', display: 'flex', flexDirection:"column", justifyContent: 'center' }}>
+        <div style={{ backgroundColor: "cyan", border: '1px solid black', display: 'flex', flexDirection: "column", justifyContent: 'center' }}>
 
-            <h3>Recommendation query: {recItem.name}</h3>
+            {recItem.name !== "" &&
+                <h3>Recommendation query: {recItem.name}</h3>}
             <button key={recItem.id} onClick={onRecItemSelect}>ADD</button>
             <Viz spec={recItem.vizQuery.spec} data={recItem.vizQuery.data}>
             </Viz>
