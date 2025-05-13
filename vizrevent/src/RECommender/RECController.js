@@ -31,11 +31,13 @@ const RECController = () => {
             // Call DracoRecProcess with the dataset
             const solutionSet = await DracoRecRequest(state.datasetId,recSettings)
             solutionSet.length >0 ? console.info("Recommendation compute done"):console.warn("No recommendation output")
+            console.log(solutionSet)
             // Update recList based on the solutionSet
             const newRecList = solutionSet.map(item => {
                 return {
                     id: uuidv4(),
-                    vizQuery: item
+                    name:item[0],
+                    vizQuery: item[1]
                 }
             });
             return newRecList;

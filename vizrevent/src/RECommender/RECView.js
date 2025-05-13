@@ -23,7 +23,7 @@ const RECView = (props) => {
       key={recItem.id}
       recItem={recItem}
       onRecItemSelect={() => handleRecItemSelect(recItem)}>
-      recommendation n°{recItem.id}</RecViz>;
+      </RecViz>;
 
 
   }

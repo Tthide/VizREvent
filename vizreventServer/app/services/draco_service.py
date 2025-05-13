@@ -135,7 +135,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
             clauses.append(bin_clause)
         if stack:
             clauses.append(f":- attribute((encoding,stack),e0,{stack}).")
-        variants.append(base + clauses)
+        variants.append((f"remove_{channel}", base + clauses))
 
         # Variant: Change mark type
         for alt_mark in ["bar", "line", "point", "area", "tick"]:
@@ -143,7 +143,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
                 clauses = [f"attribute((mark,type),m0,{alt_mark}).", "entity(encoding,m0,e0)."]
                 clauses.append(f"attribute((encoding,channel),e0,{channel}).")
                 clauses.append(f"attribute((encoding,field),e0,{field}).")
-                variants.append(base + clauses)
+                variants.append((f"change_mark_to_{alt_mark}", base + clauses))
 
         # Variant: Swap x/y channel
         if channel == "x" or channel == "y":
@@ -153,7 +153,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
                 clauses.append(f"attribute((mark,type),m0,{mark}).")
             clauses.append(f"attribute((encoding,channel),e0,{swapped}).")
             clauses.append(f"attribute((encoding,field),e0,{field}).")
-            variants.append(base + clauses)
+            variants.append((f"swap_{channel}_to_{swapped}", base + clauses))
 
         # Variant: Add binning if not present
         if not binning:
@@ -161,7 +161,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
             clauses.append(f"attribute((encoding,channel),e0,{channel}).")
             clauses.append(f"attribute((encoding,field),e0,{field}).")
             clauses.append("attribute((encoding,binning),e0,true).")
-            variants.append(base + clauses)
+            variants.append((f"add_binning_{channel}", base + clauses))
 
         # Variant: Add aggregation if not present
         if not aggregate:
@@ -175,7 +175,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
                 clauses.append(f"attribute((encoding,channel),e0,{channel}).")
                 clauses.append(f"attribute((encoding,field),e0,{field}).")
                 clauses.append(f"attribute((encoding,aggregate),e0,{agg}).")
-                variants.append(base + clauses)
+                variants.append((f"add_agg_{agg}_{channel}", base + clauses))
 
         # Variant: Try stacking options
         if stack:
@@ -185,7 +185,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
                     clauses.append(f"attribute((encoding,channel),e0,{channel}).")
                     clauses.append(f"attribute((encoding,field),e0,{field}).")
                     clauses.append(f"attribute((encoding,stack),e0,{s}).")
-                    variants.append(base + clauses)
+                    variants.append((f"change_stack_{s}_{channel}", base + clauses))
                     
     # Variant: Add additional encoding using existing fields
     for channel in ["color", "size", "shape", "text"]:
@@ -195,7 +195,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
                 clauses.append(f"attribute((mark,type),m0,{mark}).")
             clauses.append(f"attribute((encoding,channel),e0,{channel}).")
             clauses.append(f"attribute((encoding,field),e0,{field}).")
-            variants.append(base + clauses)
+            variants.append((f"add_{channel}_{field}", base + clauses))
 
     # Variant: Explore unused fields in a new encoding
     for field in used_fields:
@@ -203,12 +203,12 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
         if mark:
             clauses.append(f"attribute((mark,type),m0,{mark}).")
         clauses.append(f":- attribute((encoding,field),_,{field}).")
-        variants.append(base + clauses)
+        variants.append((f"explore_other_fields_than_{field}", base + clauses))
 
 
     # Deduplicate variants
     # Use tuple of sorted clauses to ensure uniqueness
-    unique = {tuple(sorted(v)): v for v in variants}
+    unique = {tuple(sorted(v[1])): v for v in variants}
     return list(unique.values())
 
 
@@ -236,13 +236,13 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     
     spec_facts=[]
             
-    print("\nspecs",specs)
     if specs==None :
         input_specs=[draco_facts+default_input_spec]
         num_chart=6
     else:
         spec_facts = generate_asp_variants(specs, default_input_spec)
-        input_specs = [draco_facts + spec for spec in spec_facts]
+        #print("spec_facts",spec_facts)
+        input_specs = [(spec[0],draco_facts + spec[1]) for spec in spec_facts]
         num_chart=1
 
 
@@ -260,15 +260,15 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     for i,spec in tqdm(enumerate(input_specs)):
         #print("\n\n\n///////////input_specs:\n",spec)
 
-        for j, model in enumerate(d.complete_spec(spec, num_chart)):
-            chart_name = f"CHART {(i*num_chart+j)}"
+        for j, model in enumerate(d.complete_spec(spec[1], num_chart)):
+            chart_name = f"CHART {(i*num_chart+j)}_{spec[0]}"
             schema = draco.answer_set_to_dict(model.answer_set)
 
             chart_vega_lite = renderer.render(spec=schema, data=draco_data)
             
             #converting the altair object to json and formatting it for export to frontend
             chart_vega_lite_json=split_vega_lite_spec(chart_vega_lite.to_json())
-            chart_specs[chart_name] = chart_vega_lite_json, model.cost
+            chart_specs[chart_name] = spec[0],chart_vega_lite_json, model.cost
 
             #Debug, write into json file to test vega lite specs
             if(Debug):
@@ -279,7 +279,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     
 
     # Sort the dictionary by the cost value and extract chart_vega_lite_json values
-    sorted_chart_vega_lite_json_list = [value[0] for value in sorted(chart_specs.values(), key=lambda item: item[1])]
+    sorted_chart_vega_lite_json_list = [(value[0],value[1]) for value in sorted(chart_specs.values(), key=lambda item: item[2])]
     print("\n len output_specs",len(sorted_chart_vega_lite_json_list))
 
     return sorted_chart_vega_lite_json_list
