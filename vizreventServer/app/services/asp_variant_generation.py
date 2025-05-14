@@ -37,7 +37,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
         variants.append((f"keep_mark_&_remove_{channel}", base + clauses))
 
         # Variant: Change mark type
-        for alt_mark in ["bar", "line", "point", "area", "tick"]:
+        for alt_mark in ["bar", "line", "point", "area", "tick","rect"]:
             if mark and alt_mark != mark:
                 clauses = [f"attribute((mark,type),m0,{alt_mark}).", "entity(encoding,m0,e0)."]
                 clauses.append(f"attribute((encoding,channel),e0,{channel}).")
