@@ -4,7 +4,7 @@ import { OrbitProgress } from "react-loading-indicators"
 
 const RECView = (props) => {
 
-  const { isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect } = props;
+  const { isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect,  totalCount } = props;
 
 
   const handlePanelExpandClick = () => {
@@ -36,7 +36,7 @@ const RECView = (props) => {
           <div className='RECVizList'>            
             {loading && (
             <>
-              <OrbitProgress color="#FFFFFF" size="medium" text="" textColor="#ffffff" />
+              <OrbitProgress color="#FFFFFF" size="medium" text={`${recList.length} / ${totalCount}`} textColor="#ffffff" />
               <h4>Recommendations loading...</h4>
             </>
           )}

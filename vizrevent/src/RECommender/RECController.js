@@ -16,7 +16,9 @@ const RECController = () => {
 
     //Creating local state 
     const [isOpened, setIsOpened] = useState(false);
-    const [recList, setRecList] = useState([]); //example values
+    const [recList, setRecList] = useState([]);
+    //count of recItem
+    const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(false)
 
     // Track last recSettings and datasetId used for computation
@@ -37,7 +39,9 @@ const RECController = () => {
             const solutionSet = await DracoRecRequest(state.datasetId, recSettings);
             if (solutionSet.length === 0) console.warn("No recommendation output");
             else console.info("Recommendation compute done");
+            setTotalCount(solutionSet.length); // Set total count here
 
+            //processing each recItem
             for (const item of solutionSet) {
                 if (signal.aborted) {
                     console.info("Aborted recommendation processing");
@@ -90,7 +94,7 @@ const RECController = () => {
 
             console.log(state.recSettings)
             console.log(lastRecSettingsRef.current)
-            console.log(recReset,datasetChanged,recChanged)
+            console.log(recReset, datasetChanged, recChanged)
             const shouldCompute = recChanged || datasetChanged || recReset;
 
             //computing only if there was a change
@@ -128,6 +132,7 @@ const RECController = () => {
                 loading={loading}
                 onPanelOpenerClick={handlePanelOpener}
                 recList={recList}
+                totalCount={totalCount}
                 onRecItemSelect={handleRecSelection} />
             <pre>RECControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>
             <pre>local state:{JSON.stringify({ isOpened, recList }, null, 2)}</pre>
