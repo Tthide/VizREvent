@@ -53,7 +53,8 @@ const RECController = () => {
                     vizQuery: item[1],
                 };
                 appendRecItem(newItem);
-                await new Promise(resolve => setTimeout(resolve, 10)); // slight delay to yield rendering
+                // yield to browser to avoid blocking UI, without an arbitrary timeout
+                await new Promise(resolve => requestAnimationFrame(resolve));
             }
         } catch (error) {
             if (signal.aborted) {
@@ -73,8 +74,6 @@ const RECController = () => {
         if (state.datasetId) {
 
             //on close we abort the recommendation process
-
-            // If panel is being closed, abort recommendation process
             if (currentIsOpened) {
                 if (controllerRef.current) {
                     controllerRef.current.abort();
@@ -84,7 +83,7 @@ const RECController = () => {
                 setTotalCount(0);     // optional: reset total count
                 setLoading(false);    // ensure loading is false
             }
-            
+
             setIsOpened(!(currentIsOpened));
         } else {
             console.error("Error: No dataset selected. Cannot open the panel.");
