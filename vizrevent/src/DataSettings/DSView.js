@@ -46,15 +46,6 @@ const DSView = (props) => {
             dataEncodingState={dataEncodingState}
             onEncodingChange={handleVizEncoderSelect} 
             hasSelectedViz={hasSelectedViz}/>
-            {//we only display the settings inputs if a viz has been selected
-                hasSelectedViz?
-                    <>
-                        < button onClick = { handleDataFieldSelect } > Change DataField</button >
-
-        <button onClick={handleVizEncoderSelect}>Change VizEncoder</button></> : <>
-        </>
-}
-
         </div >
     );
 };
