@@ -4,7 +4,7 @@ import { OrbitProgress } from "react-loading-indicators"
 
 const RECView = (props) => {
 
-  const { isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect,  totalCount } = props;
+  const { isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect, totalCount } = props;
 
 
   const handlePanelExpandClick = () => {
@@ -31,15 +31,19 @@ const RECView = (props) => {
   return (
     <div style={{ backgroundColor: 'blue' }}>
       <h1>RECView</h1>
+      {/* Expanding panel button, this could also be but in RECController but to respect MVC we put it here*/}
+      <button onClick={handlePanelExpandClick}>
+        {isOpened ? "Close Panel" : " Open panel"}
+      </button>
       {isOpened && (
         <div className='RECPanel' style={{ backgroundColor: 'blue' }}>
-          <div className='RECVizList'>            
+          <div className='RECVizList'>
             {loading && (
-            <>
-              <OrbitProgress color="#FFFFFF" size="medium" text={`${recList.length} / ${totalCount}`} textColor="#ffffff" />
-              <h4>Recommendations loading...</h4>
-            </>
-          )}
+              <>
+                <OrbitProgress color="#FFFFFF" size="medium" text={`${recList.length} / ${totalCount}`} textColor="#ffffff" />
+                <h4>Recommendations loading...</h4>
+              </>
+            )}
             {!loading && recList.length === 0 && <h3>No recommendation possible</h3>}
 
             {recList.map(recItem => displayRECItem(recItem))}
@@ -47,10 +51,7 @@ const RECView = (props) => {
           </div>
         </div>
       )}
-      {/* Expanding panel button, this could also be but in RECController but to respect MVC we put it here*/}
-      <button onClick={handlePanelExpandClick}>
-        {isOpened ? "Close Panel" : " Open panel"}
-      </button>
+
     </div>
   );
 };
