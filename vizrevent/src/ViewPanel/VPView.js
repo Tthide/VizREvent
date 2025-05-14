@@ -43,7 +43,7 @@ const VPView = (props) => {
         </button>
       )}
 
-      <div>
+      <div style={{height: '90vh', overflowY: 'auto'}}>
         <h3>Visualizations:</h3>
 
 
