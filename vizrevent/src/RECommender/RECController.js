@@ -22,6 +22,9 @@ const RECController = () => {
     // Track last recSettings and datasetId used for computation
     const lastRecSettingsRef = useRef(null)
     const lastDatasetIdRef = useRef(null)
+    //track last AbortController to enable recommendations stream to restart on abort
+    const controllerRef = useRef(null);
+
 
 
     // Append new recommendation item to the recList
@@ -29,13 +32,17 @@ const RECController = () => {
         setRecList(prevList => [...prevList, item]);
     }, []);
     // Stream solutionSet one-by-one and append
-    const streamRecommendations = useCallback(async (recSettings) => {
+    const streamRecommendations = useCallback(async (recSettings, signal) => {
         try {
             const solutionSet = await DracoRecRequest(state.datasetId, recSettings);
             if (solutionSet.length === 0) console.warn("No recommendation output");
             else console.info("Recommendation compute done");
 
             for (const item of solutionSet) {
+                if (signal.aborted) {
+                    console.info("Aborted recommendation processing");
+                    return; // return to stop processing and allow restart
+                }
                 const newItem = {
                     id: uuidv4(),
                     name: item[0],
@@ -45,7 +52,12 @@ const RECController = () => {
                 await new Promise(resolve => setTimeout(resolve, 10)); // slight delay to yield rendering
             }
         } catch (error) {
-            console.error('Error computing recommendations:', error);
+            if (signal.aborted) {
+                console.info("DracoRecRequest aborted");
+            }
+            else {
+                console.error('Error computing recommendations:', error);
+            }
         }
     }, [state.datasetId, appendRecItem]);
 
@@ -73,8 +85,13 @@ const RECController = () => {
             //checking if the recSettings (or more unlikely the dataset) changed or not from last opening or rerenders
             const recChanged = JSON.stringify(state.recSettings) !== JSON.stringify(lastRecSettingsRef.current);
             const datasetChanged = state.datasetId !== lastDatasetIdRef.current;
+            //checking if the recSettings reset to null
+            const recReset = (!state.recSettings && !lastRecSettingsRef.current) || (!state.recSettings && lastRecSettingsRef.current);
 
-            const shouldCompute = recChanged || datasetChanged;
+            console.log(state.recSettings)
+            console.log(lastRecSettingsRef.current)
+            console.log(recReset,datasetChanged,recChanged)
+            const shouldCompute = recChanged || datasetChanged || recReset;
 
             //computing only if there was a change
             if (shouldCompute) {
@@ -83,15 +100,26 @@ const RECController = () => {
                 setLoading(true);
                 setRecList([]); // Clear old recList
 
-                streamRecommendations(state.recSettings).finally(() => {
-                    setLoading(false);
-                    lastRecSettingsRef.current = state.recSettings;
-                    lastDatasetIdRef.current = state.datasetId;
+
+                if (controllerRef.current) {
+                    controllerRef.current.abort();
+                }
+
+                const newController = new AbortController();
+                controllerRef.current = newController;
+
+
+                streamRecommendations(state.recSettings, newController.signal).finally(() => {
+                    if (!newController.signal.aborted) {
+                        setLoading(false);
+                        lastRecSettingsRef.current = state.recSettings;
+                        lastDatasetIdRef.current = state.datasetId;
+                    }
                 });
             }
         }
         // eslint-disable-next-line
-    }, [isOpened, state.recSettings, state.datasetId]);
+    }, [isOpened, state.recSettings, state.datasetId, streamRecommendations]);
 
 
     return (
