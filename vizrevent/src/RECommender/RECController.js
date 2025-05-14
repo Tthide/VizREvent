@@ -71,6 +71,20 @@ const RECController = () => {
     const handlePanelOpener = (currentIsOpened) => {
         //Can only open if a dataset has been selected
         if (state.datasetId) {
+
+            //on close we abort the recommendation process
+
+            // If panel is being closed, abort recommendation process
+            if (currentIsOpened) {
+                if (controllerRef.current) {
+                    controllerRef.current.abort();
+                    controllerRef.current = null; // clear reference
+                }
+                setRecList([]);       // optional: clear old recommendations
+                setTotalCount(0);     // optional: reset total count
+                setLoading(false);    // ensure loading is false
+            }
+            
             setIsOpened(!(currentIsOpened));
         } else {
             console.error("Error: No dataset selected. Cannot open the panel.");
@@ -92,9 +106,6 @@ const RECController = () => {
             //checking if the recSettings reset to null
             const recReset = (!state.recSettings && !lastRecSettingsRef.current) || (!state.recSettings && lastRecSettingsRef.current);
 
-            console.log(state.recSettings)
-            console.log(lastRecSettingsRef.current)
-            console.log(recReset, datasetChanged, recChanged)
             const shouldCompute = recChanged || datasetChanged || recReset;
 
             //computing only if there was a change
