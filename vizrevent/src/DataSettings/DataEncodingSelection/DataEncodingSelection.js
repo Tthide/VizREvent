@@ -11,7 +11,7 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
     onEncodingChange(category, payload);
   };
   const handleDeleteProperty = (index) => {
-    onEncodingChange('deleteProperty',index);
+    onEncodingChange('deleteProperty', index);
   };
 
 
@@ -48,7 +48,7 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
         <span>Mark</span>
         <select
           value={(mark && (mark.type ? mark.type : mark)) || ('')}
-          onChange={e => handleDropdownChange('mark', e.target.value)}
+          onChange={e => handleDropdownChange('mark', { "type": e.target.value })}
         >
           {MARK_OPTIONS.map(o => (
             <option key={o.value} value={o.value}>{o.label}</option>
@@ -65,7 +65,7 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
         >
           {renderFieldOptions()}
         </select>
-        { (
+        {(
           <select
             value={JSON.stringify(xAgr) || 'none'}
             onChange={e => handleDropdownChange('xAgr', e.target.value)}
@@ -133,8 +133,8 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
             </select>
           </>
           )}
-          {encodingProperties.length-1>i &&enc.channel && 
-          (<button onClick={() => handleDeleteProperty(i)} style={{ color: 'red' }}>Delete</button>)}
+          {encodingProperties.length - 1 > i && enc.channel &&
+            (<button onClick={() => handleDeleteProperty(i)} style={{ color: 'red' }}>Delete</button>)}
         </div>
       ))}
 
