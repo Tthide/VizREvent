@@ -24,31 +24,30 @@ const RECController = () => {
     const lastDatasetIdRef = useRef(null)
 
 
-    //function that actually computes the recommendation
-    const recCompute = useCallback(async (recList, recSettings) => {
+    // Append new recommendation item to the recList
+    const appendRecItem = useCallback((item) => {
+        setRecList(prevList => [...prevList, item]);
+    }, []);
+    // Stream solutionSet one-by-one and append
+    const streamRecommendations = useCallback(async (recSettings) => {
         try {
+            const solutionSet = await DracoRecRequest(state.datasetId, recSettings);
+            if (solutionSet.length === 0) console.warn("No recommendation output");
+            else console.info("Recommendation compute done");
 
-            // Call DracoRecProcess with the dataset
-            const solutionSet = await DracoRecRequest(state.datasetId,recSettings)
-            solutionSet.length >0 ? console.info("Recommendation compute done"):console.warn("No recommendation output")
-            console.log(solutionSet)
-            // Update recList based on the solutionSet
-            const newRecList = solutionSet.map(item => {
-                return {
+            for (const item of solutionSet) {
+                const newItem = {
                     id: uuidv4(),
-                    name:item[0],
-                    vizQuery: item[1]
-                }
-            });
-            return newRecList;
+                    name: item[0],
+                    vizQuery: item[1],
+                };
+                appendRecItem(newItem);
+                await new Promise(resolve => setTimeout(resolve, 10)); // slight delay to yield rendering
+            }
         } catch (error) {
             console.error('Error computing recommendations:', error);
-            return recList; // Return the original recList in case of error
         }
-        /* recommendation provided in the past could influence futur recommendation here (be mindfull of infinite recursive loops)
-        const newRecSettings="";
-        dispatch.setRecSettings(newRecSettings)*/
-    }, [state.datasetId]);
+    }, [state.datasetId, appendRecItem]);
 
     ///////Event Handlers
 
@@ -74,29 +73,21 @@ const RECController = () => {
             //checking if the recSettings (or more unlikely the dataset) changed or not from last opening or rerenders
             const recChanged = JSON.stringify(state.recSettings) !== JSON.stringify(lastRecSettingsRef.current);
             const datasetChanged = state.datasetId !== lastDatasetIdRef.current;
-    
+
             const shouldCompute = recChanged || datasetChanged;
-    
+
             //computing only if there was a change
             if (shouldCompute) {
 
-                console.log("Is computing draco")
-                const computeRecommendations = async () => {
-                    setLoading(true);
-                    try {
-                        const newRecList = await recCompute(recList, state.recSettings, state.datasetId);
-                        setRecList(newRecList);
-                    } catch (err) {
-                        console.error(err);
-                    } finally {
-                        setLoading(false);
-                    }
-    
+                console.log("Is computing draco");
+                setLoading(true);
+                setRecList([]); // Clear old recList
+
+                streamRecommendations(state.recSettings).finally(() => {
+                    setLoading(false);
                     lastRecSettingsRef.current = state.recSettings;
                     lastDatasetIdRef.current = state.datasetId;
-                };
-    
-                computeRecommendations();
+                });
             }
         }
         // eslint-disable-next-line

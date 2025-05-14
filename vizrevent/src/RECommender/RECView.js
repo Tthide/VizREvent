@@ -23,7 +23,7 @@ const RECView = (props) => {
       key={recItem.id}
       recItem={recItem}
       onRecItemSelect={() => handleRecItemSelect(recItem)}>
-      </RecViz>;
+    </RecViz>;
 
 
   }
@@ -35,10 +35,11 @@ const RECView = (props) => {
         <div className='RECPanel' style={{ backgroundColor: 'blue' }}>
           <div className='RECVizList'>
             {!loading && recList.length === 0 && <h3>No recommendation possible</h3>}
+
+            {recList.map(recItem => displayRECItem(recItem))}
             {loading && (
               <OrbitProgress color="#FFFFFF" size="medium" text="" textColor="#ffffff" />
             )}
-            {!loading && recList.map(recItem => displayRECItem(recItem))}
           </div>
         </div>
       )}
