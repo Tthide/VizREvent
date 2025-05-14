@@ -36,7 +36,7 @@ const RECView = (props) => {
         {isOpened ? "Close Panel" : " Open panel"}
       </button>
       {isOpened && (
-        <div className='RECPanel' style={{ backgroundColor: 'blue' }}>
+        <div className='RECPanel' style={{ backgroundColor: 'blue', height: '90vh', overflowY: 'auto' }}>
           <div className='RECVizList'>
             {loading && (
               <>
