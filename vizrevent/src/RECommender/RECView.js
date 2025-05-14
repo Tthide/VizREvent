@@ -33,13 +33,17 @@ const RECView = (props) => {
       <h1>RECView</h1>
       {isOpened && (
         <div className='RECPanel' style={{ backgroundColor: 'blue' }}>
-          <div className='RECVizList'>
+          <div className='RECVizList'>            
+            {loading && (
+            <>
+              <OrbitProgress color="#FFFFFF" size="medium" text="" textColor="#ffffff" />
+              <h4>Recommendations loading...</h4>
+            </>
+          )}
             {!loading && recList.length === 0 && <h3>No recommendation possible</h3>}
 
             {recList.map(recItem => displayRECItem(recItem))}
-            {loading && (
-              <OrbitProgress color="#FFFFFF" size="medium" text="" textColor="#ffffff" />
-            )}
+
           </div>
         </div>
       )}
