@@ -98,6 +98,7 @@ const VPController = () => {
                     if (viz.id === state.selectedViz.id) {
                         const updatedViz = { ...viz, vizQuery: state.vizParam };
                         // Updates store
+                        dispatch.setRecSettings(updatedViz.vizQuery);
                         dispatch.setSelectedViz(updatedViz);
                         return updatedViz;
                     } else {
