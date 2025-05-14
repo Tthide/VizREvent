@@ -5,8 +5,7 @@ export const MARK_OPTIONS = [
     { value: 'point', label: 'Point' },
     { value: 'area', label: 'Area' },
     { value: 'tick', label: 'Tick' },
-    { value: 'circle', label: 'Circle' },
-    { value: 'square', label: 'Square' },
+    { value: 'rect', label: 'Rect' },
 ];
 
 export const PROPERTY_CHANNELS = ['color', 'opacity', 'fillOpacity', 'size', 'angle', 'shape', 'facet'];
@@ -16,9 +15,9 @@ export const OPERATION_OPTIONS = [
     { type: 'bin', param: 'true' },
     // Aggregation operations
     ...[
-        'count', 'valid', 'missing', 'distinct', 'sum', 'product',
-        'mean', 'average', 'variance', 'variancep', 'stdev', 'stdevp',
-        'stderr', 'median', 'q1', 'q3', 'ci0', 'ci1', 'min', 'max'
+        'count',  'sum', 'product',
+        'mean',  'variance','stdev',
+        'median', 'min', 'max'
     ].map(param => ({ type: 'aggregate', param }))
 ];
 
