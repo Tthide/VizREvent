@@ -92,6 +92,16 @@ const RECController = () => {
 
     /*Dispatch selected recommendation to store for creation in VP*/
     const handleRecSelection = (recVizSelect) => {
+
+        //on recItem selection we abort the recommendation process
+        if (controllerRef.current) {
+            controllerRef.current.abort();
+            controllerRef.current = null; // clear reference
+        }
+        setRecList([]);       // optional: clear old recommendations
+        setTotalCount(0);     // optional: reset total count
+        setLoading(false);    // ensure loading is false
+
         dispatch.setInputViz(recVizSelect);
     }
 
