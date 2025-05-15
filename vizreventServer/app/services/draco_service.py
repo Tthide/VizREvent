@@ -111,7 +111,7 @@ default_input_spec =["entity(view,root,v0).", # a root has to exist to display a
                      #':- attribute((scale,zero),_,true).', # we forbid to have this property because it creates visual duplicates (even if they are different vl specs)
                      ":- {entity(encoding,m0,_)} < 2."]    # we want to have at least 2 encodings to produce interesting visualizations
 
-def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= default_input_spec,num_chart:int = 2, labeler=lambda i: f"CHART {i + 1}", Debug: bool=False):
+def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= default_input_spec,num_chart:int = 1, labeler=lambda i: f"CHART {i + 1}", Debug: bool=False):
     """
     Computes and recommends Draco charts based on the input data.
 
@@ -179,7 +179,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     
 
     # Sort the dictionary by the cost value and extract chart_vega_lite_json values
-    sorted_chart_vega_lite_json_list = [(value[0],value[1]) for value in sorted(chart_specs.values(), key=lambda item: item[2])]
+    sorted_chart_vega_lite_json_list = [{"name":value[0],"spec":value[1]} for value in sorted(chart_specs.values(), key=lambda item: item[2])]
     print("\n len output_specs",len(sorted_chart_vega_lite_json_list))
 
     return sorted_chart_vega_lite_json_list

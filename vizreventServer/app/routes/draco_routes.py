@@ -1,6 +1,6 @@
 import json
 import traceback
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Response, stream_with_context
 
 from ..services.data_service import get_data
 import json
@@ -29,9 +29,17 @@ def get_draco_recommendations():
             return jsonify({"error": "dataset_id parameter is missing"}), 400
 
         data = get_data(dataset_id)
-        
-        charts_spec=draco_rec_compute(data,specs=specs,num_chart=2)
-        return jsonify(charts_spec)
+        charts =draco_rec_compute(data,specs=specs,num_chart=num_chart)
+
+        # Wrap our generator in a JSON array:
+        def generate():
+                for chart in charts:
+                    # send only key/name/spec
+                    out = {k: chart[k] for k in ("name", "spec")}
+                    yield json.dumps(out) + "\n"
+
+        return Response(stream_with_context(generate()),
+                            mimetype="application/x-ndjson")
 
     except FileNotFoundError:
         return jsonify({"error": "File not found"}), 404

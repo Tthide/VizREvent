@@ -35,24 +35,27 @@ const RECController = () => {
     }, []);
     // Stream solutionSet one-by-one and append
     const streamRecommendations = useCallback(async (recSettings, signal) => {
-        try {
-            const solutionSet = await DracoRecRequest(state.datasetId, recSettings);
-            if (solutionSet.length === 0) console.warn("No recommendation output");
-            else console.info("Recommendation compute done");
-            setTotalCount(solutionSet.length); // Set total count here
 
-            //processing each recItem
-            for (const item of solutionSet) {
+        setTotalCount(0);
+        try {
+
+            for await (const item of DracoRecRequest(
+                state.datasetId,
+                recSettings)) {
                 if (signal.aborted) {
                     console.info("Aborted recommendation processing");
-                    return; // return to stop processing and allow restart
+                    return;
                 }
-                const newItem = {
+
+                // append as soon as it arrives
+                appendRecItem({
                     id: uuidv4(),
-                    name: item[0],
-                    vizQuery: item[1],
-                };
-                appendRecItem(newItem);
+                    name: item.name,
+                    vizQuery: item.spec,
+                });
+
+
+                console.info("Recommendations received");
                 // yield to browser to avoid blocking UI, without an arbitrary timeout
                 await new Promise(resolve => requestAnimationFrame(resolve));
             }
