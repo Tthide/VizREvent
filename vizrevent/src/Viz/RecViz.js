@@ -4,7 +4,7 @@ import Viz from './Viz';
 
 const RecViz = (props) => {
 
-    const { recItem, onRecItemSelect } = props;
+    const { recItem,hasSelectedViz, onRecItemAdd, onRecItemUpdate } = props;
 
 
     console.log("in RecViz");
@@ -15,7 +15,10 @@ const RecViz = (props) => {
 
             {recItem.name !== "" &&
                 <h3>Recommendation query: {recItem.name}</h3>}
-            <button key={recItem.id} onClick={onRecItemSelect}>ADD</button>
+            <div key={recItem.id} style={{ display: 'flex', flexDirection: "row", width: '100%' }}>
+                <button onClick={onRecItemAdd} style={{ width: '100%' }}>ADD</button>
+                {hasSelectedViz && <button onClick={onRecItemUpdate} style={{ width: '100%' }}>UPDATE VIZ</button>}
+            </div>
             <Viz spec={recItem.vizQuery.spec} data={recItem.vizQuery.data}>
             </Viz>
         </div>

@@ -12,6 +12,7 @@ const RECController = () => {
     const { state, dispatch } = useStoreSelector(state => ({
         recSettings: state.recSettings,
         datasetId: state.datasetId,
+        selectedViz: state.selectedViz
     }));
 
     //Creating local state 
@@ -93,8 +94,8 @@ const RECController = () => {
         }
     };
 
-    /*Dispatch selected recommendation to store for creation in VP*/
-    const handleRecSelection = (recVizSelect) => {
+    /*Dispatch selected recommendation to store for creation or update in VP*/
+    const handleRecSelection = (recVizSelect, vizUpdate = false) => {
 
         //on recItem selection we abort the recommendation process
         if (controllerRef.current) {
@@ -105,7 +106,14 @@ const RECController = () => {
         setTotalCount(0);     // optional: reset total count
         setLoading(false);    // ensure loading is false
 
-        dispatch.setInputViz(recVizSelect);
+        if (vizUpdate && state.selectedViz!==null) {
+            console.log(recVizSelect)
+            dispatch.setVizParam(recVizSelect.vizQuery.spec);
+            
+        }
+        else {
+            dispatch.setInputViz(recVizSelect);
+        }
     }
 
     useEffect(() => {
@@ -156,6 +164,7 @@ const RECController = () => {
                 onPanelOpenerClick={handlePanelOpener}
                 recList={recList}
                 totalCount={totalCount}
+                hasSelectedViz={state.selectedViz !== null}
                 onRecItemSelect={handleRecSelection} />
             <pre>RECControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>
             <pre>local state:{JSON.stringify({ isOpened, recList }, null, 2)}</pre>

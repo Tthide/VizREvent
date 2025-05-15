@@ -4,7 +4,7 @@ import { OrbitProgress } from "react-loading-indicators"
 
 const RECView = (props) => {
 
-  const { isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect, totalCount } = props;
+  const { isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect,hasSelectedViz, totalCount } = props;
 
 
   const handlePanelExpandClick = () => {
@@ -12,8 +12,8 @@ const RECView = (props) => {
     onPanelOpenerClick(isOpened);
   };
 
-  const handleRecItemSelect = (recVizSettings) => {
-    onRecItemSelect(recVizSettings);
+  const handleRecItemSelect = (recVizSettings,vizUpdate=false) => {
+    onRecItemSelect(recVizSettings,vizUpdate);
   }
 
   //display one recommendation item
@@ -22,7 +22,9 @@ const RECView = (props) => {
     return <RecViz
       key={recItem.id}
       recItem={recItem}
-      onRecItemSelect={() => handleRecItemSelect(recItem)}>
+      hasSelectedViz={hasSelectedViz}
+      onRecItemAdd={() => handleRecItemSelect(recItem)}
+      onRecItemUpdate={() => handleRecItemSelect(recItem,true)}>
     </RecViz>;
 
 
