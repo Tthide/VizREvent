@@ -1,11 +1,10 @@
 {
     "keep_keys": [
       "id",
+      "index",
       "period",
       "timestamp",
       "possession",
-      "location",
-      "duration",
       "type",
       "possession_team",
       "play_pattern",

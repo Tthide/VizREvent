@@ -20,10 +20,6 @@ function App() {
 
   return (
     <>
-      <div>
-        <button onClick={handleStoreReset}>Reset Store</button>
-        <p>{JSON.stringify(state, null, 5)}</p>
-      </div>
       <div style={{ display: 'flex', gap: '20px' }}>
         <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
           <DSController />
