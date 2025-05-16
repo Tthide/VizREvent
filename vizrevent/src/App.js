@@ -14,14 +14,16 @@ function App() {
       <div className='header'>
         <AppHeader />
       </div>
-      <div className="column">
-        <DSController />
-      </div>
-      <div className="column">
-        <RECController />
-      </div>
-      <div className="column">
-        <VPController />
+      <div className="row-container">
+        <div className="column">
+          <DSController />
+        </div>
+        <div className="column">
+          <RECController />
+        </div>
+        <div className="column">
+          <VPController />
+        </div>
       </div>
     </div>
   );
