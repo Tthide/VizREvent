@@ -1,40 +1,30 @@
 import React from 'react';
-import { useStoreSelector } from './Store/VizreventStore';
 import DSController from './DataSettings/DSController';
 import RECController from './RECommender/RECController';
 import VPController from './ViewPanel/VPController';
-
+import './App.scss'; // Import the SASS file
+import AppHeader from './AppHeader';
 
 function App() {
-  const { state, dispatch } = useStoreSelector();
-  //console.log("useStoreSelector output:"+useStoreSelector());
-  //console.log("useStoreSelector output:"+useStoreSelector());
 
-  const handleStoreReset = () => {
-    dispatch.setRecSettings(null);
-    dispatch.setVizParam(null);
-    dispatch.setDatasetId(null);
-    dispatch.setInputViz(null);
-    dispatch.setSelectedViz(null);
-  };
 
   return (
-    <>
-      <div style={{ display: 'flex', gap: '20px' }}>
-        <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
-          <DSController />
-        </div>
-        <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
-          <RECController />
-        </div>
+    <div className="app-container">
 
-        <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
-          <VPController />
-        </div>
+      <div className='header'>
+        <AppHeader />
       </div>
-
-    </>
+      <div className="column">
+        <DSController />
+      </div>
+      <div className="column">
+        <RECController />
+      </div>
+      <div className="column">
+        <VPController />
+      </div>
+    </div>
   );
-};
+}
 
 export default App;

@@ -1,0 +1,34 @@
+@use '_design-variables.scss' as design-variables;
+
+
+.app-container {
+  display: flex;
+
+  .column {
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  .header {
+    width: 100%;
+    position: relative;
+    background-color: design-variables.$color-primary;
+    height: 6rem;
+    text-align: left;
+    font-size: 3rem;
+    color: #fff;
+    font-family: design-variables.$font-family-primary;
+
+    .title {
+      margin-left: 3rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      /* Takes the full height of the parent container */
+    }
+  }
+
+
+}
