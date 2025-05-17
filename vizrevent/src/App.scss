@@ -17,21 +17,16 @@ html {
   width: 100%; // Ensure the container takes the full width of the viewport
 
 
-  .row-container {
+  .app-body-container {
     display: flex;
     flex-direction: row;
     flex-grow: 1;
-
-    .column {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1; // This will make the column grow to fill available space
-    }
+    width: 100%
 
   }
 
 
-  .header {
+  .app-header {
     width: 100%;
     position: relative;
     background-color: design-variables.$color-primary;

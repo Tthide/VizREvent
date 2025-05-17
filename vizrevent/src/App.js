@@ -11,19 +11,15 @@ function App() {
   return (
     <div className="app-container">
 
-      <div className='header'>
+      <div className='app-header'>
         <AppHeader />
       </div>
-      <div className="row-container">
-        <div className="column">
-          <DSController />
-        </div>
-        <div className="column">
-          <RECController />
-        </div>
-        <div className="column">
-          <VPController />
-        </div>
+      <div className="app-body-container">
+        <DSController />
+
+        <RECController />
+
+        <VPController />
       </div>
     </div>
   );

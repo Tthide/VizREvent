@@ -1,14 +1,14 @@
-// DSView.scss
-
 @use '../_design-variables.scss' as dv;
 
 .ds-view-container {
     display: flex;
     flex-direction: column;
     background-color: dv.$color-secondary; // Background color for the container
-    padding: dv.$spacing-large;
+    padding: dv.$spacing-small;
+    padding-bottom: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: 100%; // Takes the full height of the parent container
+    width: 30%;
+
 
     h1 {
         color: dv.$color-primary; // Text color for the heading
@@ -18,14 +18,16 @@
 
     .change-dataset-button {
         @include dv.button-styles; // Use the button mixin
-        width: 100%;
         align-content: center;
         justify-content: center;
         display: flex;
-        td {
+        font-size: dv.$font-size-small;
+        width: 100%;
+
+        span {
             margin-right: dv.$spacing-small;
             margin-left: dv.$spacing-small;
-
+                text-overflow: ellipsis;
         }
     }
 
