@@ -5,15 +5,13 @@
     flex-direction: column;
     background-color: dv.$color-secondary; // Background color for the container
     padding: dv.$spacing-small;
-    padding-bottom: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 30%;
-
+    min-width: 30%;
 
     h1 {
         color: dv.$color-primary; // Text color for the heading
         font-size: dv.$font-size-large;
-        margin-bottom: dv.$spacing-large;
     }
 
     .change-dataset-button {
@@ -31,18 +29,14 @@
         }
     }
 
-    .dataset-selection {
-        margin-top: dv.$spacing-large;
-        padding: dv.$spacing-medium;
-        border-radius: dv.$border-radius-small;
-    }
 
-    .data-field-selection,
-    .data-encoding-selection {
+    .data-field-selection{
         margin-top: dv.$spacing-large;
         background-color: dv.$color-tertiary; // Background color for sections
-        padding: dv.$spacing-medium;
+        padding: dv.$spacing-small;
         border-radius: dv.$border-radius-small;
+        max-height: 25%;
+        overflow-y: auto;
 
 
     }

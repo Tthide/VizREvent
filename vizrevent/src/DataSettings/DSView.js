@@ -3,7 +3,7 @@ import DatasetSelection from './DatasetSelection/DatasetSelection.js';
 import DataFieldSelection from './DataFieldSelection/DataFieldSelection.js';
 import DataEncodingSelection from './DataEncodingSelection/DataEncodingSelection.js';
 import './DSView.scss'; // Import the DSView SASS file
-import MatchInfo from './DatasetSelection/DatasetMatchInfo.js';
+
 const DSView = (props) => {
 
     const { hasSelectedViz, datasetList, datasetMetaData, dataFields, selectedFields, dataEncodingState, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
@@ -52,9 +52,7 @@ const DSView = (props) => {
             </button>
 
             {isDatasetSelectionOpen && (
-                <div className="dataset-selection">
-                    <DatasetSelection datasetList={datasetList} onDatasetSelect={handleDatasetSelect} onSelectionConfirm={handleDatasetSelectionOpen} />
-                </div>
+                <DatasetSelection datasetList={datasetList} onDatasetSelect={handleDatasetSelect} onSelectionConfirm={handleDatasetSelectionOpen} />
             )}
 
             {/* only displayed when selectedViz !== null */}
@@ -65,13 +63,11 @@ const DSView = (props) => {
                     handleCheckboxChange={handleDataFieldSelect}
                 />
             </div>
-            <div className="data-encoding-selection">
-                <DataEncodingSelection
-                    dataEncodingState={dataEncodingState}
-                    onEncodingChange={handleVizEncoderSelect}
-                    hasSelectedViz={hasSelectedViz}
-                />
-            </div>
+            <DataEncodingSelection
+                dataEncodingState={dataEncodingState}
+                onEncodingChange={handleVizEncoderSelect}
+                hasSelectedViz={hasSelectedViz}
+            />
         </div>
     );
 };

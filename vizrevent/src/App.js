@@ -11,16 +11,16 @@ function App() {
   return (
     <div className="app-container">
 
-      <div className='app-header'>
+      <header className='app-header'>
         <AppHeader />
-      </div>
-      <div className="app-body-container">
+      </header>
+      <main  className="app-body-container">
         <DSController />
 
         <RECController />
 
         <VPController />
-      </div>
+      </main >
     </div>
   );
 }
