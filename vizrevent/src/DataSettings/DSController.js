@@ -197,15 +197,16 @@ const DSController = () => {
             <DSView
                 hasSelectedViz={state.selectedViz !== null}
                 datasetList={datasetList}
+                datasetMetaData={state.datasetId !==null? datasetList.find(dataset => dataset.match_id === state.datasetId) : null}
                 dataFields={dataFields}
                 selectedFields={selectedFields}
                 dataEncodingState={encodingState}
                 onDatasetChange={handleDatasetSelect}
                 onDatafieldSelect={handleDatafieldSelect}
                 onEncoderSelect={handleEncoderChange} />
-            <pre>Local state:{JSON.stringify(selectedFields, null, 2)}</pre>
+           {/* <pre>Local state:{JSON.stringify(selectedFields, null, 2)}</pre>
 
-            <pre>DSControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>
+            <pre>DSControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>*/}
         </>
     )
 }

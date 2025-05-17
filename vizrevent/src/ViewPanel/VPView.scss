@@ -1,0 +1,8 @@
+@use '../_design-variables.scss' as design-variables;
+
+
+.vp-container  {
+  background-color: design-variables.$color-tertiary;
+  padding: 20px;
+  color: design-variables.$primary;
+}

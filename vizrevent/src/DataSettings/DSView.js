@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import DatasetSelection from './DatasetSelection/DatasetSelection.js';
 import DataFieldSelection from './DataFieldSelection/DataFieldSelection.js';
 import DataEncodingSelection from './DataEncodingSelection/DataEncodingSelection.js';
-
+import './DSView.scss'; // Import the DSView SASS file
+import MatchInfo from './DatasetSelection/DatasetMatchInfo.js';
 const DSView = (props) => {
 
-    const { hasSelectedViz, datasetList, dataFields, selectedFields,dataEncodingState, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
+    const { hasSelectedViz, datasetList, datasetMetaData,dataFields, selectedFields, dataEncodingState, onDatasetChange, onDatafieldSelect, onEncoderSelect } = props;
     // State to manage the visibility of the DatasetSelection component
     const [isDatasetSelectionOpen, setIsDatasetSelectionOpen] = useState(false);
 
@@ -27,26 +28,42 @@ const DSView = (props) => {
     const handleVizEncoderSelect = (category, payload) => {
         onEncoderSelect(category, payload);
     };
-
     return (
-        <div style={{ backgroundColor: 'red' }}>
+        <div className="ds-view-container">
             <h1>DSView</h1>
-            <button onClick={handleDatasetSelectionOpen}>Change Dataset</button>
+
+            <button className="change-dataset-button" onClick={handleDatasetSelectionOpen}>
+                
+                {datasetMetaData && datasetMetaData!==null? 
+                 <MatchInfo dataset={datasetMetaData}/>
+                :  'Change Dataset' //id :${datasetMetaData.match_id} | da `
+            
+                }
+
+            </button>
+
             {isDatasetSelectionOpen && (
-                <DatasetSelection datasetList={datasetList} onDatasetSelect={handleDatasetSelect} onSelectionConfirm={handleDatasetSelectionOpen} />
+                <div className="dataset-selection">
+                    <DatasetSelection datasetList={datasetList} onDatasetSelect={handleDatasetSelect} onSelectionConfirm={handleDatasetSelectionOpen} />
+                </div>
             )}
 
             {/* only displayed when selectedViz !== null */}
-            <DataFieldSelection 
-            dataFields={dataFields} 
-            selectedFields={selectedFields} 
-            handleCheckboxChange={handleDataFieldSelect}/>
-            <DataEncodingSelection 
-            dataEncodingState={dataEncodingState}
-            onEncodingChange={handleVizEncoderSelect} 
-            hasSelectedViz={hasSelectedViz}/>
-        </div >
+            <div className="data-field-selection">
+                <DataFieldSelection
+                    dataFields={dataFields}
+                    selectedFields={selectedFields}
+                    handleCheckboxChange={handleDataFieldSelect}
+                />
+            </div>
+            <div className="data-encoding-selection">
+                <DataEncodingSelection
+                    dataEncodingState={dataEncodingState}
+                    onEncodingChange={handleVizEncoderSelect}
+                    hasSelectedViz={hasSelectedViz}
+                />
+            </div>
+        </div>
     );
 };
-
 export default React.memo(DSView);

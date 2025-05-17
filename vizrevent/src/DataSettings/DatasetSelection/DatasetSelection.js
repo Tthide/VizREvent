@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import MatchInfo from './DatasetMatchInfo';
-import './DatasetSelection.css';
+import './DatasetSelection.scss';
 
-const DatasetSelection = ({ datasetList, onDatasetSelect,onSelectionConfirm }) => {
+const DatasetSelection = ({ datasetList, onDatasetSelect, onSelectionConfirm }) => {
     const [selectedMatchId, setSelectedMatchId] = useState(null);
 
     if (!datasetList || datasetList.length === 0) {
@@ -25,7 +25,8 @@ const DatasetSelection = ({ datasetList, onDatasetSelect,onSelectionConfirm }) =
     };
 
     return (
-        <div className="dataset-selection">
+        <div className="dataset-selection-container">
+
             <div className="table-container">
                 <table>
                     <thead>
@@ -51,11 +52,12 @@ const DatasetSelection = ({ datasetList, onDatasetSelect,onSelectionConfirm }) =
                         ))}
                     </tbody>
                 </table>
-                <button className="confirm-button" onClick={handleConfirmClick} disabled={!selectedMatchId}>
-                    Confirm Selection
-                </button>
             </div>
+            <button className="confirm-button" onClick={handleConfirmClick} disabled={!selectedMatchId}>
+                Confirm Selection
+            </button>
         </div>
+
     );
 };
 

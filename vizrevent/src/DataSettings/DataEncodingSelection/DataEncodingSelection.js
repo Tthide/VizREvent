@@ -35,7 +35,6 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
   // Render fallback
   if (!hasSelectedViz) return (
     <div>
-      <p>Visualization type not selected</p>
       <p>Please choose a visualization type before encoding data.</p>
     </div>
   );

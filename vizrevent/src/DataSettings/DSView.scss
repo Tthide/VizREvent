@@ -1,0 +1,47 @@
+// DSView.scss
+
+@use '../_design-variables.scss' as dv;
+
+.ds-view-container {
+    display: flex;
+    flex-direction: column;
+    background-color: dv.$color-secondary; // Background color for the container
+    padding: dv.$spacing-large;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 100%; // Takes the full height of the parent container
+
+    h1 {
+        color: dv.$color-primary; // Text color for the heading
+        font-size: dv.$font-size-large;
+        margin-bottom: dv.$spacing-large;
+    }
+
+    .change-dataset-button {
+        @include dv.button-styles; // Use the button mixin
+        width: 100%;
+        align-content: center;
+        justify-content: center;
+        display: flex;
+        td {
+            margin-right: dv.$spacing-small;
+            margin-left: dv.$spacing-small;
+
+        }
+    }
+
+    .dataset-selection {
+        margin-top: dv.$spacing-large;
+        padding: dv.$spacing-medium;
+        border-radius: dv.$border-radius-small;
+    }
+
+    .data-field-selection,
+    .data-encoding-selection {
+        margin-top: dv.$spacing-large;
+        background-color: dv.$color-tertiary; // Background color for sections
+        padding: dv.$spacing-medium;
+        border-radius: dv.$border-radius-small;
+
+
+    }
+}

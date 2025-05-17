@@ -1,3 +1,17 @@
+//function to convert px to rem
+@function rem($pxval, $base: 16) {
+
+@if not unitless($pxval) {
+	$pxval: strip-units($pxval);
+}
+
+@if not unitless($base) {
+	$base: strip-units($base);
+}
+
+@return ($pxval / $base) * 1rem;
+}
+
 // Color variables
 $color-primary: #443627;
 $color-secondary: #D98324;
@@ -9,16 +23,31 @@ $font-family-primary: 'Arial', sans-serif;
 $font-family-secondary: 'Georgia', serif;
 
 // Font size variables
-$font-size-small: 12px;
-$font-size-medium: 16px;
-$font-size-large: 20px;
+$font-size-small: 0.8rem;
+$font-size-medium: 1rem;
+$font-size-large: 2rem;
 
 // Spacing variables
-$spacing-small: 8px;
-$spacing-medium: 16px;
-$spacing-large: 24px;
+$spacing-small: rem(8);
+$spacing-medium: rem(16);
+$spacing-large: rem(24);
 
 // Border radius variables
-$border-radius-small: 4px;
-$border-radius-medium: 8px;
-$border-radius-large: 12px;
+$border-radius-small: rem(4);
+$border-radius-medium: rem(8);
+$border-radius-large: rem(12);
+
+@mixin button-styles {
+    background-color: $color-primary; // Button background color
+    color: white; // Button text color
+    border: none;
+    padding: rem(10) rem(15);
+    border-radius: $border-radius-small;
+    cursor: pointer;
+    font-size: $font-size-medium;
+
+    &:hover {
+        background-color: $color-quaternary; // Button background color on hover
+        color:$color-primary;
+    }
+}

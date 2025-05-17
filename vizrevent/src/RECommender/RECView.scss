@@ -1,0 +1,8 @@
+@use '../_design-variables.scss' as design-variables;
+
+
+.rec-container  {
+  background-color: design-variables.$color-secondary;
+  padding: 20px;
+  color: white;
+}
