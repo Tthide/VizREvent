@@ -36,9 +36,8 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
   if (!hasSelectedViz) return (
     <div className="data-encoding-selection">
 
-      <div className="fallback-message">
-        <p>Please choose a visualization instance before encoding data.</p>
-      </div>
+        <p className="fallback-message">Please choose a visualization instance before encoding data.</p>
+
     </div>
 
   );

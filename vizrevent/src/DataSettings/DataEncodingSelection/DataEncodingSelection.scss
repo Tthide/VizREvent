@@ -29,6 +29,7 @@
     font-size: dv.$font-size-medium;
     color: dv.$color-primary;
     margin-bottom: dv.$spacing-small;
+    font-weight: bold;
 }
 
 .select {
@@ -42,7 +43,7 @@
 }
 
 .option-selected {
-    background-color: dv.$color-quaternary;
+    background-color: dv.$color-tertiary;
 }
 
 
@@ -53,9 +54,7 @@
 }
 
 .fallback-message {
-    color: dv.$color-primary;
-    font-size: dv.$font-size-large;
-    padding: dv.$spacing-large;
+    @include dv.fallback-message;
 }
 
 .debug-output {

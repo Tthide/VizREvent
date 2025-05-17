@@ -1,15 +1,15 @@
 //function to convert px to rem
 @function rem($pxval, $base: 16) {
 
-@if not unitless($pxval) {
-	$pxval: strip-units($pxval);
-}
+    @if not unitless($pxval) {
+        $pxval: strip-units($pxval);
+    }
 
-@if not unitless($base) {
-	$base: strip-units($base);
-}
+    @if not unitless($base) {
+        $base: strip-units($base);
+    }
 
-@return ($pxval / $base) * 1rem;
+    @return ($pxval / $base) * 1rem;
 }
 
 // Color variables
@@ -49,6 +49,18 @@ $border-radius-large: rem(12);
 
     &:hover {
         background-color: $color-quaternary; // Button background color on hover
-        color:$color-primary;
+        color: $color-primary;
     }
+}
+
+@mixin fallback-message {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: $font-family-primary;
+    font-size: $font-size-large;
+    color: $color-primary;
+    padding: $spacing-large;
+
 }

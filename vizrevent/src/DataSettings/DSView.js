@@ -56,13 +56,12 @@ const DSView = (props) => {
             )}
 
             {/* only displayed when selectedViz !== null */}
-            <div className="data-field-selection">
-                <DataFieldSelection
-                    dataFields={dataFields}
-                    selectedFields={selectedFields}
-                    handleCheckboxChange={handleDataFieldSelect}
-                />
-            </div>
+            <DataFieldSelection
+                dataFields={dataFields}
+                selectedFields={selectedFields}
+                handleCheckboxChange={handleDataFieldSelect}
+            />
+
             <DataEncodingSelection
                 dataEncodingState={dataEncodingState}
                 onEncodingChange={handleVizEncoderSelect}
