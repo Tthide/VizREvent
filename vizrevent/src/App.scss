@@ -1,11 +1,20 @@
 @use '_design-variables.scss' as design-variables;
 
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  /* Prevent scrolling */
+}
 
 .app-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw; // Ensure the container takes the full width of the viewport
+  height: 100%;
+  width: 100%; // Ensure the container takes the full width of the viewport
 
 
   .row-container {
