@@ -166,8 +166,11 @@ const RECController = () => {
                 totalCount={totalCount}
                 hasSelectedViz={state.selectedViz !== null}
                 onRecItemSelect={handleRecSelection} />
+
+            {//debug   
+            /* 
             <pre>RECControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>
-            <pre>local state:{JSON.stringify({ isOpened, recList }, null, 2)}</pre>
+            <pre>local state:{JSON.stringify({ isOpened, recList }, null, 2)}</pre>*/}
         </>
     )
 }

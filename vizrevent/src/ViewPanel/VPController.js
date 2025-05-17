@@ -25,7 +25,7 @@ const VPController = () => {
         if (state.datasetId) {
             const newViz = {
                 id: uuidv4(),
-                vizQuery: vizQuery? vizQuery.spec : null
+                vizQuery: vizQuery ? vizQuery.spec : null
             };
             setVizList(preVizList => [...preVizList, newViz]);
             dispatch.setRecSettings(newViz.vizQuery);
@@ -122,7 +122,7 @@ const VPController = () => {
                     const result = await DatasetFetcher(state.datasetId);
                     console.log("Viz/Data Fetched");
 
-                    setData({ "dataset": [ ...result ] });
+                    setData({ "dataset": [...result] });
                 } catch (err) {
                     console.error('Error fetching dataset:', err);
                 }
@@ -145,8 +145,9 @@ const VPController = () => {
                 data={data}
             />
 
+            {/* //for debug
             <pre>VPControllerPseudoState:{JSON.stringify({ state, vizList }, null, 2)}</pre>
-            <pre>local state:{JSON.stringify({ vizList, data }, null, 2)}</pre>
+            <pre>local state:{JSON.stringify({ vizList, data }, null, 2)}</pre>*/}
 
         </>
     )
