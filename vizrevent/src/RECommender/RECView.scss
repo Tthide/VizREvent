@@ -74,9 +74,11 @@ $chevron-large-size: 64px;
 
 .rec-panel {
   background-color: dv.$color-primary;
-  height: 95%; 
-   overflow-y: auto;
-
+  height: 95%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   padding: dv.$spacing-medium;
   border-radius: dv.$border-radius-medium;
   margin: dv.$spacing-small;
@@ -85,9 +87,6 @@ $chevron-large-size: 64px;
   h1 {
     font-size: dv.$font-size-large;
     color: dv.$color-tertiary;
-    //position: sticky;
-    //top: dv.$spacing-small;
-    //z-index: 30;
     background-color: dv.$color-primary;
 
   }
@@ -96,6 +95,8 @@ $chevron-large-size: 64px;
 .recviz-list {
   display: flex;
   flex-direction: column;
+  height: 90%;
+  overflow-y: auto;
   gap: dv.$spacing-medium;
 }
 
