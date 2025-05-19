@@ -1,0 +1,31 @@
+@use '../_design-variables.scss' as dv;
+
+.RecViz-container {
+  background-color: dv.$color-tertiary;
+  border: 1px solid dv.$color-primary;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: dv.$spacing-medium;
+  border-radius: dv.$border-radius-medium;
+  font-family: dv.$font-family-primary;
+}
+
+.RecViz-heading {
+  font-size: dv.$font-size-large;
+  color: dv.$color-primary;
+  margin-bottom: dv.$spacing-medium;
+}
+
+.RecViz-button-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: dv.$spacing-small;
+  margin-bottom: dv.$spacing-medium;
+}
+
+.RecViz-button {
+  width: 100%;
+  @include dv.button-styles;
+}
