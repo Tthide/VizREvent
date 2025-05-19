@@ -83,8 +83,7 @@ const RECController = () => {
                     controllerRef.current.abort();
                     controllerRef.current = null; // clear reference
                 }
-                setRecList([]);       // optional: clear old recommendations
-                setTotalCount(0);     // optional: reset total count
+                setTotalCount(0);     // reset total count
                 setLoading(false);    // ensure loading is false
             }
 
