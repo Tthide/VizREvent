@@ -1,8 +1,93 @@
-@use '../_design-variables.scss' as design-variables;
+@use '../_design-variables.scss' as dv;
+
+$padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel opener
+
+.vp-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background-color: dv.$color-quaternary;
+  font-family: dv.$font-family-primary;
+  border-left: solid 3px dv.$color-primary;
 
 
-.vp-container  {
-  background-color: design-variables.$color-tertiary;
-  padding: 20px;
-  color: design-variables.$primary;
+  .vp-banner {
+    padding: dv.$spacing-large;
+    padding-left: $padding-left-no-rec-overlap;
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: dv.$color-tertiary;
+    flex-grow: 1;
+    max-height: 5rem;
+
+    h1 {
+      margin-top: 0;
+      font-size: dv.$font-size-large;
+      margin-bottom: dv.$spacing-medium;
+      color: dv.$color-primary;
+    }
+
+    .vp-banner-controller {
+
+      display: flex;
+      flex-direction: row;
+      justify-content: left;
+
+      button {
+        @include dv.button-styles;
+        margin-right: dv.$spacing-small;
+        margin-bottom: dv.$spacing-small;
+      }
+    }
+
+
+  }
+
+  .viz-panel {
+    flex-grow: 1;
+    padding: dv.$spacing-medium;
+    padding-left: $padding-left-no-rec-overlap;
+    overflow: auto;
+    margin-top: dv.$spacing-medium;
+
+    h2 {
+      font-size: dv.$font-size-medium;
+      color: dv.$color-primary;
+      margin-bottom: dv.$spacing-small;
+    }
+
+    .viz-item {
+      display: flex;
+      position: relative;
+      border: 1px solid black;
+      cursor: pointer;
+      margin-bottom: dv.$spacing-small;
+      border-radius: dv.$border-radius-small;
+      justify-content: center;
+      align-content: center;
+
+      .viz-bg {
+        position: absolute;
+        display: flex;
+        flex-grow: 1;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 0;
+        background-color: dv.$color-tertiary;
+        color: dv.$color-primary;
+
+        &.selected {
+          background-color: dv.$color-secondary;
+          color: dv.$color-quaternary;
+        }
+      }
+
+      .viz-content {
+        z-index: 1;
+      }
+    }
+  }
 }
