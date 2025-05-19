@@ -1,8 +1,8 @@
 import React from 'react';
 import RecViz from '../Viz/RecViz';
 import { OrbitProgress } from "react-loading-indicators"
-import './RECView.scss'; // Import the DSView SASS file
-import { ChevronRight } from 'lucide-react'; // Import at the top
+import './RECView.scss'; 
+import { ChevronRight } from 'lucide-react';
 
 const RECView = (props) => {
 

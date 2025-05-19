@@ -50,7 +50,7 @@ $chevron-large-size: 64px;
   color: dv.$color-primary;
   transition: transform 0.3s ease;
   stroke-width: 2px;
-  padding-left: -20%; //bringing the chevron closer to the REC panel
+  margin-left: -20%; //bringing the chevron closer to the REC panel
   position: relative;
   z-index: 10;
   display: flex;
@@ -96,6 +96,7 @@ $chevron-large-size: 64px;
 .recviz-list {
   display: flex;
   flex-direction: column;
+  align-items: center;
   height: 90%;
   overflow-y: auto;
   gap: dv.$spacing-medium;
