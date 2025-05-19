@@ -1,8 +1,110 @@
-@use '../_design-variables.scss' as design-variables;
+@use '../_design-variables.scss' as dv;
 
 
-.rec-container  {
-  background-color: design-variables.$color-secondary;
-  padding: 20px;
-  color: white;
+.rec-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  background-color: dv.$color-tertiary;
+  color: dv.$color-primary;
+
+}
+
+.container-closed {
+  width: 0;
+  overflow: visible;
+  /* allow chevron to overflow */
+  position: relative;
+  z-index: 10;
+}
+
+.container-open {
+  max-width: 30%;
+  padding: dv.$spacing-medium;
+
+    h1 {
+    margin-top: dv.$spacing-small;
+    font-size: dv.$font-size-large;
+    color: dv.$color-tertiary;
+  }
+
+}
+
+.panel-button {
+  flex: 0 0 auto;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  padding: 0;
+  
+  transform: translate(100%, -50%); // push it outside the right edge + center vertically
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 20;
+
+}
+
+$chevron-base-size: 32px;
+$chevron-medium-size: 42px;
+$chevron-large-size: 64px;
+
+.chevron-icon {
+  width: $chevron-base-size;
+  height: $chevron-base-size;
+  color: dv.$color-primary;
+  transition: transform 0.3s ease;
+  stroke-width: 2px;
+  padding-left: -20%; //bringing the chevron closer to the REC panel
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (min-width: 600px) {
+    width: $chevron-medium-size;
+    height: $chevron-medium-size;
+  }
+
+  @media (min-width: 900px) {
+    width: $chevron-large-size;
+    height: $chevron-large-size;
+  }
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+
+.rec-panel {
+  background-color: dv.$color-primary;
+  height: 90vh;
+  overflow-y: auto;
+  padding: dv.$spacing-medium;
+  border-radius: dv.$border-radius-medium;
+}
+
+.rec-viz-list {
+  display: flex;
+  flex-direction: column;
+  gap: dv.$spacing-medium;
+}
+
+.loading-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: dv.$spacing-large;
+
+  h2 {
+    margin-top: dv.$spacing-small;
+    font-size: dv.$font-size-medium;
+    color: dv.$color-tertiary;
+  }
+}
+
+.fallback-message {
+  @include dv.fallback-message;
 }
