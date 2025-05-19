@@ -9,8 +9,8 @@
     padding: dv.$spacing-small;
     border-radius: dv.$border-radius-medium;
     font-family: dv.$font-family-primary;
-    width: 100%;
-    max-width: 100%;
+    width: 92%;
+    max-width: 92%;
 
 }
 
@@ -36,26 +36,4 @@
     width: 100%;
     align-items: center;
     justify-content: center;
-}
-
-
-.RecViz-chart-container {
-    min-width: 100px;
-    max-width: 100%;
-    min-height: 100px;
-    aspect-ratio: 4 / 3;
-    flex-grow: 1;
-    display: flex;
-    align-items: stretch;
-    justify-content: stretch;
-
-    >div {
-        width: 100% !important;
-        height: 100% !important;
-    }
-
-    canvas {
-        width: 100% !important;
-        height: auto !important;
-    }
 }
