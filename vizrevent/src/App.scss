@@ -1,53 +1,45 @@
 @use '_design-variables.scss' as design-variables;
 
-body,
-html {
+html,
+body {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  width: 100vw;
-  max-height: 100vh;
-  max-width: 100vw;
-  overflow: hidden;
-  /* Prevent scrolling */
+  height: 100%;
+  width: 100%;
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%; // Ensure the container takes the full width of the viewport
-
-
-  .app-body-container {
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    width: 100%;
-    
-
-  }
-
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 
   .app-header {
-    width: 100%;
-    position: relative;
-    background-color: design-variables.$color-primary;
     height: 4rem;
-    text-align: left;
-    font-size: 3rem;
+    background-color: design-variables.$color-primary;
     color: #fff;
+    font-size: 3rem;
     font-family: design-variables.$font-family-primary;
+    display: flex;
+    align-items: center;
+    padding-left: 3rem;
     flex-shrink: 0;
-
-    .title {
-      margin-left: 3rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      height: 100%;
-    }
   }
 
+  .app-body-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    overflow-y: auto;
+  }
 
+  footer {
+    height: 3rem;
+    background-color: #7bd684;
+    text-align: center;
+    line-height: 3rem;
+    flex-shrink: 0;
+  }
 }

@@ -21,6 +21,7 @@ function App() {
 
         <VPController />
       </main >
+      <footer> footer Placeholder</footer>
     </div>
   );
 }

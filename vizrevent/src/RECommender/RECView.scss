@@ -4,10 +4,10 @@
 .rec-container {
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   background-color: dv.$color-tertiary;
   color: dv.$color-primary;
-
+  justify-content: center;
 }
 
 .container-closed {
@@ -74,17 +74,20 @@ $chevron-large-size: 64px;
 
 .rec-panel {
   background-color: dv.$color-primary;
-  height: 90vh;
-  overflow-y: auto;
+  height: 95%; 
+   overflow-y: auto;
+
   padding: dv.$spacing-medium;
   border-radius: dv.$border-radius-medium;
+  margin: dv.$spacing-small;
+
 
   h1 {
     font-size: dv.$font-size-large;
     color: dv.$color-tertiary;
     //position: sticky;
     //top: dv.$spacing-small;
-        //z-index: 30;
+    //z-index: 30;
     background-color: dv.$color-primary;
 
   }
