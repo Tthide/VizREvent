@@ -6,15 +6,18 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: dv.$spacing-medium;
+    padding: dv.$spacing-small;
     border-radius: dv.$border-radius-medium;
     font-family: dv.$font-family-primary;
+    width: 100%;
+    max-width: 100%;
+
 }
 
 .RecViz-heading {
     font-size: dv.$font-size-medium;
     color: dv.$color-primary;
-    margin-bottom: dv.$spacing-medium;
+    margin-bottom: dv.$spacing-small;
 }
 
 .RecViz-button-container {
@@ -22,7 +25,7 @@
     flex-direction: row;
     width: 100%;
     gap: dv.$spacing-small;
-    margin-bottom: dv.$spacing-medium;
+    margin-bottom: dv.$spacing-small;
 }
 
 .RecViz-button {
@@ -33,4 +36,26 @@
     width: 100%;
     align-items: center;
     justify-content: center;
+}
+
+
+.RecViz-chart-container {
+    min-width: 100px;
+    max-width: 100%;
+    min-height: 100px;
+    aspect-ratio: 4 / 3;
+    flex-grow: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+
+    >div {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
 }

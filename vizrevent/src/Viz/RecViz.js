@@ -25,8 +25,9 @@ const RecViz = (props) => {
                         <CircleFadingArrowUp /> UPDATE CURRENT
                     </button>}
             </div>
-
-            <Viz spec={recItem.vizQuery.spec} data={recItem.vizQuery.data} />
+            <div className="RecViz-chart-container">
+                <Viz spec={recItem.vizQuery.spec} data={recItem.vizQuery.data} />
+            </div>
         </div>
     )
 }
