@@ -22,12 +22,6 @@
   max-width: 30%;
   padding: dv.$spacing-medium;
 
-    h1 {
-    margin-top: dv.$spacing-small;
-    font-size: dv.$font-size-large;
-    color: dv.$color-tertiary;
-  }
-
 }
 
 .panel-button {
@@ -36,7 +30,7 @@
   top: 50%;
   right: 0;
   padding: 0;
-  
+
   transform: translate(100%, -50%); // push it outside the right edge + center vertically
   background: transparent;
   border: none;
@@ -84,9 +78,19 @@ $chevron-large-size: 64px;
   overflow-y: auto;
   padding: dv.$spacing-medium;
   border-radius: dv.$border-radius-medium;
+
+  h1 {
+    font-size: dv.$font-size-large;
+    color: dv.$color-tertiary;
+    //position: sticky;
+    //top: dv.$spacing-small;
+        //z-index: 30;
+    background-color: dv.$color-primary;
+
+  }
 }
 
-.rec-viz-list {
+.recviz-list {
   display: flex;
   flex-direction: column;
   gap: dv.$spacing-medium;

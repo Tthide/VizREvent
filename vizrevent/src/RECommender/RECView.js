@@ -39,7 +39,7 @@ const RECView = (props) => {
       {isOpened && (
         <div className={'rec-panel'}>
           <h1>Recommendations</h1>
-          <div className={'rec-viz-list'}>
+          <div className={'recviz-list'}>
             {loading && (
               <div className={'loading-wrapper'}>
                 <OrbitProgress
