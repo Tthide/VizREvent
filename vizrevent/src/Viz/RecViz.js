@@ -1,7 +1,7 @@
 import React from 'react'
 import Viz from './Viz';
-import './RecViz.scss'; // Import the DSView SASS file
-import { CirclePlus, CircleFadingArrowUp } from 'lucide-react'; // Import at the top
+import './RecViz.scss'; 
+import { CirclePlus, CircleFadingArrowUp } from 'lucide-react';
 
 
 const RecViz = (props) => {
@@ -25,9 +25,7 @@ const RecViz = (props) => {
                         <CircleFadingArrowUp /> UPDATE CURRENT
                     </button>}
             </div>
-            <div className="RecViz-chart-container">
-                <Viz spec={recItem.vizQuery.spec} data={recItem.vizQuery.data} />
-            </div>
+            <Viz spec={recItem.vizQuery.spec} data={recItem.vizQuery.data} />
         </div>
     )
 }

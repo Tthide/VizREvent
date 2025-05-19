@@ -1,0 +1,22 @@
+@use '../_design-variables.scss' as dv;
+
+.Viz-chart-container {
+    min-width: 100px;
+    max-width: 100%;
+    min-height: 100px;
+    aspect-ratio: 4 / 3;
+    flex-grow: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+
+    >div {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+}

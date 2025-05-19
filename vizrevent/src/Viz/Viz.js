@@ -1,6 +1,6 @@
 import React from 'react';
 import { VegaLite } from 'react-vega';
-
+import './Viz.scss'; // Import the DSView SASS file
 
 const Viz = ({ spec, data }) => {
     //enhancing the spec by resizing the viz
@@ -15,17 +15,17 @@ const Viz = ({ spec, data }) => {
     } : null;
 
     return (
-        <>
+        <div className="Viz-chart-container">
             {
                 enhancedSpec ? (
-                        <VegaLite data={data} spec={enhancedSpec} />
+                    <VegaLite data={data} spec={enhancedSpec} />
                 ) : (
                     <div style={{ width: '200px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span>No Visualization</span>
                     </div>
                 )
             }
-        </>
+        </div>
     );
 };
 
