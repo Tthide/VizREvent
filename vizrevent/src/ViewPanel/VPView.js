@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Viz from '../Viz/Viz';
 import './VPView.scss';
 import { DndContext, closestCorners } from '@dnd-kit/core';
@@ -52,6 +52,22 @@ const VPView = (props) => {
       onVizUpdatePosition(newList);
     }
   };
+
+  //enables use of Delete key to delete viz
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Delete' && vizSelected) {
+        handleVizDelete();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [vizSelected]);
 
   return (
     <div className="vp-container">
