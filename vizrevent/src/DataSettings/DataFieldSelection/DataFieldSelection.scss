@@ -67,8 +67,13 @@
         z-index: 20;
     }
 
-    tbody tr:hover {
+    tbody tr:hover  {
         background-color: lighten(dv.$color-quaternary, 5%);
+    }
+
+    .selected-row {
+        background-color: lighten(dv.$color-quaternary, 5%);
+        cursor: 'pointer' ;
     }
 
     input[type="checkbox"] {

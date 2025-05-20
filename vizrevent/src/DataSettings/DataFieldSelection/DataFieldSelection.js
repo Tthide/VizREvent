@@ -18,22 +18,31 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                             </tr>
                         </thead>
                         <tbody>
-                            {dataFields.map((field) => (
-                                <tr key={field.name} title={`Field: ${field.name}\nType: ${field.type}\nFrequency: ${field.freq}\nEntropy: ${field.entropy}\nUnique Values: ${field.unique}`}>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedFields.includes(field)}
-                                            onChange={() => handleCheckboxChange(field)}
-                                        />
-                                    </td>
-                                    <td><b>{field.type}</b></td>
-                                    <td>{field.name}</td>
-                                    <td>{field.freq}</td>
-                                    <td>{field.entropy}</td>
-                                    <td>{field.unique}</td>
-                                </tr>
-                            ))}
+                            {dataFields.map((field) => {
+                                const isSelected = selectedFields.includes(field);
+                                return (
+                                    <tr
+                                        key={field.name}
+                                        title={`Field: ${field.name}\nType: ${field.type}\nFrequency: ${field.freq}\nEntropy: ${field.entropy}\nUnique Values: ${field.unique}`}
+                                        className={isSelected ? 'selected-row' : ''}
+                                        onClick={() => handleCheckboxChange(field)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedFields.includes(field)}
+                                                onChange={() => handleCheckboxChange(field)}
+                                            />
+                                        </td>
+                                        <td><b>{field.type}</b></td>
+                                        <td>{field.name}</td>
+                                        <td>{field.freq}</td>
+                                        <td>{field.entropy}</td>
+                                        <td>{field.unique}</td>
+                                    </tr>
+                                )
+                            })}
                         </tbody>
                     </table>
                 ) : (
