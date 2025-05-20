@@ -52,8 +52,7 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
     margin-top: dv.$spacing-medium;
     position: relative; // Enable absolutely positioned children
     flex-grow: 1;
-    gap: 16px;
-    padding: 8px;
+
 
     .viz-item {
       position: absolute;
@@ -61,7 +60,6 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
       left: 0;
       display: flex;
       justify-content: center;
-      border: 1px solid black;
       cursor: pointer;
       padding: dv.$spacing-small;
       border-radius: dv.$border-radius-small;
@@ -77,8 +75,10 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
       min-height: dv.rem(120);
       max-width: 100%;
       max-height: 100%;
-      border: 2px solid transparent;
+      border: 2px solid dv.$color-primary;
       transition: border 0.2s;
+
+      margin:dv.$spacing-smallest;
 
       &.selected {
         background-color: dv.$color-secondary;

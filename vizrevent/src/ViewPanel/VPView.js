@@ -6,7 +6,7 @@ import DraggableViz from '../Viz/DraggableViz';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 
 const VPView = (props) => {
-  const { vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, data } = props;
+  const { vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, GRID_SIZE, data } = props;
 
 
   const handleVizCreateClick = () => {
@@ -27,22 +27,29 @@ const VPView = (props) => {
     });
 
   }
+
+  //updating the coordinate of viz item
   const handleDragEnd = (event) => {
     const { active, delta } = event;
     const movedViz = vizList.find((v) => v.id === active.id);
 
     if (movedViz) {
+      const newX = movedViz.x + delta.x;
+      const newY = movedViz.y + delta.y;
+      // Snap to nearest grid point
+      const snappedX = Math.round(newX / GRID_SIZE) * GRID_SIZE;
+      const snappedY = Math.round(newY / GRID_SIZE) * GRID_SIZE;
+
       const updatedViz = {
         ...movedViz,
-        x: movedViz.x + delta.x,
-        y: movedViz.y + delta.y,
+        x: snappedX,
+        y: snappedY,
       };
-
       const newList = vizList.map((v) =>
         v.id === movedViz.id ? updatedViz : v
       );
 
-      onVizUpdatePosition(newList); // You can rename this to onVizUpdatePosition or similar
+      onVizUpdatePosition(newList);
     }
   };
 

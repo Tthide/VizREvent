@@ -20,6 +20,10 @@ const VPController = () => {
     const [vizList, setVizList] = useState([]);
     const [data, setData] = useState([]);
 
+    //the viz panel consist of grid in which we can place the viz instances, here we can change the size of each grid cells
+    //the bigger the size, the less freedom in placement we have
+    const GRID_SIZE = 50;
+
     //create a Viz and automatically selects it
     const createViz = useCallback((vizQuery = null) => {
         if (state.datasetId) {
@@ -149,6 +153,7 @@ const VPController = () => {
                 onVizCreate={handleEmptyVizCreate}
                 onVizDelete={handleVizDelete}
                 onVizUpdatePosition={handleVizUpdatePosition}
+                GRID_SIZE={GRID_SIZE}
                 data={data}
             />
 
