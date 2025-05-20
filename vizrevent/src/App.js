@@ -4,7 +4,7 @@ import RECController from './RECommender/RECController';
 import VPController from './ViewPanel/VPController';
 import './App.scss'; // Import the SASS file
 import AppHeader from './AppHeader';
-
+import AppFooter from './AppFooter';
 function App() {
 
 
@@ -14,14 +14,16 @@ function App() {
       <header className='app-header'>
         <AppHeader />
       </header>
-      <main  className="app-body-container">
+      <main className="app-body-container">
         <DSController />
 
         <RECController />
 
         <VPController />
       </main >
-      <footer> footer Placeholder</footer>
+      <footer className='app-footer'>
+        <AppFooter/>
+      </footer>
     </div>
   );
 }
