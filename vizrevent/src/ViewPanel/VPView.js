@@ -6,7 +6,7 @@ import DraggableViz from '../Viz/DraggableViz';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 
 const VPView = (props) => {
-  const { vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, GRID_SIZE, data } = props;
+  const { isDatasetSelected, vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, GRID_SIZE, data } = props;
 
 
   const handleVizCreateClick = () => {
@@ -75,7 +75,7 @@ const VPView = (props) => {
         <h1>Visualization Panel</h1>
 
         <div className='vp-banner-controller'>
-          <button onClick={handleVizCreateClick}>Create Visualization</button>
+          {isDatasetSelected && (<button onClick={handleVizCreateClick}>Create Visualization</button>)}
 
           {vizSelected && (
             <button onClick={handleVizDelete}>Delete Selected Visualization</button>
