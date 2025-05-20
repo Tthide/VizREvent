@@ -4,6 +4,7 @@ import './VPView.scss';
 import { DndContext, closestCorners } from '@dnd-kit/core';
 import DraggableViz from '../Viz/DraggableViz';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
+import { CirclePlus, OctagonX, Trash2 } from 'lucide-react';
 
 const VPView = (props) => {
   const { isDatasetSelected, vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, GRID_SIZE, data } = props;
@@ -75,14 +76,23 @@ const VPView = (props) => {
         <h1>Visualization Panel</h1>
 
         <div className='vp-banner-controller'>
-          {isDatasetSelected && (<button onClick={handleVizCreateClick}>Create Visualization</button>)}
+          {isDatasetSelected &&
+            (<button onClick={handleVizCreateClick}>
+              <CirclePlus />Create Visualization
+            </button>)}
 
           {vizSelected && (
-            <button onClick={handleVizDelete}>Delete Selected Visualization</button>
+            <button onClick={handleVizDelete}>
+              <OctagonX />
+              Delete Selected Visualization
+            </button>
           )}
 
           {vizList?.length > 0 && (
-            <button onClick={handleVPVizClear}>Clear all Visualization</button>
+            <button onClick={handleVPVizClear}>
+              <Trash2 />
+              Clear all Visualization
+            </button>
           )}
 
         </div>

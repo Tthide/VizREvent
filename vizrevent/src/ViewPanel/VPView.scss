@@ -20,6 +20,7 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
     background-color: dv.$color-tertiary;
     flex-grow: 1;
     max-height: 5rem;
+    border-bottom: dv.$border-thin-primary;
 
     h1 {
       margin-top: 0;
@@ -38,6 +39,12 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
         @include dv.button-styles;
         margin-right: dv.$spacing-small;
         margin-bottom: dv.$spacing-small;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: dv.$spacing-smallest;
+        font-size: dv.$font-size-medium ;
       }
     }
 
