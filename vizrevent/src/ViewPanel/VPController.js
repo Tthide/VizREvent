@@ -143,11 +143,10 @@ const VPController = () => {
         }
 
     }, [state.datasetId]);
-
     return (
         <>
             <VPView
-                isDatasetSelected={state.dataset!==null}
+                isDatasetSelected={state.datasetId!==null}
                 vizList={vizList}
                 vizSelected={state.selectedViz}
                 onVizSelect={handleVizSelect}
