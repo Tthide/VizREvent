@@ -1,9 +1,12 @@
 import React from 'react';
 import Viz from '../Viz/Viz';
 import './VPView.scss';
+import { DndContext, closestCorners } from '@dnd-kit/core';
+import DraggableViz from '../Viz/DraggableViz';
+import { restrictToParentElement } from '@dnd-kit/modifiers';
 
 const VPView = (props) => {
-  const { vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, data } = props;
+  const { vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, data } = props;
 
 
   const handleVizCreateClick = () => {
@@ -11,10 +14,6 @@ const VPView = (props) => {
     //dispatch here a null inputViz so that VPController
     // onVizCreate;
     return onVizCreate();
-  }
-
-  const handleVizSelect = (viz) => {
-    return () => onVizSelect(viz);
   }
 
   const handleVizDelete = () => {
@@ -28,6 +27,24 @@ const VPView = (props) => {
     });
 
   }
+  const handleDragEnd = (event) => {
+    const { active, delta } = event;
+    const movedViz = vizList.find((v) => v.id === active.id);
+
+    if (movedViz) {
+      const updatedViz = {
+        ...movedViz,
+        x: movedViz.x + delta.x,
+        y: movedViz.y + delta.y,
+      };
+
+      const newList = vizList.map((v) =>
+        v.id === movedViz.id ? updatedViz : v
+      );
+
+      onVizUpdatePosition(newList); // You can rename this to onVizUpdatePosition or similar
+    }
+  };
 
   return (
     <div className="vp-container">
@@ -48,19 +65,25 @@ const VPView = (props) => {
         </div>
       </div>
 
-
-      <div className="viz-panel">
-
-        {vizList.map((viz) => (
-          <div
-            key={viz.id}
-            onClick={handleVizSelect(viz)}
-            className={`viz-item ${vizSelected?.id === viz.id ? 'selected' : ''}`}
-          >
-            <Viz key={viz.id} spec={viz.vizQuery} data={data} />
-          </div>
-        ))}
-      </div>
+      <DndContext
+        collisionDetection={closestCorners}
+        modifiers={[restrictToParentElement]}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="viz-panel">
+          {vizList.map((viz) => (
+            <DraggableViz
+              key={viz.id}
+              viz={viz}
+              selected={vizSelected?.id === viz.id}
+              onClick={() => onVizSelect(viz)}
+              onMove={() => { }}
+            >
+              <Viz spec={viz.vizQuery} data={data} />
+            </DraggableViz>
+          ))}
+        </div>
+      </DndContext>
     </div>
   );
 };

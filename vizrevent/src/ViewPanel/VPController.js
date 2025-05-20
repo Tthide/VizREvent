@@ -25,7 +25,9 @@ const VPController = () => {
         if (state.datasetId) {
             const newViz = {
                 id: uuidv4(),
-                vizQuery: vizQuery ? vizQuery.spec : null
+                vizQuery: vizQuery ? vizQuery.spec : null,
+                x: 0,
+                y: 0
             };
             setVizList(preVizList => [...preVizList, newViz]);
             dispatch.setRecSettings(newViz.vizQuery);
@@ -87,6 +89,10 @@ const VPController = () => {
         }
     };
 
+    //updates vizList with new order after drag&drop
+    const handleVizUpdatePosition = (newVizList) => {
+        setVizList(newVizList);
+    };
 
     // Handle updating the vizQuery of the selected visualization
     useEffect(() => {
@@ -142,6 +148,7 @@ const VPController = () => {
                 onVizSelect={handleVizSelect}
                 onVizCreate={handleEmptyVizCreate}
                 onVizDelete={handleVizDelete}
+                onVizUpdatePosition={handleVizUpdatePosition}
                 data={data}
             />
 
