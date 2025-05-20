@@ -1,50 +1,41 @@
 @use '../../_design-variables.scss' as dv;
 
-.data-field-selection {
-    font-family: dv.$font-family-primary;
+
+
+
+.field-item {
+    margin-bottom: dv.$spacing-small;
     padding: dv.$spacing-small;
-    background-color: dv.$color-tertiary;
-    margin-top: dv.$spacing-small;
+    background-color: dv.$color-quaternary;
     border-radius: dv.$border-radius-small;
-    max-height: 20%;
-    height: 20%;
+    transition: background-color 0.3s ease;
 
-    overflow-y: auto;
+    label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: dv.$spacing-small;
+        font-size: dv.$font-size-small;
+        color: dv.$color-primary;
 
+        b {
+            font-weight: bold;
+            color: dv.$color-secondary;
+        }
 
-    .field-item {
-        margin-bottom: dv.$spacing-small;
-        padding: dv.$spacing-small;
-        background-color: dv.$color-quaternary;
-        border-radius: dv.$border-radius-small;
-        transition: background-color 0.3s ease;
-
-        label {
+        input[type="checkbox"] {
+            margin-right: dv.$spacing-small;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: dv.$spacing-small;
-            font-size: dv.$font-size-small;
-            color: dv.$color-primary;
+            accent-color: dv.$color-secondary;
+        }
 
-            b {
-                font-weight: bold;
-                color: dv.$color-secondary;
-            }
-
-            input[type="checkbox"] {
-                margin-right: dv.$spacing-small;
-                cursor: pointer;
-                accent-color: dv.$color-secondary;
-            }
-
-            &:hover {
-                background-color: lighten(dv.$color-quaternary, 5%);
-            }
+        &:hover {
+            background-color: lighten(dv.$color-quaternary, 5%);
         }
     }
-
 }
+
+
 
 .fallback-message {
     @include dv.fallback-message;

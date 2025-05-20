@@ -7,7 +7,7 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
 
 
     return (
-        <div className="data-field-selection">
+        <>
             {dataFields ? (
                 dataFields.length > 0 ? (
                     dataFields.map((field) => (
@@ -37,7 +37,7 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
             ) : (
                 <p className="fallback-message">Please select a dataset</p>
             )}
-        </div>
+        </>
     );
 };
 

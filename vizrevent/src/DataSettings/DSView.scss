@@ -7,13 +7,13 @@
     padding: dv.$spacing-small;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 30%;
-    min-width: 30%;
+    max-width: 30%;
     border-right: solid 3px dv.$color-primary;
-    justify-content: space-evenly;
 
     h1 {
         color: dv.$color-primary; // Text color for the heading
         font-size: dv.$font-size-large;
+        margin: dv.$spacing-small;
     }
 
     .change-dataset-button {
@@ -35,5 +35,41 @@
         font-size: dv.$font-size-medium;
         font-weight: bold;
     }
+
+    .properties-selection {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        overflow: hidden;
+        margin-top: dv.$spacing-small;
+        gap: dv.$spacing-small;
+
+        .data-field-selection {
+            font-family: dv.$font-family-primary;
+            padding: dv.$spacing-smallest;
+            background-color: dv.$color-tertiary;
+            border-radius: dv.$border-radius-small;
+            height: 35%;
+            max-height: 35%;
+            overflow-y: auto;
+        }
+
+
+        .data-encoding-selection {
+            flex: 1 1 auto;
+            font-family: dv.$font-family-primary;
+            padding: dv.$spacing-smallest;
+            background-color: dv.$color-tertiary;
+            border-radius: dv.$border-radius-small;
+            overflow-y: auto;
+
+
+        }
+
+
+    }
+
+
 
 }

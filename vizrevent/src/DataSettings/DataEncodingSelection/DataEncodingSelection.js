@@ -34,17 +34,17 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
 
   // Render fallback
   if (!hasSelectedViz) return (
-    <div className="data-encoding-selection">
+    <>
 
         <p className="fallback-message">Please choose a visualization instance to encode data.</p>
 
-    </div>
+    </>
 
   );
 
   // Main render: dropdowns for mark, x, y, and additional properties
   return (
-    <div className="data-encoding-selection">
+    <>
       {/* Mark selector */}
       <div className="form-group">
         <span className="label">Mark</span>
@@ -163,7 +163,7 @@ const DataEncodingSelection = ({ dataEncodingState, onEncodingChange, hasSelecte
         </div>
       </div>
 
-    </div>
+    </>
   );
 }
 

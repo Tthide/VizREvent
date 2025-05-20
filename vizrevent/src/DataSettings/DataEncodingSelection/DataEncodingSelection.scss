@@ -1,17 +1,6 @@
 @use '../../_design-variables.scss' as dv;
 
 
-.data-encoding-selection {
-    font-family: dv.$font-family-primary;
-    padding: dv.$spacing-small;
-    margin-top: dv.$spacing-large;
-    background-color: dv.$color-tertiary; // Background color for sections
-    padding: dv.$spacing-small;
-    border-radius: dv.$border-radius-small;
-    max-height: 35%;
-    overflow-y: auto;
-}
-
 .form-group {
     margin-bottom: dv.$spacing-small;
     display: flex;
