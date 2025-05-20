@@ -17,7 +17,7 @@ const Viz = ({ spec, data }) => {
                 height: Math.floor(height),
             });
         });
-
+        console.info("re-renders");
         observer.observe(container);
         return () => observer.disconnect();
     }, []);
@@ -36,7 +36,7 @@ const Viz = ({ spec, data }) => {
         <div className="Viz-chart-container" ref={containerRef}>
             {
                 enhancedSpec ? (
-                    <VegaLite key={`${dimensions.width}x${dimensions.height}`} data={data} spec={enhancedSpec} />
+                    <VegaLite key={`${dimensions.width}x${dimensions.height}`} data={data} spec={enhancedSpec}  actions={false} />
                 ) : (
                     <div style={{ width: '200px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span>No Visualization</span>

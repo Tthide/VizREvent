@@ -75,7 +75,7 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
       min-width: dv.rem(160); // Min size to avoid breaking Vega
       min-height: dv.rem(120);
       max-width: 100%;
-      max-height: 100%;
+      max-height: dv.rem(600);
       border: 2px solid dv.$color-primary;
       transition: border 0.2s;
 

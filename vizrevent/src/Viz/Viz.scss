@@ -2,12 +2,14 @@
 
 .Viz-chart-container {
     min-width: 100px;
-    max-width: 100%;
+    max-width: 95%;
+    height: 95%;
     min-height: 100px;
     flex-grow: 1;
     display: flex;
     align-items: stretch;
     justify-content: stretch;
+
 
     >div {
         width: 100% !important;
@@ -16,6 +18,6 @@
 
     canvas {
         width: 100% !important;
-        height:  100% !important;
+        height: 100% !important;
     }
 }
