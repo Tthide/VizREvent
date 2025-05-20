@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { Move } from 'lucide-react';
 const DraggableViz = ({ viz, selected, onClick, children }) => {
@@ -13,7 +13,7 @@ const DraggableViz = ({ viz, selected, onClick, children }) => {
     transform: transform
       ? `translate(${transform.x}px, ${transform.y}px)`
       : undefined,
-    zIndex: selected ? 10 : 1,
+    zIndex: selected ? 1 : 0,
   };
 
   return (
