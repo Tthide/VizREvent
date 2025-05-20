@@ -26,7 +26,7 @@
     padding: dv.$spacing-small;
     font-size: dv.$font-size-small;
     border-radius: dv.$border-radius-small;
-    border: 1px solid dv.$color-primary;
+    border: dv.$border-thinner-primary;
     background-color: white;
     font-family: dv.$font-family-primary;
 }

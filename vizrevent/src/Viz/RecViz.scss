@@ -2,7 +2,7 @@
 
 .RecViz-container {
     background-color: dv.$color-tertiary;
-    border: 1px solid dv.$color-primary;
+    border: dv.$border-thinner-primary;
     display: flex;
     flex-direction: column;
     justify-content: center;
