@@ -47,13 +47,14 @@
 
         .data-field-selection {
             font-family: dv.$font-family-primary;
-            padding: dv.$spacing-smallest;
+            padding: 0;
+            padding-bottom: dv.$spacing-smallest;
             background-color: dv.$color-tertiary;
             border-radius: dv.$border-radius-small;
             height: 35%;
             max-height: 35%;
-            overflow-y: auto;
             border: dv.$border-thin-primary;
+            overflow: hidden; // hide any overflow outside container
         }
 
 

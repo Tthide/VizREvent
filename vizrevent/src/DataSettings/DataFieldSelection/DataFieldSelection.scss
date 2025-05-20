@@ -1,41 +1,81 @@
 @use '../../_design-variables.scss' as dv;
 
-
-
-
-.field-item {
+.data-field-table {
+    width: 100%;
+    border-collapse: collapse;
     margin-bottom: dv.$spacing-small;
-    padding: dv.$spacing-small;
-    background-color: dv.$color-quaternary;
-    border-radius: dv.$border-radius-small;
-    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
 
-    label {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: dv.$spacing-small;
+    thead {
+        flex: 0 0 auto;
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-left: dv.$border-thin-primary;
+    }
+
+    tbody {
+        flex: 1 1 auto; // take all remaining space
+        display: block;
+        overflow-y: scroll;
+        overflow-x: hidden;
+
+        width: 100%;
+        table-layout: fixed;
+
+        scrollbar-width: thin;
+        scrollbar-color: dv.$color-secondary transparent;
+    }
+
+
+
+    tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    th,
+    td {
+        padding: dv.$spacing-small;
+        text-align: left;
         font-size: dv.$font-size-small;
+        box-sizing: border-box;
+        white-space: nowrap; // keep text in one line
+        overflow: hidden; // hide overflow
+        text-overflow: ellipsis; // add "..." at the end
+    }
+
+    td {
         color: dv.$color-primary;
+        border: dv.$border-thinner-primary;
 
-        b {
-            font-weight: bold;
-            color: dv.$color-secondary;
-        }
+    }
 
-        input[type="checkbox"] {
-            margin-right: dv.$spacing-small;
-            cursor: pointer;
-            accent-color: dv.$color-secondary;
-        }
+    th {
 
-        &:hover {
-            background-color: lighten(dv.$color-quaternary, 5%);
-        }
+        background-color: dv.$color-primary;
+        border: dv.$border-thinner-quaternary;
+        border-top: 0;
+        border-bottom: dv.$border-thinner-primary;
+        color: dv.$color-quaternary;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+    }
+
+    tbody tr:hover {
+        background-color: lighten(dv.$color-quaternary, 5%);
+    }
+
+    input[type="checkbox"] {
+        cursor: pointer;
+        accent-color: dv.$color-secondary;
     }
 }
-
-
 
 .fallback-message {
     @include dv.fallback-message;
