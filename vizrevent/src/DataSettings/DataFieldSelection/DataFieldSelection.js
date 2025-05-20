@@ -9,12 +9,12 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                     <table className="data-field-table">
                         <thead>
                             <tr>
-                                <th>Select</th>
-                                <th>Type</th>
-                                <th>Name</th>
-                                <th>Frequency</th>
-                                <th>Entropy</th>
-                                <th>Unique Values</th>
+                                <th title={"Select"}>Select</th>
+                                <th title={"Type"}>Type</th>
+                                <th title={"Name"}>Name</th>
+                                <th title={"Frequency"}>Frequency</th>
+                                <th title={"Entropy"}>Entropy</th>
+                                <th title={"Unique Values"}>Unique Values</th>
                             </tr>
                         </thead>
                         <tbody>
