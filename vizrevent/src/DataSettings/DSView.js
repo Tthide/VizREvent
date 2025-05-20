@@ -32,7 +32,7 @@ const DSView = (props) => {
         <div className="ds-view-container">
             <h1>DSView</h1>
 
-            <button className="change-dataset-button" onClick={handleDatasetSelectionOpen}>
+            <button className={`change-dataset-button ${datasetMetaData === null ? ' no-dataset' : ''}`} onClick={handleDatasetSelectionOpen}>
 
                 {datasetMetaData && datasetMetaData !== null ?
                     <>
@@ -45,7 +45,7 @@ const DSView = (props) => {
                         </span>
                         <span >{datasetMetaData.match_date}</span>
                     </>
-                    : 'Change Dataset' //id :${datasetMetaData.match_id} | da `
+                    : 'Select Dataset' //id :${datasetMetaData.match_id} | da `
 
                 }
 
