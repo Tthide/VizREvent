@@ -8,9 +8,6 @@ const RecViz = (props) => {
 
     const { recItem, hasSelectedViz, onRecItemAdd, onRecItemUpdate } = props;
 
-
-    console.log("in RecViz");
-
     return (
         <div className="RecViz-container">
             {recItem.name !== "" &&

@@ -53,6 +53,7 @@
             height: 35%;
             max-height: 35%;
             overflow-y: auto;
+            border: dv.$border-thin-primary;
         }
 
 
@@ -63,6 +64,7 @@
             background-color: dv.$color-tertiary;
             border-radius: dv.$border-radius-small;
             overflow-y: auto;
+            border: dv.$border-thin-primary;
 
 
         }
