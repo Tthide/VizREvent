@@ -182,7 +182,6 @@ export const buildNewSpec = (hasSelectedViz, { mark, xField, yField, xAgr, yAgr,
 
     const defaultSpec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.20.1.json",
-        "config": { "view": { "continuousHeight": 300, "continuousWidth": 300 } },
         "data": { "name": "dataset" }
     };
 

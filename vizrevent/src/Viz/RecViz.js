@@ -1,6 +1,6 @@
 import React from 'react'
 import Viz from './Viz';
-import './RecViz.scss'; 
+import './RecViz.scss';
 import { CirclePlus, CircleFadingArrowUp } from 'lucide-react';
 
 
@@ -25,7 +25,9 @@ const RecViz = (props) => {
                         <CircleFadingArrowUp /> UPDATE CURRENT
                     </button>}
             </div>
-            <Viz spec={recItem.vizQuery.spec} data={recItem.vizQuery.data} />
+            <div className='RecViz-Viz-container'>
+                <Viz spec={recItem.vizQuery.spec} data={recItem.vizQuery.data} />
+            </div>
         </div>
     )
 }

@@ -55,12 +55,9 @@ const VPView = (props) => {
           <div
             key={viz.id}
             onClick={handleVizSelect(viz)}
-            className="viz-item"
+            className={`viz-item ${vizSelected?.id === viz.id ? 'selected' : ''}`}
           >
-            <div className={`viz-bg ${vizSelected?.id === viz.id ? 'selected' : ''}`} />
-            <div className="viz-content">
-              <Viz key={viz.id} spec={viz.vizQuery} data={data} />
-            </div>
+            <Viz key={viz.id} spec={viz.vizQuery} data={data} />
           </div>
         ))}
       </div>
