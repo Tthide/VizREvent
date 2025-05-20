@@ -59,6 +59,7 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
       top: 0;
       left: 0;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       cursor: pointer;
       padding: dv.$spacing-small;
@@ -78,13 +79,23 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
       border: 2px solid dv.$color-primary;
       transition: border 0.2s;
 
-      margin:dv.$spacing-smallest;
+      margin: dv.$spacing-smallest;
+      flex-shrink: 1;
 
       &.selected {
         background-color: dv.$color-secondary;
         color: dv.$color-quaternary;
       }
 
+      .viz-drag-handle {
+        align-self: flex-start;
+        cursor: move;
+        border-radius: dv.$border-radius-small;
+        background-color: rgba(0, 0, 0, 0.15);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
 
       .viz-content {
         position: relative;

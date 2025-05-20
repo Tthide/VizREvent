@@ -1,6 +1,6 @@
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
-
+import { Move } from 'lucide-react';
 const DraggableViz = ({ viz, selected, onClick, children }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: viz.id,
@@ -22,9 +22,10 @@ const DraggableViz = ({ viz, selected, onClick, children }) => {
       style={style}
       className={`viz-item ${selected ? 'selected' : ''}`}
       onClick={onClick}
-      {...listeners}
-      {...attributes}
     >
+      <div className="viz-drag-handle" {...listeners} {...attributes}>
+        <Move />
+      </div>
       <div className="viz-content">{children}</div>
     </div>
   );
