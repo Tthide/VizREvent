@@ -160,7 +160,7 @@ const VPView = (props) => {
                       onClick={() => onVizSelect(viz)}
                       onMove={() => { }}
                     >
-                      <div id={`viz-${viz.id}`}>
+                      <div id={`viz-${viz.id}`} className='Viz-chart-container'>
                         <Viz spec={viz.vizQuery} data={data} />
                       </div>
                     </DraggableViz>
