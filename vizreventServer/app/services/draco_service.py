@@ -41,7 +41,7 @@ def get_draco_dataframe(preprocessed_data):
     df=df.dropna(axis=1,how='any')
     
     #Debug
-    df.to_csv('debug/output_before_schema.csv', index=False)
+    #df.to_csv('debug/output_before_schema.csv', index=False)
     return df
 
 
