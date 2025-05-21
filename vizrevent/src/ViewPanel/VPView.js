@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Viz from '../Viz/Viz';
 import './VPView.scss';
 import { DndContext, closestCorners } from '@dnd-kit/core';
@@ -9,7 +9,7 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 const VPView = (props) => {
   const { isDatasetSelected, vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, GRID_SIZE, data } = props;
-
+  const transformRef = useRef(null);
 
   const handleVizCreateClick = () => {
 
@@ -55,6 +55,16 @@ const VPView = (props) => {
     }
   };
 
+  //zooming to selectedViz
+  const zoomToElement = () => {
+    if (!vizSelected || !transformRef.current) return;
+
+
+      const el = document.getElementById(`viz-${vizSelected.id}`);
+
+    transformRef.current.zoomToElement(el, 1, 400, "easeOut");
+  };
+
   //enables use of Delete key to delete viz
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -70,6 +80,11 @@ const VPView = (props) => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [vizSelected]);
+  /*
+    //on Mount, we set the initial view position to the center of the canva
+    useEffect(() => {
+      transformRef.current?.centerView();
+    }, []);*/
 
   return (
     <div className="vp-container">
@@ -105,6 +120,7 @@ const VPView = (props) => {
         onDragEnd={handleDragEnd}
       >
         <TransformWrapper
+          ref={transformRef}
           wheel={{ step: 50 }}
           options={{
             minScale: 0.5,
@@ -113,13 +129,15 @@ const VPView = (props) => {
           }}
           pan={{ velocityDisabled: true }}
         >
-          {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+          {({ zoomIn, zoomOut, centerView, ...rest }) => (
             <React.Fragment>
               {isDatasetSelected &&
                 <div className="zoom-tools">
                   <button onClick={() => zoomIn()}>Zoom in +</button>
                   <button onClick={() => zoomOut()}>Zoom out -</button>
-                  <button onClick={() => resetTransform()}>Center x</button>
+                  <button onClick={() => centerView()}>Center x</button>
+                  {vizSelected &&
+                    <button onClick={zoomToElement}>See Selected Viz</button>}
                 </div>}
               <TransformComponent wrapperClass="zoom-wrapper">
                 <div className="viz-panel">
@@ -131,7 +149,9 @@ const VPView = (props) => {
                       onClick={() => onVizSelect(viz)}
                       onMove={() => { }}
                     >
-                      <Viz spec={viz.vizQuery} data={data} />
+                      <div id={`viz-${viz.id}`}>
+                        <Viz spec={viz.vizQuery} data={data} />
+                      </div>
                     </DraggableViz>
                   ))}
                 </div>
