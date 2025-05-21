@@ -105,10 +105,10 @@ const RECController = () => {
         setTotalCount(0);     // optional: reset total count
         setLoading(false);    // ensure loading is false
 
-        if (vizUpdate && state.selectedViz!==null) {
+        if (vizUpdate && state.selectedViz !== null) {
             console.log(recVizSelect)
             dispatch.setVizParam(recVizSelect.vizQuery.spec);
-            
+
         }
         else {
             dispatch.setInputViz(recVizSelect);
@@ -158,7 +158,9 @@ const RECController = () => {
 
     return (
         <>
-            <RECView isOpened={isOpened}
+            <RECView
+                isDatasetSelected={state.datasetId !== null}
+                isOpened={isOpened}
                 loading={loading}
                 onPanelOpenerClick={handlePanelOpener}
                 recList={recList}

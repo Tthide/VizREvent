@@ -1,12 +1,12 @@
 import React from 'react';
 import RecViz from '../Viz/RecViz';
 import { OrbitProgress } from "react-loading-indicators"
-import './RECView.scss'; 
+import './RECView.scss';
 import { ChevronRight } from 'lucide-react';
 
 const RECView = (props) => {
 
-  const { isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect, hasSelectedViz, totalCount } = props;
+  const { isDatasetSelected, isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect, hasSelectedViz, totalCount } = props;
 
 
   const handlePanelExpandClick = () => {
@@ -64,13 +64,13 @@ const RECView = (props) => {
         </div>
       )}
 
-      <button onClick={handlePanelExpandClick} className={'panel-button'}>
+      {isDatasetSelected && <button onClick={handlePanelExpandClick} className={'panel-button'}>
         <ChevronRight
           className={`chevron-icon ${isOpened ? 'rotate-180' : ''}`}
 
-    
+
         />
-      </button>
+      </button>}
     </div>
   );
 };
