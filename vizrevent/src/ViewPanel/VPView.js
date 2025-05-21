@@ -60,7 +60,7 @@ const VPView = (props) => {
     if (!vizSelected || !transformRef.current) return;
 
 
-      const el = document.getElementById(`viz-${vizSelected.id}`);
+    const el = document.getElementById(`viz-${vizSelected.id}`);
 
     transformRef.current.zoomToElement(el, 1, 400, "easeOut");
   };
@@ -122,9 +122,11 @@ const VPView = (props) => {
         <TransformWrapper
           ref={transformRef}
           wheel={{ step: 50 }}
+          panning={{ allowLeftClickPan: false }}
           options={{
-            minScale: 0.5,
-            maxScale: 2,
+            initialScale: 0.8,
+            minScale: 0.1,
+            maxScale: 1.2,
             limitToBounds: false,
           }}
           pan={{ velocityDisabled: true }}
@@ -140,7 +142,16 @@ const VPView = (props) => {
                     <button onClick={zoomToElement}>See Selected Viz</button>}
                 </div>}
               <TransformComponent wrapperClass="zoom-wrapper">
-                <div className="viz-panel">
+                <div
+                  className="viz-canva"
+                  //grid like background
+                  style={{
+                    backgroundImage: `
+      linear-gradient(to right, rgba(0,0,0,0.15) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,0.15) 1px, transparent 1px)
+    `,
+                    backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
+                  }}>
                   {vizList.map((viz) => (
                     <DraggableViz
                       key={viz.id}
