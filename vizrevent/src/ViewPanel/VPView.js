@@ -121,37 +121,36 @@ const VPView = (props) => {
       >
         <TransformWrapper
           ref={transformRef}
-          wheel={{ step: 50 }}
+          wheel={{ step: 50 , smoothStep:0.001}}
           panning={{ allowLeftClickPan: false }}
-          options={{
-            initialScale: 0.8,
-            minScale: 0.1,
-            maxScale: 1.2,
-            limitToBounds: false,
-          }}
+          initialScale={1}
+          minScale={0.2}
+          maxScale={1.2}
+          limitToBounds={false}
           pan={{ velocityDisabled: true }}
         >
           {({ zoomIn, zoomOut, centerView, ...rest }) => (
-            <React.Fragment>
+            <>
               {isDatasetSelected &&
-                <div className="zoom-tools">
+                (<div className="zoom-tools">
+                  <p>{transformRef.current.state}</p>
                   <button onClick={() => zoomIn()}>Zoom in +</button>
                   <button onClick={() => zoomOut()}>Zoom out -</button>
                   <button onClick={() => centerView()}>Center x</button>
                   {vizSelected &&
                     <button onClick={zoomToElement}>See Selected Viz</button>}
-                </div>}
+                </div>)}
               <TransformComponent wrapperClass="zoom-wrapper">
                 <div
                   className="viz-canva"
-                  //grid like background
                   style={{
                     backgroundImage: `
-      linear-gradient(to right, rgba(0,0,0,0.15) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0,0,0,0.15) 1px, transparent 1px)
-    `,
+        linear-gradient(to right, rgba(0,0,0,0.15) 2px, transparent 2px),
+        linear-gradient(to bottom, rgba(0,0,0,0.15) 2px, transparent 2px)
+      `,
                     backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
-                  }}>
+                  }}
+                >
                   {vizList.map((viz) => (
                     <DraggableViz
                       key={viz.id}
@@ -160,14 +159,14 @@ const VPView = (props) => {
                       onClick={() => onVizSelect(viz)}
                       onMove={() => { }}
                     >
-                      <div id={`viz-${viz.id}`} className='Viz-chart-container'>
+                      <div id={`viz-${viz.id}`} className="Viz-chart-container">
                         <Viz spec={viz.vizQuery} data={data} />
                       </div>
                     </DraggableViz>
                   ))}
                 </div>
               </TransformComponent>
-            </React.Fragment>
+            </>
           )}
         </TransformWrapper>
       </DndContext>
