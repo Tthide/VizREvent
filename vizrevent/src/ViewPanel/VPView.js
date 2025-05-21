@@ -5,6 +5,7 @@ import { DndContext, closestCorners } from '@dnd-kit/core';
 import DraggableViz from '../Viz/DraggableViz';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { CirclePlus, OctagonX, Trash2 } from 'lucide-react';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 const VPView = (props) => {
   const { isDatasetSelected, vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, GRID_SIZE, data } = props;
@@ -103,19 +104,41 @@ const VPView = (props) => {
         modifiers={[restrictToParentElement]}
         onDragEnd={handleDragEnd}
       >
-        <div className="viz-panel">
-          {vizList.map((viz) => (
-            <DraggableViz
-              key={viz.id}
-              viz={viz}
-              selected={vizSelected?.id === viz.id}
-              onClick={() => onVizSelect(viz)}
-              onMove={() => { }}
-            >
-              <Viz spec={viz.vizQuery} data={data} />
-            </DraggableViz>
-          ))}
-        </div>
+        <TransformWrapper
+          wheel={{ step: 50 }}
+          options={{
+            minScale: 0.5,
+            maxScale: 2,
+            limitToBounds: false,
+          }}
+          pan={{ velocityDisabled: true }}
+        >
+          {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+            <React.Fragment>
+              {isDatasetSelected &&
+                <div className="zoom-tools">
+                  <button onClick={() => zoomIn()}>Zoom in +</button>
+                  <button onClick={() => zoomOut()}>Zoom out -</button>
+                  <button onClick={() => resetTransform()}>Center x</button>
+                </div>}
+              <TransformComponent wrapperClass="zoom-wrapper">
+                <div className="viz-panel">
+                  {vizList.map((viz) => (
+                    <DraggableViz
+                      key={viz.id}
+                      viz={viz}
+                      selected={vizSelected?.id === viz.id}
+                      onClick={() => onVizSelect(viz)}
+                      onMove={() => { }}
+                    >
+                      <Viz spec={viz.vizQuery} data={data} />
+                    </DraggableViz>
+                  ))}
+                </div>
+              </TransformComponent>
+            </React.Fragment>
+          )}
+        </TransformWrapper>
       </DndContext>
     </div>
   );

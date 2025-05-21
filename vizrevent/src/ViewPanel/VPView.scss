@@ -9,6 +9,7 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
   background-color: dv.$color-quaternary;
   font-family: dv.$font-family-primary;
   border-left: solid 3px dv.$color-primary;
+  overflow: hidden;
 
 
   .vp-banner {
@@ -48,14 +49,32 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
     }
   }
 
+  .zoom-tools {
+    display: flex;
+    margin: dv.$spacing-smallest;
+    gap: dv.$spacing-smallest;
+
+    button {
+      @include dv.button-styles;
+      padding: dv.$spacing-smallest;
+      font-size: dv.$font-size-small;
+    }
+  }
+
+  .zoom-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
   .viz-panel {
-    flex-grow: 1;
+    min-width: 5000px;
+    min-height: 5000px;
     padding: dv.$spacing-medium;
     padding-left: $padding-left-no-rec-overlap;
-    overflow: auto;
+    overflow: hidden;
     margin-top: dv.$spacing-medium;
     position: relative;
-    flex-grow: 1;
 
 
     .viz-item {
