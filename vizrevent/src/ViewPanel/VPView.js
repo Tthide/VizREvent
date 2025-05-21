@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Viz from '../Viz/Viz';
 import './VPView.scss';
-import { DndContext, closestCorners, DragOverlay } from '@dnd-kit/core';
+import { DndContext, closestCorners } from '@dnd-kit/core';
 import DraggableViz from '../Viz/DraggableViz';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { CirclePlus, OctagonX, Trash2 } from 'lucide-react';
@@ -11,11 +11,9 @@ const VPView = (props) => {
   const { isDatasetSelected, vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, GRID_SIZE, data } = props;
   const transformRef = useRef(null);
   const [currentScale, setCurrentScale] = useState(1);
+  const vizListSizeRef = useRef(0);
 
   const handleVizCreateClick = () => {
-
-    //dispatch here a null inputViz so that VPController
-    // onVizCreate;
     return onVizCreate();
   }
 
@@ -67,7 +65,7 @@ const VPView = (props) => {
 
     const el = document.getElementById(`viz-${vizSelected.id}`);
 
-    transformRef.current.zoomToElement(el, 1, 400, "easeOut");
+    transformRef.current.zoomToElement(el, currentScale, 400, "easeOut");
   };
 
   //enables use of Delete key to delete viz
@@ -85,11 +83,21 @@ const VPView = (props) => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [vizSelected]);
-  /*
-    //on Mount, we set the initial view position to the center of the canva
-    useEffect(() => {
-      transformRef.current?.centerView();
-    }, []);*/
+
+  //we check if the vizList has increased (thus if an element has been created)
+  //and we zoom to the created element
+  useEffect(() => {
+
+    const vizListLength = vizList.length;
+    if (vizListLength !== vizListSizeRef.current) {
+      if (vizListLength > vizListSizeRef.current) {
+        zoomToElement();
+      }
+      vizListSizeRef.current = vizListLength;
+    }
+
+  }, [vizList])
+
 
   return (
     <div className="vp-container">
