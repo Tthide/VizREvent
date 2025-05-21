@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Viz from '../Viz/Viz';
 import './VPView.scss';
-import { DndContext, closestCorners } from '@dnd-kit/core';
+import { DndContext, closestCorners, DragOverlay } from '@dnd-kit/core';
 import DraggableViz from '../Viz/DraggableViz';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { CirclePlus, OctagonX, Trash2 } from 'lucide-react';
@@ -10,6 +10,7 @@ import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 const VPView = (props) => {
   const { isDatasetSelected, vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, GRID_SIZE, data } = props;
   const transformRef = useRef(null);
+  const [currentScale, setCurrentScale] = useState(1);
 
   const handleVizCreateClick = () => {
 
@@ -36,9 +37,11 @@ const VPView = (props) => {
     const movedViz = vizList.find((v) => v.id === active.id);
 
     if (movedViz) {
-      const newX = movedViz.x + delta.x;
-      const newY = movedViz.y + delta.y;
-      // Snap to nearest grid point
+      const scale = currentScale || 1;
+
+      const newX = movedViz.x + delta.x / scale;
+      const newY = movedViz.y + delta.y / scale;
+
       const snappedX = Math.round(newX / GRID_SIZE) * GRID_SIZE;
       const snappedY = Math.round(newY / GRID_SIZE) * GRID_SIZE;
 
@@ -47,6 +50,7 @@ const VPView = (props) => {
         x: snappedX,
         y: snappedY,
       };
+
       const newList = vizList.map((v) =>
         v.id === movedViz.id ? updatedViz : v
       );
@@ -54,6 +58,7 @@ const VPView = (props) => {
       onVizUpdatePosition(newList);
     }
   };
+
 
   //zooming to selectedViz
   const zoomToElement = () => {
@@ -121,20 +126,22 @@ const VPView = (props) => {
       >
         <TransformWrapper
           ref={transformRef}
-          wheel={{ step: 50 , smoothStep:0.001}}
+          wheel={{ step: 2, smoothStep: 0.001 }}
           panning={{ allowLeftClickPan: false }}
-          doubleClick={{disabled:true}}
+          doubleClick={{ disabled: true }}
           initialScale={1}
-          minScale={0.2}
+          minScale={0.4}
           maxScale={1.2}
-          limitToBounds={false}
           pan={{ velocityDisabled: true }}
+          onZoom={(ref) => {
+            setCurrentScale(ref.state.scale);
+          }}
         >
           {({ zoomIn, zoomOut, centerView, ...rest }) => (
             <>
               {isDatasetSelected &&
                 (<div className="zoom-tools">
-                  <p>{transformRef.current.state}</p>
+                  {/*<p>Current Scale: {currentScale.toFixed(2)}</p>*/}
                   <button onClick={() => zoomIn()}>Zoom in +</button>
                   <button onClick={() => zoomOut()}>Zoom out -</button>
                   <button onClick={() => centerView()}>Center x</button>
@@ -158,7 +165,7 @@ const VPView = (props) => {
                       viz={viz}
                       selected={vizSelected?.id === viz.id}
                       onClick={() => onVizSelect(viz)}
-                      onMove={() => { }}
+                      currentScale={currentScale}
                     >
                       <div id={`viz-${viz.id}`} className="Viz-chart-container">
                         <Viz spec={viz.vizQuery} data={data} />
