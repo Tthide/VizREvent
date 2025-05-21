@@ -1,8 +1,9 @@
+import config from '../config';
 /**
  * An async generator that yields each chart spec
  * as soon as it’s parsed out of the incoming stream.
  */
-export async function* DracoRecRequest(datasetId = null, specs = null, numChart = 1, serverUrl = "http://localhost:5000/api/draco") {
+export async function* DracoRecRequest(datasetId = null, specs = null, numChart = 1, serverUrl = `${config.API_BASE_URL}/api/draco`) {
     if (datasetId) {
         try {
 

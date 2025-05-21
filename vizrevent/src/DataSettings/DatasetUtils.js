@@ -1,4 +1,5 @@
-export const DatasetFetcher = async (datasetId = null, serverUrl = 'http://localhost:5000/api/dataset') => {
+import config from "../config";
+export const DatasetFetcher = async (datasetId = null, serverUrl = `${config.API_BASE_URL}/api/dataset`) => {
     if (datasetId) {
         try {
 
@@ -20,7 +21,7 @@ export const DatasetFetcher = async (datasetId = null, serverUrl = 'http://local
     }
 };
 
-export const DatasetListFetcher = async (serverUrl = 'http://localhost:5000/api/datasetList') => {
+export const DatasetListFetcher = async (serverUrl = `${config.API_BASE_URL}/api/datasetList`) => {
     try {
         const response = await fetch(`${serverUrl}`);
         if (!response.ok) {
@@ -34,7 +35,7 @@ export const DatasetListFetcher = async (serverUrl = 'http://localhost:5000/api/
     }
 
 }
-export const DatafieldsList = async (datasetId = null, serverUrl = 'http://localhost:5000/api/datafields') => {
+export const DatafieldsList = async (datasetId = null, serverUrl = `${config.API_BASE_URL}/api/datafields`) => {
 
     if (datasetId) {
         try {
