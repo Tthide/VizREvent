@@ -14,41 +14,38 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
   .vp-banner {
     padding: dv.$spacing-large;
     padding-left: $padding-left-no-rec-overlap;
-    position: relative;
-    top: 0;
-    left: 0;
     background-color: dv.$color-tertiary;
-    flex-grow: 1;
-    max-height: 5rem;
     border-bottom: dv.$border-thin-primary;
+    width: 100%;
+    box-sizing: border-box;
 
     h1 {
       margin-top: 0;
       font-size: dv.$font-size-large;
       margin-bottom: dv.$spacing-medium;
       color: dv.$color-primary;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .vp-banner-controller {
-
       display: flex;
-      flex-direction: row;
-      justify-content: left;
+      flex-wrap: wrap;
+      width: 100%;
+      gap: dv.$spacing-small;
 
       button {
         @include dv.button-styles;
-        margin-right: dv.$spacing-small;
-        margin-bottom: dv.$spacing-small;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
         gap: dv.$spacing-smallest;
-        font-size: dv.$font-size-medium ;
+        font-size: dv.$font-size-medium;
+        flex: 1 1 auto;
       }
     }
-
-
   }
 
   .viz-panel {
@@ -57,7 +54,7 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
     padding-left: $padding-left-no-rec-overlap;
     overflow: auto;
     margin-top: dv.$spacing-medium;
-    position: relative; // Enable absolutely positioned children
+    position: relative;
     flex-grow: 1;
 
 
@@ -114,6 +111,7 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
         align-items: center;
       }
     }
+
 
   }
 }
