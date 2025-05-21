@@ -123,6 +123,7 @@ const VPView = (props) => {
           ref={transformRef}
           wheel={{ step: 50 , smoothStep:0.001}}
           panning={{ allowLeftClickPan: false }}
+          doubleClick={{disabled:true}}
           initialScale={1}
           minScale={0.2}
           maxScale={1.2}
