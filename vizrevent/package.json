@@ -1,7 +1,8 @@
 {
   "name": "vizrevent",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage":"https://tthide.github.io/VizREvent/",
   "dependencies": {
     "-": "^0.0.1",
     "@dnd-kit/core": "^6.3.1",
@@ -35,7 +36,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
     "deploy": "gh-pages -d build -b build-UI"
   },
   "eslintConfig": {
