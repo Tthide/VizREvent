@@ -1,6 +1,5 @@
 import json
 import os
-import shutil
 from .dataset_filtering import preprocess_events
 import numpy as np
 
@@ -15,14 +14,12 @@ def clean_temp_files(temp_folder_path):
         print(f"Deleted temporary file: {file_path}")
             
             
-#the dataset needs to be processed to be made usable for draco
-#therefore we create a temp copy of the current dataset on which we will apply the modification
-#if that temp file already exists then we pass it
-def create_temp_file(dataset_name):
+def read_data_temp_file(dataset_name):
     original_file_path = f"./data/events/{dataset_name}.json"
     temp_folder_path = "./data/events/temps"
     temp_file_path = f"{temp_folder_path}/{dataset_name}.json"
     
+    data=[]
     #if temps folder doesn't exist, create it
     if not os.path.exists(temp_folder_path):
         os.makedirs(temp_folder_path)
@@ -30,30 +27,40 @@ def create_temp_file(dataset_name):
 
     # Creating temp file if doesn't already exists
     if not os.path.exists(temp_file_path):
-        # Clean other temporary files
-        #clean_temp_files(temp_folder_path)
+        print(f"No temp file for this dataset: {dataset_name}")
         
-        # Create a temporary file
+        # Create a temporary file for future use
         if os.path.exists(original_file_path):
-            
-            print(f"Temporary file created as a copy of the original file: {temp_file_path}")
+            print(f"Reading original data {original_file_path}")
             #Processing the data before writing it in the file
             with open(original_file_path,"r") as original_file:
-                data= json.load(original_file)
+                raw_data= json.load(original_file)
+                print(f"Preprocessing the data...")
 
-            with open(temp_file_path,"w") as temp_file:
-                json.dump(preprocess_events(data),temp_file,indent=4)
+                data=preprocess_events(raw_data)
+                print(f"Preprocessing done!")
+
             
+            with open(temp_file_path,"w") as temp_file:
+                json.dump(data,temp_file,indent=4)
+                print(f"Temporary file created as a copy of the original file: {temp_file_path}")
+
         else:
             print(f"Original file does not exist: {original_file_path}")
             # Handle the case where the original file does not exist
             # You can create a default temp file or raise an error
-            default_data = {"default_key": "default_value"}
-            with open(temp_file_path, 'w') as temp_file:
-                json.dump(default_data, temp_file,indent=4)
-            print(f"Temporary file created with default data: {temp_file_path}")
+            data = {"default_key": "default_value"}
 
-    return temp_file_path
+            
+    #if temps folder exist, read it
+    else:  
+        print(f"Reading temp file {temp_file_path}") 
+        with open(temp_file_path, 'r') as file:
+            data = json.load(file)
+            print("data_service/get_data" + str(file.name))
+    
+    return data
+
 
 def create_temp_data_schema(schema_data,file_path="./data/events/temps/draco_dataframe.json"):
     

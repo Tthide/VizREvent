@@ -1,23 +1,17 @@
 import os
 import json
-from .temp_file_management import create_temp_file,create_temp_data_schema
+from .temp_file_management import read_data_temp_file,create_temp_data_schema
 import glob
 from .draco_service import get_draco_schema,get_draco_dataframe
 import time
 
 def get_data(dataset_name):
-    
         # Check if the input is a string composed of numbers and nothing else
     if not isinstance(dataset_name, str) or not dataset_name.isdigit():
         raise ValueError("dataset_name must be a string composed of numbers only.")
     
     #checking whether the temp dataset already exist
-    file_path = create_temp_file(dataset_name)
-    
-        
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-        print("data_service/get_data" + str(file.name))
+    data = read_data_temp_file(dataset_name)
     return data
 
 #here we only want to work with the datasets from the 2022 World Cup, if we want to allow users to chose, we would need

@@ -13,6 +13,8 @@ def get_dataset():
         print(f"Dataset: {dataset_id}")
         dataset=get_data(dataset_id)
 
+        print("Data sent!")
+
         return jsonify(dataset)
     except Exception as e:
         traceback.print_exc()  # Print the traceback to the console
