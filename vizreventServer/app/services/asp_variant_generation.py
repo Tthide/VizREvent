@@ -76,18 +76,8 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
                 clauses.append(f"attribute((encoding,aggregate),e0,{agg}).")
                 variants.append((f"add_agg_{agg}_{channel}", base + clauses))
 
-        # Variant: Try stacking options
-        if stack:
-            for s in ["zero", "center", "normalize"]:
-                if s != stack:
-                    clauses = []
-                    clauses.append(f"attribute((encoding,channel),e0,{channel}).")
-                    clauses.append(f"attribute((encoding,field),e0,{field}).")
-                    clauses.append(f"attribute((encoding,stack),e0,{s}).")
-                    variants.append((f"change_stack_{s}_{channel}", base + clauses))
-                    
     # Variant: Add additional encoding using existing fields
-    for channel in ["color", "size", "shape", "text"]:
+    for channel in ["color", "size", "shape"]:
         for field in used_fields:
             clauses = []
             if mark:
