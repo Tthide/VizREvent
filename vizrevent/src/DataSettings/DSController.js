@@ -160,7 +160,7 @@ const DSController = () => {
                     console.log('Fetching data fields...');
                     const fieldList = await DatafieldsList(state.datasetId);
                     console.log('Fetched data fields:', fieldList);
-                    setDataFields(fieldList);
+                    setDataFields(fieldList.field);
                 }
             } catch (error) {
                 console.error("Error fetching data fields:", error);

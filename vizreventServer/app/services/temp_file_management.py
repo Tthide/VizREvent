@@ -1,7 +1,6 @@
 import json
 import os
 from .dataset_filtering import preprocess_events
-import numpy as np
 
 #we need the unused temp files to be deleted when switching to another dataset
 #we already suppose in this function, that the folder exists
@@ -60,21 +59,3 @@ def read_data_temp_file(dataset_name):
             print("data_service/get_data" + str(file.name))
     
     return data
-
-
-def create_temp_data_schema(schema_data,file_path="./data/events/temps/draco_dataframe.json"):
-    
-        # Function to convert non-serializable objects to serializable format
-    def convert_to_serializable(obj):
-        if isinstance(obj, np.integer):
-            return int(obj)
-        raise TypeError(f"Type {type(obj)} not serializable")
-
-    # Convert the 'field' part of the schema to a JSON string with indentation
-    json_object = json.dumps(schema_data["field"], indent=4, default=convert_to_serializable)
-
-    # Write the JSON string to a file
-    with open(file_path, "w") as outfile:
-        outfile.write(json_object)
-        
-    return file_path
