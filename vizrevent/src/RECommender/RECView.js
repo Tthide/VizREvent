@@ -45,7 +45,7 @@ const RECView = (props) => {
                 <OrbitProgress
                   color="#FFFFFF"
                   size="medium"
-                  text={`${recList.length} / ${totalCount}`}
+                  text={totalCount!==0? `${recList.length} / ${totalCount}` : "..."}
                   textColor="#ffffff"
                 />
                 <h2>Recommendations loading...</h2>

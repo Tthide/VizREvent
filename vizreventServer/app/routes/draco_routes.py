@@ -33,9 +33,10 @@ def get_draco_recommendations():
 
         # Wrap our generator in a JSON array:
         def generate():
-                for chart in charts:
+                for i,chart in enumerate(charts):
                     # send only key/name/spec
                     out = {k: chart[k] for k in ("name", "spec")}
+                    out["nb_item"]=len(charts)
                     yield json.dumps(out) + "\n"
 
         return Response(stream_with_context(generate()),

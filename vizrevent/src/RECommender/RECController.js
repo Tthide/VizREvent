@@ -55,7 +55,7 @@ const RECController = () => {
                     console.info("Aborted recommendation processing");
                     return;
                 }
-
+                setTotalCount(item.nb_item)
                 // append as soon as it arrives
                 appendRecItem({
                     id: uuidv4(),
