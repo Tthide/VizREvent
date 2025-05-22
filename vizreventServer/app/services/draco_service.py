@@ -179,7 +179,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     
 
     # Sort the dictionary by the cost value and extract chart_vega_lite_json values
-    sorted_chart_vega_lite_json_list = [{"name":value[0],"spec":value[1]} for value in sorted(chart_specs.values(), key=lambda item: item[2])]
+    sorted_chart_vega_lite_json_list = [{"name":value[0],"spec":value[1]["spec"]} for value in sorted(chart_specs.values(), key=lambda item: item[2])]
     print("\n len output_specs",len(sorted_chart_vega_lite_json_list))
 
     return sorted_chart_vega_lite_json_list
