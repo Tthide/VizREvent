@@ -1,6 +1,8 @@
 altair==5.5.0
-draco==2.0.1
-Flask==3.1.0
+git+https://github.com/Tthide/draco2.git
+Flask==3.1.1
 flask_cors==5.0.1
-numpy==2.2.5
+ipython==8.36.0
+numpy==2.2.6
 pandas==2.2.3
+tqdm==4.67.1
