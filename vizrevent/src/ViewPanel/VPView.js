@@ -40,8 +40,16 @@ const VPView = (props) => {
       const newX = movedViz.x + delta.x / scale;
       const newY = movedViz.y + delta.y / scale;
 
-      const snappedX = Math.round(newX / GRID_SIZE) * GRID_SIZE;
-      const snappedY = Math.round(newY / GRID_SIZE) * GRID_SIZE;
+      let snappedX = Math.round(newX / GRID_SIZE) * GRID_SIZE;
+      let snappedY = Math.round(newY / GRID_SIZE) * GRID_SIZE;
+
+      //edge case handling
+      if (snappedX === 0) {
+        snappedX = 1;
+      }
+      if (snappedY === 0) {
+        snappedY = 1;
+      }
 
       const updatedViz = {
         ...movedViz,
