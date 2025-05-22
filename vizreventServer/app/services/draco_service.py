@@ -4,7 +4,7 @@ from draco import dict_to_facts
 from draco.renderer import AltairRenderer
 from .dataset_filtering import split_vega_lite_spec
 from .asp_variant_generation import generate_asp_variants
-
+import heapq
 import time
 
 def get_draco_dataframe(preprocessed_data):
@@ -122,16 +122,13 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
         spec_facts = generate_asp_variants(specs, default_input_spec)
         input_specs = [(spec[0],draco_facts + spec[1]) for spec in spec_facts]
 
-    # Dictionary to store the generated recommendations
     chart_specs = {}
+    # Heap to store top 10 lowest-cost models (as a max-heap using negative costs)
+    top_models_heap = []
 
-    # Track top 10 models with lowest cost as they are found
-    top_models = []
-
-    # Maximum number of charts to render
     MAX_CHARTS = 10
 
-    # Gather and filter (chart_name, model, i, j) tuples dynamically
+    # Gather and filter (chart_name, model, i, j) using a heap
     for i, spec in enumerate(input_specs):
         for j, model in enumerate(d.complete_spec(spec[1], num_chart)):
             if specs is not None:
@@ -139,19 +136,23 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
             else:
                 chart_name = f"chart_{i}_{j}"
 
-            # If fewer than 10, add directly
-            if len(top_models) < MAX_CHARTS:
-                top_models.append((chart_name, model, i, j))
-                # Sort so highest-cost is last
-                top_models.sort(key=lambda x: x[1].cost)
-            else:
-                # If current model is cheaper than the most expensive one in top_models
-                if model.cost < top_models[-1][1].cost:
-                    top_models[-1] = (chart_name, model, i, j)
-                    top_models.sort(key=lambda x: x[1].cost)
+            # Use negative cost to simulate max-heap
+            cost = model.cost[0] if isinstance(model.cost, list) else model.cost
+            entry = (-cost, chart_name, i, j, model )
 
-    # Now render and convert only the top models
-    for chart_name, model, i, j in top_models:
+            if len(top_models_heap) < MAX_CHARTS:
+                heapq.heappush(top_models_heap, entry)
+            else:
+                # Only push if better than current worst (i.e. lowest negated cost)
+                if cost < -top_models_heap[0][0]:
+                    heapq.heappushpop(top_models_heap, entry)
+
+    # Convert heap to sorted list (ascending cost)
+    top_models = sorted([(-cost, chart_name, i, j, model ) for cost, chart_name, i, j, model in top_models_heap])
+
+
+    # Now render and convert only these
+    for cost, chart_name, i, j, model  in top_models:
         chart_debug_name = f"CHART {(i * num_chart + j)}_{chart_name}"
         schema = draco.answer_set_to_dict(model.answer_set)
 
@@ -163,12 +164,12 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
         chart_vega_lite_json = split_vega_lite_spec(chart_vega_lite.to_json())
 
         unique_key = f"{chart_name}_{i}_{j}"
-        chart_specs[unique_key] = (chart_name, chart_vega_lite_json, model.cost)
+        chart_specs[unique_key] = (chart_name, chart_vega_lite_json, cost)
 
         if Debug:
-            with open("debug/" + chart_debug_name + '_output.vg.json', 'w') as f:
+            with open(f"debug/{chart_debug_name}_output.vg.json", 'w') as f:
                 print(f"Writing output {chart_debug_name} in {f.name}")
-                print(f"Current chart cost: {model.cost}")
+                print(f"Current chart cost: {cost}")
                 f.write(chart_vega_lite.to_json())
 
     # Format output
@@ -177,7 +178,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
         for value in chart_specs.values()
     ]
 
-    print(f"\nExecution Time: {time.time() - start_time:.2f} seconds")
+    print(f"\nExecution Time: {time.time() - start_time:.2f} seconds | Item number: {len(input_specs)*num_chart} | Per Item : {( time.time() - start_time )/(len(input_specs)*num_chart)}")
     return sorted_chart_vega_lite_json_list
 
 
