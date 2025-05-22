@@ -122,31 +122,42 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
         spec_facts = generate_asp_variants(specs, default_input_spec)
         input_specs = [(spec[0],draco_facts + spec[1]) for spec in spec_facts]
 
-
     # Dictionary to store the generated recommendations
     chart_specs = {}
-    
-    #Gather all (chart_name, model, i, j) tuples
-    all_models = []
+
+    # Track top 10 models with lowest cost as they are found
+    top_models = []
+
+    # Maximum number of charts to render
+    MAX_CHARTS = 10
+
+    # Gather and filter (chart_name, model, i, j) tuples dynamically
     for i, spec in enumerate(input_specs):
         for j, model in enumerate(d.complete_spec(spec[1], num_chart)):
             if specs is not None:
                 chart_name = spec[0] + f"_{j}"
             else:
                 chart_name = f"chart_{i}_{j}"
-            all_models.append((chart_name, model, i, j))
 
-    #Sort by model cost
-    all_models_sorted = sorted(all_models, key=lambda x: x[1].cost)
+            # If fewer than 10, add directly
+            if len(top_models) < MAX_CHARTS:
+                top_models.append((chart_name, model, i, j))
+                # Sort so highest-cost is last
+                top_models.sort(key=lambda x: x[1].cost)
+            else:
+                # If current model is cheaper than the most expensive one in top_models
+                if model.cost < top_models[-1][1].cost:
+                    top_models[-1] = (chart_name, model, i, j)
+                    top_models.sort(key=lambda x: x[1].cost)
 
-    #Only keep the top 10 to render/convert
-    top_models = all_models_sorted[:10]
-
-    #Now render and convert only these
+    # Now render and convert only the top models
     for chart_name, model, i, j in top_models:
         chart_debug_name = f"CHART {(i * num_chart + j)}_{chart_name}"
         schema = draco.answer_set_to_dict(model.answer_set)
-        chart_vega_lite = renderer.render(spec=schema, data=draco_data)
+
+        # renderer.render returns a full vega-lite viz, but we only want the specs,
+        # to improve performance we feed it an empty dataframe
+        chart_vega_lite = renderer.render(spec=schema, data=pd.DataFrame())
 
         # Convert to JSON and prepare for frontend
         chart_vega_lite_json = split_vega_lite_spec(chart_vega_lite.to_json())
@@ -160,7 +171,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
                 print(f"Current chart cost: {model.cost}")
                 f.write(chart_vega_lite.to_json())
 
-    #Format output
+    # Format output
     sorted_chart_vega_lite_json_list = [
         {"name": value[0], "spec": value[1]["spec"]}
         for value in chart_specs.values()
@@ -168,6 +179,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
 
     print(f"\nExecution Time: {time.time() - start_time:.2f} seconds")
     return sorted_chart_vega_lite_json_list
+
 
 
 #Usage Example
