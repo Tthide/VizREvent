@@ -4,6 +4,7 @@ import {
   SET_DATASETID,
   SET_INPUT_VIZ,
   SET_SELECTED_VIZ,
+  SET_DATASET_DATA,
 } from './VizreventActions';
 
 // Initial state
@@ -24,6 +25,8 @@ const reducer = (state, action) => {
       return { ...state, vizParam: action.payload };
     case SET_DATASETID:
       return { ...state, datasetId: action.payload };
+    case SET_DATASET_DATA:
+      return { ...state, datasetData: action.payload };
     case SET_INPUT_VIZ:
       return { ...state, inputViz: action.payload };
     case SET_SELECTED_VIZ:

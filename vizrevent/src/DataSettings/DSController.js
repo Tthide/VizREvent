@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import DSView from './DSView'
 import { useStoreSelector } from '../Store/VizreventStore';
-import { DatasetListFetcher, DatafieldsList } from './DatasetUtils';
+import { DatasetListFetcher, DatafieldsList,DatasetFetcher } from './DatasetUtils';
 import { buildNewSpec, parseSpec } from './DataEncodingSelection/DataEncodingUtils';
 
 const DSController = () => {
@@ -74,13 +74,13 @@ const DSController = () => {
             copyState.yField = newEncoding;
         }
         if (category === 'xAgr') {
-            newEncoding =  payload!==""? JSON.parse(payload):{};
+            newEncoding = payload !== "" ? JSON.parse(payload) : {};
             setXAgr(newEncoding);
 
             copyState.xAgr = newEncoding;
         }
         if (category === 'yAgr') {
-            newEncoding =  payload!==""? JSON.parse(payload):{};
+            newEncoding = payload !== "" ? JSON.parse(payload) : {};
             setYAgr(newEncoding);
 
             copyState.yAgr = newEncoding;
@@ -103,7 +103,7 @@ const DSController = () => {
 
             copyState.encodingProperties = newEncoding;
 
-          }
+        }
         // before dispatching, tell the effect to skip once
         skipNextVizSelectEffect.current = true;
 
@@ -146,10 +146,25 @@ const DSController = () => {
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     /**
-    *Takes selected datasetId and dispatch it to store.
+    *Takes selected dataset, fetch its data, and dispatches datasetId and datasetData to store.
     */
     const handleDatasetSelect = (datasetId) => {
         dispatch.setDatasetId(datasetId);
+
+        //getting the datasetData and dispatching it
+        if (datasetId) {
+            const fetchData = async () => {
+                try {
+                    const result = await DatasetFetcher(datasetId);
+                    console.log("Viz/Data Fetched");
+                    dispatch.setDatasetData({ "dataset": [...result] });
+                } catch (err) {
+                    console.error('Error fetching dataset:', err);
+                }
+            };
+            fetchData();
+        }
+
     };
 
     //fetching the dataFields only when the dataset changes
@@ -197,14 +212,14 @@ const DSController = () => {
             <DSView
                 hasSelectedViz={state.selectedViz !== null}
                 datasetList={datasetList}
-                datasetMetaData={state.datasetId !==null? datasetList.find(dataset => dataset.match_id === state.datasetId) : null}
+                datasetMetaData={state.datasetId !== null ? datasetList.find(dataset => dataset.match_id === state.datasetId) : null}
                 dataFields={dataFields}
                 selectedFields={selectedFields}
                 dataEncodingState={encodingState}
                 onDatasetChange={handleDatasetSelect}
                 onDatafieldSelect={handleDatafieldSelect}
                 onEncoderSelect={handleEncoderChange} />
-           {/* <pre>Local state:{JSON.stringify(selectedFields, null, 2)}</pre>
+            {/* <pre>Local state:{JSON.stringify(selectedFields, null, 2)}</pre>
 
             <pre>DSControllerPseudoState:{JSON.stringify(state, null, 2)}</pre>*/}
         </>

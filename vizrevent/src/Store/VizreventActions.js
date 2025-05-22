@@ -4,6 +4,7 @@ export const SET_VIZ_PARAM = 'SET_VIZ_PARAM';
 export const SET_DATASETID = 'SET_DATASETID';
 export const SET_INPUT_VIZ = 'SET_INPUT_VIZ';
 export const SET_SELECTED_VIZ = 'SET_SELECTED_VIZ';
+export const SET_DATASET_DATA = 'SET_DATASET_DATA';
 
 
 // Action creators
@@ -20,6 +21,10 @@ export const setVizParam = (vizParam) => ({
 export const setDatasetId = (datasetId) => ({
   type: SET_DATASETID,
   payload: datasetId,
+});
+export const setDatasetData = (datasetData) => ({
+  type: SET_DATASET_DATA,
+  payload: datasetData,
 });
 
 export const setInputViz = (inputViz) => ({
