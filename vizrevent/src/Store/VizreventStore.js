@@ -6,6 +6,7 @@ import {
   setDatasetId,
   setInputViz,
   setSelectedViz,
+  setDatasetData
 } from './VizreventActions';
 
 // Create a context for the store
@@ -22,6 +23,8 @@ export const StoreProvider = ({ children }) => {
       setDatasetId: (datasetId) => dispatch(setDatasetId(datasetId)),
       setInputViz: (inputViz) => dispatch(setInputViz(inputViz)),
       setSelectedViz: (selectedViz) => dispatch(setSelectedViz(selectedViz)),
+      setDatasetData: (datasetData) => dispatch(setDatasetData(datasetData)),
+
     },
   }), [state]);
 
@@ -34,7 +37,7 @@ export const StoreProvider = ({ children }) => {
 
 
 // Custom hook to use the store with possible selection of relevant properties and dispatch methods
-export const useStoreSelector = (stateSelector = state => state, dispatchSelector = dispatchMethods => dispatchMethods)=> {
+export const useStoreSelector = (stateSelector = state => state, dispatchSelector = dispatchMethods => dispatchMethods) => {
   const context = useContext(StoreContext);
   if (context === undefined) {
     throw new Error('useStoreSelector must be used within a StoreProvider');
@@ -43,11 +46,11 @@ export const useStoreSelector = (stateSelector = state => state, dispatchSelecto
   const { state, dispatchMethods } = context;
   const selectedState = stateSelector(state);
   const selectedDispatchMethods = dispatchSelector(dispatchMethods);
- // console.log('Dispatch Methods:', dispatchMethods);
- // console.log('Selected Dispatch Methods:', selectedDispatchMethods);
+  // console.log('Dispatch Methods:', dispatchMethods);
+  // console.log('Selected Dispatch Methods:', selectedDispatchMethods);
 
   return {
-    state:selectedState,
-    dispatch:selectedDispatchMethods,
+    state: selectedState,
+    dispatch: selectedDispatchMethods,
   };
 };

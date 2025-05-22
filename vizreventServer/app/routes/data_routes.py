@@ -13,6 +13,8 @@ def get_dataset():
         print(f"Dataset: {dataset_id}")
         dataset=get_data(dataset_id)
 
+        print("Data sent!")
+
         return jsonify(dataset)
     except Exception as e:
         traceback.print_exc()  # Print the traceback to the console
@@ -24,8 +26,10 @@ def get_datafields():
     try:
         #every API request from react will contain the current chosen dataset
         dataset_id = request.args.get('dataset_id')
+        print("Getting datafields...")
         data = get_data_fields(dataset_id)
         # Return the fields as a JSON response
+        print("Datafields Sent !")
         return jsonify(data)
     
     except FileNotFoundError:

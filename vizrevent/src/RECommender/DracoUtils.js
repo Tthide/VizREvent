@@ -1,9 +1,10 @@
-import config from '../config';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 /**
  * An async generator that yields each chart spec
  * as soon as it’s parsed out of the incoming stream.
  */
-export async function* DracoRecRequest(datasetId = null, specs = null, numChart = 1, serverUrl = `${config.API_BASE_URL}/api/draco`) {
+export async function* DracoRecRequest(datasetId = null, specs = null, numChart = 1, serverUrl = "http://localhost:5000/api/draco") {
     if (datasetId) {
         try {
 
@@ -34,7 +35,7 @@ export async function* DracoRecRequest(datasetId = null, specs = null, numChart 
             const reader = response.body.getReader();
             const decoder = new TextDecoder("utf-8");
             let buf = "";
-            
+
             while (true) {
                 const { value, done } = await reader.read();
                 if (done) break;

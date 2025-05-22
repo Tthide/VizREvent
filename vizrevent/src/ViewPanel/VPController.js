@@ -14,11 +14,13 @@ const VPController = () => {
         inputViz: state.inputViz,
         selectedViz: state.selectedViz,
         datasetId: state.datasetId,
+        datasetData: state.datasetData
+
     }));
+    console.log("VP/datasetData", state.datasetData);
 
     //Creating local state 
     const [vizList, setVizList] = useState([]);
-    const [data, setData] = useState([]);
 
     //the viz panel consist of grid in which we can place the viz instances, here we can change the size of each grid cells
     //the bigger the size, the less freedom in placement we have
@@ -121,32 +123,10 @@ const VPController = () => {
     }, [state.vizParam]);
 
 
-    //fetching the data on creation (if not already passed by parent component)
-    //only for non RecViz
-    useEffect(() => {
-
-
-        if (state.datasetId) {
-            const fetchData = async () => {
-                try {
-                    const result = await DatasetFetcher(state.datasetId);
-                    console.log("Viz/Data Fetched");
-
-                    setData({ "dataset": [...result] });
-                } catch (err) {
-                    console.error('Error fetching dataset:', err);
-                }
-            };
-
-
-            fetchData();
-        }
-
-    }, [state.datasetId]);
     return (
         <>
             <VPView
-                isDatasetSelected={state.datasetId!==null}
+                isDatasetSelected={state.datasetId !== null}
                 vizList={vizList}
                 vizSelected={state.selectedViz}
                 onVizSelect={handleVizSelect}
@@ -154,7 +134,7 @@ const VPController = () => {
                 onVizDelete={handleVizDelete}
                 onVizUpdatePosition={handleVizUpdatePosition}
                 GRID_SIZE={GRID_SIZE}
-                data={data}
+                data={state.datasetData}
             />
 
             {/* //for debug

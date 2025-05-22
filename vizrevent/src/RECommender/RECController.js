@@ -12,7 +12,9 @@ const RECController = () => {
     const { state, dispatch } = useStoreSelector(state => ({
         recSettings: state.recSettings,
         datasetId: state.datasetId,
-        selectedViz: state.selectedViz
+        selectedViz: state.selectedViz,
+        datasetData: state.datasetData
+
     }));
 
     //Creating local state 
@@ -29,13 +31,19 @@ const RECController = () => {
     const controllerRef = useRef(null);
 
 
+    useEffect(() => {
+        console.log("Rec/datasetData", state.datasetData)
+
+    }, [state.datasetData])
+
+
 
     // Append new recommendation item to the recList
     const appendRecItem = useCallback((item) => {
         setRecList(prevList => [...prevList, item]);
     }, []);
     // Stream solutionSet one-by-one and append
-    const streamRecommendations = useCallback(async (recSettings, signal) => {
+    const streamRecommendations = useCallback(async (datasetData,recSettings, signal) => {
 
         setTotalCount(0);
         try {
@@ -47,12 +55,12 @@ const RECController = () => {
                     console.info("Aborted recommendation processing");
                     return;
                 }
-
+                setTotalCount(item.nb_item)
                 // append as soon as it arrives
                 appendRecItem({
                     id: uuidv4(),
                     name: item.name,
-                    vizQuery: item.spec,
+                    vizQuery: { data: { ...datasetData }, spec: { ...item.spec } },
                 });
 
 
@@ -143,7 +151,7 @@ const RECController = () => {
                 controllerRef.current = newController;
 
 
-                streamRecommendations(state.recSettings, newController.signal).finally(() => {
+                streamRecommendations(state.datasetData,state.recSettings, newController.signal).finally(() => {
                     if (!newController.signal.aborted) {
                         setLoading(false);
                         lastRecSettingsRef.current = state.recSettings;
@@ -155,6 +163,7 @@ const RECController = () => {
         // eslint-disable-next-line
     }, [isOpened, state.recSettings, state.datasetId, streamRecommendations]);
 
+    console.log("RecList", recList)
 
     return (
         <>
@@ -166,7 +175,8 @@ const RECController = () => {
                 recList={recList}
                 totalCount={totalCount}
                 hasSelectedViz={state.selectedViz !== null}
-                onRecItemSelect={handleRecSelection} />
+                onRecItemSelect={handleRecSelection}
+            />
 
             {//debug   
             /* 

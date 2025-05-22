@@ -136,3 +136,4 @@ dist
 vizreventServer/data/events/temps/*
 .spyproject
 vizreventServer/debug/*
+vizrevent/build/*
