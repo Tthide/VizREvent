@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.22bc3cd3.css",
-    "main.js": "/static/js/main.a3bc2d0b.js",
-    "static/js/453.2ff1f593.chunk.js": "/static/js/453.2ff1f593.chunk.js",
-    "static/media/github-mark.svg": "/static/media/github-mark.6fa18895f6e6c7772cab7049f7e05f59.svg",
-    "index.html": "/index.html",
-    "main.22bc3cd3.css.map": "/static/css/main.22bc3cd3.css.map",
-    "main.a3bc2d0b.js.map": "/static/js/main.a3bc2d0b.js.map",
-    "453.2ff1f593.chunk.js.map": "/static/js/453.2ff1f593.chunk.js.map"
+    "main.css": "/VizREvent/static/css/main.22bc3cd3.css",
+    "main.js": "/VizREvent/static/js/main.c60331f0.js",
+    "static/js/453.2ff1f593.chunk.js": "/VizREvent/static/js/453.2ff1f593.chunk.js",
+    "static/media/github-mark.svg": "/VizREvent/static/media/github-mark.6fa18895f6e6c7772cab7049f7e05f59.svg",
+    "index.html": "/VizREvent/index.html",
+    "main.22bc3cd3.css.map": "/VizREvent/static/css/main.22bc3cd3.css.map",
+    "main.c60331f0.js.map": "/VizREvent/static/js/main.c60331f0.js.map",
+    "453.2ff1f593.chunk.js.map": "/VizREvent/static/js/453.2ff1f593.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.22bc3cd3.css",
-    "static/js/main.a3bc2d0b.js"
+    "static/js/main.c60331f0.js"
   ]
 }
