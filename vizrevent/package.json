@@ -2,7 +2,7 @@
   "name": "vizrevent",
   "version": "0.1.0",
   "private": false,
-  "homepage":"https://tthide.github.io/VizREvent/",
+  "homepage": "/",
   "dependencies": {
     "-": "^0.0.1",
     "@dnd-kit/core": "^6.3.1",
