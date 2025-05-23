@@ -137,3 +137,7 @@ vizreventServer/data/events/temps/*
 .spyproject
 vizreventServer/debug/*
 vizrevent/build/*
+
+#local exe build files
+vizreventServer/build/*
+vizreventServer/app/frontend_build/*
