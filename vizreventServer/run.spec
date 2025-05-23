@@ -4,7 +4,7 @@ from PyInstaller.utils.hooks import collect_all
 
 datas = [('app/frontend_build', 'frontend_build')]
 binaries = []
-hiddenimports = []
+hiddenimports = ['_cffi_backend']
 hiddenimports += collect_submodules('draco')
 hiddenimports += collect_submodules('clingo')
 tmp_ret = collect_all('clingo')
