@@ -18,7 +18,7 @@ def preprocess_events(events: list[dict],
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Config file not found: {config_path}")
 
-    with open(config_path, 'r') as f:
+    with open(config_path, 'r', encoding='utf-8') as f:
         CONFIG = json.load(f)
 
     KEEP_KEYS = CONFIG.get('keep_keys', [])
@@ -81,7 +81,7 @@ def is_preprocessed(data: list[dict[str, any]], config_path: str = DEFAULT_CONF)
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Config file not found: {config_path}")
 
-    with open(config_path, 'r') as f:
+    with open(config_path, 'r', encoding='utf-8') as f:
         CONFIG = json.load(f)
 
     KEEP_KEYS = CONFIG.get('keep_keys', [])

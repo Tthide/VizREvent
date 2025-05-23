@@ -178,7 +178,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
         chart_specs[unique_key] = (chart_name, chart_vega_lite_json, cost)
 
         if Debug:
-            with open(f"debug/{chart_debug_name}_output.vg.json", 'w') as f:
+            with open(f"debug/{chart_debug_name}_output.vg.json", 'w', encoding='utf-8') as f:
                 print(f"Writing output {chart_debug_name} in {f.name}")
                 print(f"Current chart cost: {cost}")
                 f.write(chart_vega_lite.to_json())
@@ -197,6 +197,6 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
 
 #Usage Example
 """file_path = create_temp_file("3857256")
-with open(file_path, 'r') as file:
+with open(file_path, 'r', encoding='utf-8') as file:
     data = json.load(file)
     draco_rec_compute(data,Debug=True)"""

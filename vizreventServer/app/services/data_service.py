@@ -23,7 +23,7 @@ def list_datasets():
     for filename in os.listdir(datasets_dir):
         if filename.endswith(".json"):  # Assuming the files are JSON files
             file_path = os.path.join(datasets_dir, filename)
-            with open(file_path, 'r') as file:
+            with open(file_path, 'r',encoding='utf-8') as file:
                 data = json.load(file)
                 # Ensure data is a list and extend the datasets list
                 if isinstance(data, list):

@@ -32,7 +32,7 @@ def read_data_temp_file(dataset_name):
         if os.path.exists(original_file_path):
             print(f"Reading original data {original_file_path}")
             #Processing the data before writing it in the file
-            with open(original_file_path,"r") as original_file:
+            with open(original_file_path,"r", encoding='utf-8') as original_file:
                 raw_data= json.load(original_file)
                 print(f"Preprocessing the data...")
 
@@ -40,7 +40,7 @@ def read_data_temp_file(dataset_name):
                 print(f"Preprocessing done!")
 
             
-            with open(temp_file_path,"w") as temp_file:
+            with open(temp_file_path,"w", encoding='utf-8') as temp_file:
                 json.dump(data,temp_file,indent=4)
                 print(f"Temporary file created as a copy of the original file: {temp_file_path}")
 
@@ -54,7 +54,7 @@ def read_data_temp_file(dataset_name):
     #if temps folder exist, read it
     else:  
         print(f"Reading temp file {temp_file_path}") 
-        with open(temp_file_path, 'r') as file:
+        with open(temp_file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
             print("data_service/get_data" + str(file.name))
     
