@@ -10,7 +10,7 @@ from ..services.draco_service import draco_rec_compute
 draco_bp = Blueprint('draco', __name__)
 @draco_bp.route('/api/draco', methods=['POST'])
 def get_draco_recommendations():
-
+    print("Received /api/dataset call...")   
     try:
         # Parse & validate JSON payload
         payload = request.get_json(force=True)

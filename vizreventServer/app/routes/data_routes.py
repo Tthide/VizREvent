@@ -7,6 +7,7 @@ data_bp = Blueprint('data', __name__)
 
 @data_bp.route('/api/dataset', methods=['GET'])
 def get_dataset():
+    print("Received /api/dataset call...")   
     try:
         #every API request from react will contain the current chosen dataset
         dataset_id = request.args.get('dataset_id')
@@ -23,6 +24,7 @@ def get_dataset():
 
 @data_bp.route('/api/datafields', methods=['GET'])
 def get_datafields():
+    print("Received /api/datafields call...")
     try:
         #every API request from react will contain the current chosen dataset
         dataset_id = request.args.get('dataset_id')
@@ -41,6 +43,7 @@ def get_datafields():
 
 @data_bp.route('/api/datasetList', methods=['GET'])
 def list_datasets_route():
+    print("Received /api/datasetList call...")
     try:
         print("Getting datasetLists...")
         datasets = list_datasets()

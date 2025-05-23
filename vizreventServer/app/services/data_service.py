@@ -23,8 +23,12 @@ def list_datasets():
     datasets_dir = Path(get_resource_path("data/matches/"))
     datasets = []
 
-    # List all files in the directory
-    for file_path in datasets_dir.glob("*.json"):  # Assuming the files are JSON files
+  # List all JSON files in the directory
+    json_files = list(datasets_dir.glob("*.json"))  # Assuming the files are JSON files
+    if not json_files:
+        raise FileNotFoundError("No JSON files found in the dataset directory.")
+
+    for file_path in json_files:
         with file_path.open('r', encoding='utf-8') as file:
             data = json.load(file)
             # Ensure data is a list and extend the datasets list
@@ -32,6 +36,8 @@ def list_datasets():
                 datasets.extend(data)
             else:
                 datasets.append(data)
+    if not datasets:
+        raise ValueError("No data could be read from any JSON files in the dataset directory.")
     return datasets
 
 
