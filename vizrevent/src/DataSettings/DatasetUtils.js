@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-import config from "../config";
-export const DatasetFetcher = async (datasetId = null, serverUrl = `${config.API_BASE_URL}/api/dataset`) => {
-=======
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const DatasetFetcher = async (datasetId = null, serverUrl = `${API_BASE_URL}/api/dataset`) => {
->>>>>>> fix/performance
     if (datasetId) {
         try {
 
@@ -27,11 +22,7 @@ export const DatasetFetcher = async (datasetId = null, serverUrl = `${API_BASE_U
     }
 };
 
-<<<<<<< HEAD
-export const DatasetListFetcher = async (serverUrl = `${config.API_BASE_URL}/api/datasetList`) => {
-=======
 export const DatasetListFetcher = async (serverUrl = `${API_BASE_URL}/api/datasetList`) => {
->>>>>>> fix/performance
     try {
         const response = await fetch(`${serverUrl}`);
         if (!response.ok) {
@@ -45,11 +36,7 @@ export const DatasetListFetcher = async (serverUrl = `${API_BASE_URL}/api/datase
     }
 
 }
-<<<<<<< HEAD
-export const DatafieldsList = async (datasetId = null, serverUrl = `${config.API_BASE_URL}/api/datafields`) => {
-=======
 export const DatafieldsList = async (datasetId = null, serverUrl = `${API_BASE_URL}/api/datafields`) => {
->>>>>>> fix/performance
 
     if (datasetId) {
         try {
