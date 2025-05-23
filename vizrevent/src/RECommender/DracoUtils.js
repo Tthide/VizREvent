@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
  * An async generator that yields each chart spec
  * as soon as it’s parsed out of the incoming stream.
  */
-export async function* DracoRecRequest(datasetId = null, specs = null, numChart = 1, serverUrl = "http://localhost:5000/api/draco") {
+export async function* DracoRecRequest(datasetId = null, specs = null, numChart = 1, serverUrl = `${API_BASE_URL}//api/draco`) {
     if (datasetId) {
         try {
 
