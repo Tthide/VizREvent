@@ -3,7 +3,7 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 export const DatasetFetcher = async (datasetId = null, serverUrl = `${API_BASE_URL}/api/dataset`) => {
     if (datasetId) {
         try {
-
+            console.info(`Fetching dataset ${serverUrl}`);
             // Construct the URL with the dataset_id if provided
             const url = datasetId ? `${serverUrl}?dataset_id=${datasetId}` : serverUrl;
             const response = await fetch(url);
@@ -17,13 +17,15 @@ export const DatasetFetcher = async (datasetId = null, serverUrl = `${API_BASE_U
             throw error;
         }
     }
-    else{
+    else {
         console.warn("No datasetId passed when trying to fetch dataset")
     }
 };
 
 export const DatasetListFetcher = async (serverUrl = `${API_BASE_URL}/api/datasetList`) => {
     try {
+        console.info(`Fetching datasetList ${serverUrl}`);
+
         const response = await fetch(`${serverUrl}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -40,7 +42,7 @@ export const DatafieldsList = async (datasetId = null, serverUrl = `${API_BASE_U
 
     if (datasetId) {
         try {
-
+            console.info(`Fetching datafieldList ${serverUrl}`);
 
             // Construct the URL with the dataset_id if provided
             const url = datasetId ? `${serverUrl}?dataset_id=${datasetId}` : serverUrl;
@@ -64,7 +66,7 @@ export const DatafieldsList = async (datasetId = null, serverUrl = `${API_BASE_U
             throw error;
         }
     }
-    else{
+    else {
         console.warn("No datasetId passed when trying to fetch data fields")
     }
 };

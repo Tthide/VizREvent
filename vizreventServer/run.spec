@@ -2,7 +2,7 @@
 from PyInstaller.utils.hooks import collect_submodules
 from PyInstaller.utils.hooks import collect_all
 
-datas = [('app/frontend_build', 'frontend_build')]
+datas = [('app/frontend_build', 'frontend_build'),('data/matches', 'data/matches'),('data/events', 'data/events'),]
 binaries = []
 hiddenimports = ['_cffi_backend']
 hiddenimports += collect_submodules('draco')

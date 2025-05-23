@@ -1,9 +1,12 @@
 import os
+import sys
 import json
+from .utils import get_resource_path
 from .temp_file_management import read_data_temp_file
 import numpy as np
 from .draco_service import get_draco_schema,get_draco_dataframe
 from pathlib import Path
+
 
 def get_data(dataset_name):
         # Check if the input is a string composed of numbers and nothing else
@@ -17,7 +20,7 @@ def get_data(dataset_name):
 # here we only want to work with the datasets from the 2022 World Cup, if we want to allow users to chose, we would need
 # this function to have a parameter (and it would be more like get_data())
 def list_datasets():
-    datasets_dir = Path("./data/matches/")
+    datasets_dir = Path(get_resource_path("data/matches/"))
     datasets = []
 
     # List all files in the directory
@@ -55,3 +58,4 @@ def get_data_fields(dataset_name, file_path=Path("./data/events/temps/draco_data
     print("Datafields found")
     
     return convert_numpy(schema_data)
+

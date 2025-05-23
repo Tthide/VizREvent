@@ -1,9 +1,9 @@
 import json
 from pathlib import Path
+from .utils import get_resource_path
 
-# Compute the default config path once, relative to this script’s location
-SCRIPT_DIR   = Path(__file__).resolve().parent
-DEFAULT_CONF = SCRIPT_DIR / 'preprocessing_config.json'
+# Compute the default config path once, relative to this script’s location or packaged location
+DEFAULT_CONF = Path(get_resource_path('preprocessing_config.json'))
 
 def preprocess_events(events: list[dict], 
                       config_path: Path = DEFAULT_CONF) -> list[dict]:

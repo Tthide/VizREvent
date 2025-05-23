@@ -20,7 +20,7 @@ export async function* DracoRecRequest(datasetId = null, specs = null, numChart 
                 payload.specs = { ...draco_specs }//({ ...draco_specs });
             };
 
-
+            console.info(`Calling draco request ${serverUrl}`);
             console.log("draco_specs before draco request", payload.specs);
             const response = await fetch(serverUrl, {
                 method: "POST",

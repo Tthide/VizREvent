@@ -42,7 +42,9 @@ def get_datafields():
 @data_bp.route('/api/datasetList', methods=['GET'])
 def list_datasets_route():
     try:
+        print("Getting datasetLists...")
         datasets = list_datasets()
+        print("DatasetLists Sent !")
         return jsonify(datasets)
     except Exception as e:
         traceback.print_exc()  # Print the traceback to the console
