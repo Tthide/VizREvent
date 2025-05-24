@@ -36,6 +36,7 @@
         display: table;
         width: 100%;
         table-layout: fixed;
+        overflow: hidden; // clip content if too big
     }
 
     th,
@@ -44,9 +45,11 @@
         text-align: left;
         font-size: dv.$font-size-smallest;
         box-sizing: border-box;
-        white-space: nowrap; // keep text in one line
-        overflow: hidden; // hide overflow
-        text-overflow: ellipsis; // add "..." at the end
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 3.3rem; // fixed cell height
+        max-height: 3.3rem;
     }
 
     td {
@@ -67,19 +70,54 @@
         z-index: 20;
     }
 
-    tbody tr:hover  {
+    tbody tr:hover {
         background-color: lighten(dv.$color-quaternary, 5%);
     }
 
     .selected-row {
         background-color: lighten(dv.$color-quaternary, 5%);
-        cursor: 'pointer' ;
+        cursor: 'pointer';
     }
 
     input[type="checkbox"] {
         cursor: pointer;
         accent-color: dv.$color-secondary;
     }
+
+
+    thead,
+    tbody tr {
+        table-layout: fixed; // enforce fixed layout
+    }
+
+    // Number of fixed-width columns (excluding last)
+    $fixed-columns: 3;
+
+    // Total table width is 100%, distribute fixed widths accordingly
+    // For example, fixed columns = 16% each
+    // Last column fills remaining space
+
+    // You can adjust this fixed width as needed
+    $fixed-width: 16%;
+
+    // Assign fixed width for first 6 columns:
+    @for $i from 1 through $fixed-columns {
+
+        th:nth-child(#{$i}),
+        td:nth-child(#{$i}) {
+            width: $fixed-width;
+            max-width: $fixed-width;
+            min-width: $fixed-width;
+        }
+    }
+
+    // Last column takes remaining space:
+    th:nth-child(n + 7),
+    td:nth-child(n + 7) {
+        width: auto;
+        min-width: 0; // allow shrinking if needed
+    }
+
 }
 
 .fallback-message {
