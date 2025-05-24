@@ -130,6 +130,13 @@
 
 }
 
+.treemap-rect {
+    font-size: dv.$font-size-smallest;
+    fill: dv.$color-primary;
+    font-weight: bold;
+
+}
+
 .fallback-message {
     @include dv.fallback-message;
 }

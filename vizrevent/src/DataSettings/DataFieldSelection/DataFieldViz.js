@@ -52,15 +52,21 @@ const DataFieldViz = ({ distribution, showRectTooltips = false }) => {
 function drawTreemap(svg, distribution, { width, height }, showRectTooltips) {
     const data = Object.entries(distribution.frequencies).map(([name, value]) => ({ name, value }));
 
-    const root = d3.hierarchy({ children: data }).sum(d => d.value);
+
+    const root = d3.hierarchy({ children: data })
+        .sum(d => d.value)
+        .sort((a, b) => (b.value - a.value));
+
     d3.treemap().size([width, height]).padding(1)(root);
 
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     svg.selectAll("rect").remove();  // clear previous
 
+    const leaves = root.leaves();
+
     const rects = svg.selectAll('rect')
-        .data(root.leaves())
+        .data(leaves)
         .join('rect')
         .attr('x', d => d.x0)
         .attr('y', d => d.y0)
@@ -77,6 +83,18 @@ function drawTreemap(svg, distribution, { width, height }, showRectTooltips) {
             .attr('data-tooltip-id', null)
             .attr('data-tooltip-content', null);
     }
+
+    //Size threshold for showing labels (area)
+    const sizeThreshold = 3500;
+
+    // Add labels for rectangles big enough
+    svg.selectAll('text')
+        .data(leaves.filter(d => (d.x1 - d.x0) * (d.y1 - d.y0) >= sizeThreshold))
+        .join('text')
+        .attr('x', d => d.x0 + 4)  // small padding inside rect
+        .attr('y', d => d.y0 + 14)
+        .text(d => d.data.name)
+        .attr('class', 'treemap-rect')
 }
 
 function drawHistogram(svg, distribution, { width, height }) {

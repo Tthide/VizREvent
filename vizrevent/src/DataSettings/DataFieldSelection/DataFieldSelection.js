@@ -72,7 +72,7 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                                             id={vizTooltipId}
                                             place="right"
                                             positionStrategy="fixed"
-                                            delayShow={200}
+                                            delayShow={400}
                                             clickable
                                             className='viz-tooltip'
                                             render={() => (
