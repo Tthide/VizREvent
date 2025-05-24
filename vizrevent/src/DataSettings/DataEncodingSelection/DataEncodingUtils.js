@@ -15,8 +15,8 @@ export const OPERATION_OPTIONS = [
     { type: 'bin', param: 'true' },
     // Aggregation operations
     ...[
-        'count',  'sum', 'product',
-        'mean',  'variance','stdev',
+        'count', 'sum', 'product',
+        'mean', 'variance', 'stdev',
         'median', 'min', 'max'
     ].map(param => ({ type: 'aggregate', param }))
 ];
@@ -26,7 +26,7 @@ export const convertTypeFormat = (field) => {
     //some fields are exceptions in terms of their type, therefore we include them here
 
     const exceptions = { period: 'ordinal' };
-    if (field.name in exceptions)   return exceptions[field.name] ;
+    if (field.name in exceptions) return exceptions[field.name];
     return (
         {
             number: 'quantitative',
@@ -116,6 +116,9 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
     Object.entries(enc).forEach(([channel, specObj]) => {
         if (channel !== 'x' && channel !== 'y' && specObj) {
             if (PROPERTY_CHANNELS.includes(channel)) {
+                if (specObj.field !== undefined) {
+                    newSelectedField.push(dataFields.find(f => f.name === specObj.field));
+                }
                 otherProps.push({
                     channel,
                     field: specObj.field || null,
