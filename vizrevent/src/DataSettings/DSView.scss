@@ -6,28 +6,32 @@
     background-color: dv.$color-secondary; // Background color for the container
     padding: dv.$spacing-small;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 30%;
-    max-width: 30%;
+    $ds-container-width: 20%;
+    min-width: $ds-container-width;
+    max-width: $ds-container-width;
     border-right: solid 3px dv.$color-primary;
 
     h1 {
         color: dv.$color-primary; // Text color for the heading
         font-size: dv.$font-size-large;
-        margin: dv.$spacing-small;
+        padding: dv.$spacing-small;
+        margin: 0;
     }
 
     .change-dataset-button {
         @include dv.button-styles; // Use the button mixin
-        align-content: center;
-        justify-content: center;
         display: flex;
-        font-size: dv.$font-size-small;
+        align-items: flex-start;
+        justify-content: center;
+        font-size: dv.$font-size-smallest;
         width: 100%;
+        padding: dv.$spacing-small;
+        gap: dv.$spacing-smallest;
 
         span {
-            margin-right: dv.$spacing-small;
-            margin-left: dv.$spacing-small;
+
             text-overflow: ellipsis;
+
         }
     }
 
