@@ -104,7 +104,7 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
             setYAgr(OPERATION_OPTIONS.find(op => op.type === "bin"));
         }
         else if (enc.y.aggregate) {
-            setYAgr(OPERATION_OPTIONS.find(op => op.type === "aggregate" && enc.x.aggregate === op.param));
+            setYAgr(OPERATION_OPTIONS.find(op => op.type === "aggregate" && enc.y.aggregate === op.param));
         }
         else {
             setYAgr({});
