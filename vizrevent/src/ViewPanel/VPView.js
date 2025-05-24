@@ -153,14 +153,14 @@ const VPView = (props) => {
             setCurrentScale(ref.state.scale);
           }}
         >
-          {({ zoomIn, zoomOut, centerView, ...rest }) => (
+          {({ zoomIn, zoomOut, setTransform, ...rest }) => (
             <>
               {isDatasetSelected &&
                 (<div className="zoom-tools">
                   {/*<p>Current Scale: {currentScale.toFixed(2)}</p>*/}
                   <button onClick={() => zoomIn()}>Zoom in +</button>
                   <button onClick={() => zoomOut()}>Zoom out -</button>
-                  <button onClick={() => centerView()}>Center x</button>
+                  <button onClick={() => setTransform(0, 0, currentScale)}>View Origin</button>
                   {vizSelected &&
                     <button onClick={zoomToElement}>See Selected Viz</button>}
                 </div>)}
