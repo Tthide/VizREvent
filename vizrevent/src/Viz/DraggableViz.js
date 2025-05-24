@@ -32,4 +32,4 @@ const DraggableViz = ({ viz, selected, onClick, currentScale,children }) => {
   );
 };
 
-export default DraggableViz
+export default React.memo(DraggableViz)

@@ -36,7 +36,7 @@ const Viz = ({ spec, data }) => {
         <div className="Viz-chart-container" ref={containerRef}>
             {
                 enhancedSpec ? (
-                    <VegaLite key={`${dimensions.width}x${dimensions.height}`} data={data} spec={enhancedSpec}  actions={false} />
+                    <VegaLite key={`${dimensions.width}x${dimensions.height}`} data={data} spec={enhancedSpec}/>
                 ) : (
                     <div style={{ width: '200px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span>No Visualization</span>
@@ -47,4 +47,4 @@ const Viz = ({ spec, data }) => {
     );
 };
 
-export default Viz;
+export default React.memo(Viz);
