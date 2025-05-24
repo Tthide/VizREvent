@@ -34,7 +34,7 @@ const DataFieldViz = ({ distribution, showRectTooltips = false }) => {
         if (distribution.type === 'categorical') {
             drawTreemap(svg, distribution, dimensions, showRectTooltips);
         } else if (distribution.type === 'numerical') {
-            drawHistogram(svg, distribution, dimensions);
+            drawHistogram(svg, distribution, dimensions, showRectTooltips);
         }
     }, [distribution, dimensions]);
 
@@ -97,10 +97,11 @@ function drawTreemap(svg, distribution, { width, height }, showRectTooltips) {
         .attr('class', 'treemap-rect')
 }
 
-function drawHistogram(svg, distribution, { width, height }) {
-    const margin = { top: 5, right: 5, bottom: 20, left: 30 };
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
+function drawHistogram(svg, distribution, { width, height }, showRectTooltips) {
+    let margin = {}
+    showRectTooltips ? margin = { top: 5, right: 5, bottom: 40, left: 45 }
+        : margin = { top: 5, right: 5, bottom: 20, left: 25 };
+
 
     const data = distribution.counts.map((count, i) => ({
         binStart: distribution.bins[i],
@@ -135,6 +136,21 @@ function drawHistogram(svg, distribution, { width, height }) {
         .attr('transform', `translate(${margin.left},0)`)
         .call(d3.axisLeft(y).ticks(4).tickSizeOuter(0))
         .attr('font-size', '10px');
+
+    if (showRectTooltips) {
+        // X axis label
+        svg.append('text')
+            .attr('x', (width) / 2)
+            .attr('y', height - 5)
+            .attr('class', 'hist-axis-label')
+            .text(`Value`);
+
+        // Y axis label
+        svg.append('text')
+            .attr('transform', `translate(15,${height / 2}) rotate(-90)`)
+            .attr('class', 'hist-axis-label')
+            .text('Count');
+    }
 }
 
 export default React.memo(DataFieldViz)
