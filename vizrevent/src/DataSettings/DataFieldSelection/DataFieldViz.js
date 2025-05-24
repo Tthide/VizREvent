@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 
-export default function DataFieldViz({ distribution }) {
+const DataFieldViz=({ distribution })=> {
   const containerRef = useRef();
   const svgRef = useRef();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -105,3 +105,5 @@ function drawHistogram(svg, distribution, { width, height }) {
     .call(d3.axisLeft(y).ticks(4).tickSizeOuter(0))
     .attr('font-size', '10px');
 }
+
+export default React.memo(DataFieldViz)
