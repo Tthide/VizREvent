@@ -129,7 +129,7 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
     setEncodingProperties([...otherProps, {}]);
 
     //uploading all new selectedFields all at once
-    setSelectedFields([...selectedFields, ...newSelectedField])
+    setSelectedFields([...newSelectedField])
 };
 
 
