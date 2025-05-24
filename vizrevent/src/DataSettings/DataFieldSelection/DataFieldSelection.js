@@ -21,8 +21,9 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                         <tbody>
                             {dataFields.map((field) => {
                                 const isSelected = selectedFields.includes(field);
-                                const tooltipId = `tooltip-${field.name}`;
-                                const tooltipContent = `Field: ${field.name}
+                                const tooltipLineId = `tooltip-${field.name}`;
+                                const vizTooltipId = `viz-tooltip-${field.name}`;
+                                const tooltipLineContent = `Field: ${field.name}
                                                         Type: ${field.type}
                                                         Frequency: ${field.freq}
                                                         Entropy: ${field.entropy}
@@ -37,8 +38,8 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                                         >
                                             {/* Tooltip wrapper cells */}
                                             <td
-                                                data-tooltip-id={tooltipId}
-                                                data-tooltip-content={tooltipContent}
+                                                data-tooltip-id={tooltipLineId}
+                                                data-tooltip-content={tooltipLineContent}
                                             >
                                                 <input
                                                     type="checkbox"
@@ -46,22 +47,38 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                                                     onChange={() => handleCheckboxChange(field)}
                                                 />
                                             </td>
-                                            <td data-tooltip-id={tooltipId} data-tooltip-content={tooltipContent}>
+                                            <td data-tooltip-id={tooltipLineId} data-tooltip-content={tooltipLineContent}>
                                                 <b>{field.type}</b>
                                             </td>
-                                            <td data-tooltip-id={tooltipId} data-tooltip-content={tooltipContent}>
+                                            <td data-tooltip-id={tooltipLineId} data-tooltip-content={tooltipLineContent}>
                                                 {field.name}
                                             </td>
-                                            <td>
+                                            <td data-tooltip-id={vizTooltipId} data-tooltip-content={tooltipLineContent}
+                                                data-tooltip-delay-hide={1000}>
                                                 <DataFieldViz distribution={field.distribution} />
                                             </td>
+
                                         </tr>
+                                        {/* Regular text line tooltip */}
                                         <Tooltip
-                                            id={tooltipId}
+                                            id={tooltipLineId}
                                             place="right"
                                             multiline
                                             positionStrategy="fixed"
                                             style={{ whiteSpace: 'pre-line', zIndex: 9999 }}
+                                        />
+                                        {/* BIGGER viz tooltip */}
+                                        <Tooltip
+                                            id={vizTooltipId}
+                                            place="right"
+                                            positionStrategy="fixed"
+                                            delayShow={200}
+                                            delayHide={200}
+                                            clickable
+                                            className='viz-tooltip'
+                                            render={() => (
+                                                <DataFieldViz distribution={field.distribution} />
+                                            )}
                                         />
                                     </React.Fragment>
                                 );

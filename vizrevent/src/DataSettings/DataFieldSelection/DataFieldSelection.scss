@@ -120,6 +120,16 @@
 
 }
 
+.viz-tooltip {
+    @include dv.tooltip-styles;
+    max-width: 10rem;
+    max-height: 10rem;
+    min-width: 5rem;
+    min-height: 5rem;
+    z-index: 9999;
+
+}
+
 .fallback-message {
     @include dv.fallback-message;
 }
