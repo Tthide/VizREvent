@@ -56,11 +56,43 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
 
     if (!spec) return resetEncodingLocal();
 
+    const otherProps = [];
+    const newSelectedField = [];
+
+
+    //when there is facets in a vega lite spec, the json layout changes
+    //we need to take that into account
+    if (spec.facet) {
+        // Handle facets by extracting them and replacing spec
+        if (spec.facet) {
+            ['column', 'row'].forEach(channel => {
+                const facetSpec = spec.facet[channel];
+                if (facetSpec && facetSpec.field) {
+                    const found = dataFields.find(f => f.name === facetSpec.field);
+                    if (found && !selectedFields.includes(found)) {
+                        newSelectedField.push(found);
+                    }
+                    otherProps.push({
+                        channel: "facet",
+                        field: facetSpec.field,
+                        aggregate: facetSpec.aggregate || null,
+                        bin: facetSpec.bin || null,
+                        type: facetSpec.type || null
+                    });
+
+                }
+            });
+        }
+        //readjusting the spec as if there was no facet
+        spec = spec.spec;
+
+    }
+
     setMark(spec.mark || null);
     if (!spec.encoding) return;
     const enc = spec.encoding;
 
-    const newSelectedField = [];
+
     if (enc.x) {
         let found = null;
         if (enc.x.field) {
@@ -112,7 +144,8 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
 
     } else setYField({});
 
-    const otherProps = [];
+
+
     Object.entries(enc).forEach(([channel, specObj]) => {
         if (channel !== 'x' && channel !== 'y' && specObj) {
             if (PROPERTY_CHANNELS.includes(channel)) {
