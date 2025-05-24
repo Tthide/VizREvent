@@ -77,3 +77,18 @@ $border-radius-large: rem(12);
     padding: $spacing-large;
 
 }
+
+@mixin tooltip-styles {
+    background-color: $color-primary;
+    color: white;
+    font-family: $font-family-primary;
+    font-size: $font-size-small;
+    padding: $spacing-small $spacing-medium;
+    border-radius: $border-radius-small;
+    max-width: rem(240);
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    border: $border-thinner-quaternary;
+    z-index: 1000;
+    line-height: 1.4;
+}

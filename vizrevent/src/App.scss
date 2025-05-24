@@ -15,6 +15,11 @@ body {
   width: 100vw;
   overflow: hidden;
 
+  //global tooltip style
+  .react-tooltip {
+    @include dv.tooltip-styles;
+  }
+
   .app-header {
     background-color: dv.$color-primary;
     color: #fff;
