@@ -31,7 +31,7 @@ const DSView = (props) => {
     };
 
     const datasetButtonTooltipContent = datasetMetaData
-        ? `${datasetMetaData.match_id} | ${datasetMetaData.season.season_name} ${datasetMetaData.competition.competition_name} | ${datasetMetaData.competition_stage.name} | ${datasetMetaData.home_team.home_team_name} ${datasetMetaData.home_score} - ${datasetMetaData.away_score} ${datasetMetaData.away_team.away_team_name} | ${datasetMetaData.match_date}`
+        ? `${datasetMetaData.match_id} | ${datasetMetaData.competition.competition_name}  ${datasetMetaData.season.season_name} | ${datasetMetaData.competition_stage.name} | ${datasetMetaData.home_team.home_team_name} ${datasetMetaData.home_score} - ${datasetMetaData.away_score} ${datasetMetaData.away_team.away_team_name} | ${datasetMetaData.match_date}`
         : 'Select Dataset';
     return (
         <div className="ds-view-container">
@@ -48,10 +48,7 @@ const DSView = (props) => {
                         <>
                             <span >{datasetMetaData.match_id}</span>
                             <span >
-                                {datasetMetaData.season.season_name} {datasetMetaData.competition.competition_name}
-                            </span>
-                            <span >
-                                {datasetMetaData.competition_stage.name}
+                               {datasetMetaData.competition.competition_name} {datasetMetaData.season.season_name} 
                             </span>
                             <span>
                                 {datasetMetaData.home_team.home_team_name} {datasetMetaData.home_score} - {datasetMetaData.away_score} {datasetMetaData.away_team.away_team_name}
