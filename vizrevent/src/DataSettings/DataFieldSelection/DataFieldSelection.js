@@ -1,5 +1,6 @@
 import React from 'react';
 import './DataFieldSelection.scss';
+import DataFieldViz from './DataFieldViz';
 
 const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }) => {
     return (
@@ -15,6 +16,7 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                                 <th title={"Frequency"}>Frequency</th>
                                 <th title={"Entropy"}>Entropy</th>
                                 <th title={"Unique Values"}>Unique Values</th>
+                                <th title={"Distribution"}>Distribution</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,6 +42,7 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                                         <td>{field.freq}</td>
                                         <td>{field.entropy}</td>
                                         <td>{field.unique}</td>
+                                        <td><DataFieldViz distribution={field.distribution} /></td>
                                     </tr>
                                 )
                             })}

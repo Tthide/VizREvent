@@ -1,5 +1,4 @@
-import os
-import sys
+from collections import Counter, defaultdict
 import json
 from .utils import get_resource_path
 from .temp_file_management import read_data_temp_file
@@ -41,6 +40,53 @@ def list_datasets():
     return datasets
 
 
+
+def is_number(x):
+    return isinstance(x, (int, float, np.integer, np.floating))
+def compute_distribution(data, fields):
+    """
+    Compute distribution data for each field in the dataset.
+    For numerical fields, compute histogram bins and counts.
+    For categorical/string fields, compute frequency counts suitable for treemaps.
+
+    Args:
+        data (list of dict): The dataset to analyze.
+        fields (list of dict): List of field metadata dicts, each with keys 'name' and 'type'.
+
+    Returns:
+        dict: mapping field name -> distribution info
+    """
+    from collections import Counter, defaultdict
+    import numpy as np
+
+    collected = defaultdict(list)
+    for row in data:
+        for f in fields:
+            field_name = f["name"]
+            collected[field_name].append(row.get(field_name))
+
+    distribution = {}
+    for f in fields:
+        field_name = f["name"]
+        values = collected[field_name]
+
+        if f["type"] == "number":
+            arr = np.array(values)
+            hist, bin_edges = np.histogram(arr, bins='auto')
+            distribution[field_name] = {
+                "type": "numerical",
+                "bins": bin_edges.tolist(),
+                "counts": hist.tolist()
+            }
+        else:  # treat all others as categorical
+            freq = dict(Counter(values))
+            distribution[field_name] = {
+                "type": "categorical",
+                "frequencies": freq
+            }
+    return distribution
+
+
 def get_data_fields(dataset_name, file_path=Path("./data/events/temps/draco_dataframe.json")):
     # Check if the input is a string composed of numbers and nothing else
     if not isinstance(dataset_name, str) or not dataset_name.isdigit():
@@ -61,7 +107,17 @@ def get_data_fields(dataset_name, file_path=Path("./data/events/temps/draco_data
             return obj.item()
         else:
             return obj
-    print("Datafields found")
     
-    return convert_numpy(schema_data)
-
+    print("Computing distribution data for each field")
+    distribution = compute_distribution(data, schema_data["field"])
+    
+    # Append distribution data back into each field dict
+    for field in schema_data["field"]:
+        dist = distribution.get(field["name"])
+        if dist:
+            field["distribution"] = dist
+    
+    print("Datafields found and distribution computed")
+    
+    schema_data = convert_numpy(schema_data)
+    return schema_data

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { VegaLite } from 'react-vega';
+import { VegaLite,Vega  } from 'react-vega';
 import './Viz.scss';
 
-const Viz = ({ spec, data }) => {
+const Viz = ({ spec, data, isVega = false }) => {
     const containerRef = useRef(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -36,7 +36,9 @@ const Viz = ({ spec, data }) => {
         <div className="Viz-chart-container" ref={containerRef}>
             {
                 enhancedSpec ? (
-                    <VegaLite key={`${dimensions.width}x${dimensions.height}`} data={data} spec={enhancedSpec}/>
+                    isVega
+                        ? <Vega key={`${dimensions.width}x${dimensions.height}`} spec={enhancedSpec} />
+                        : <VegaLite key={`${dimensions.width}x${dimensions.height}`} data={data} spec={enhancedSpec} />
                 ) : (
                     <div style={{ width: '200px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span>No Visualization</span>
