@@ -1,4 +1,6 @@
 import React from 'react';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 import './DataFieldSelection.scss';
 import DataFieldViz from './DataFieldViz';
 
@@ -10,41 +12,59 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                     <table className="data-field-table">
                         <thead>
                             <tr>
-                                <th title={"Select"}>Select</th>
-                                <th title={"Type"}>Type</th>
-                                <th title={"Name"}>Name</th>
-                                <th title={"Frequency"}>Frequency</th>
-                                <th title={"Entropy"}>Entropy</th>
-                                <th title={"Unique Values"}>Unique Values</th>
-                                <th title={"Distribution"}>Distribution</th>
+                                <th title="Select">Select</th>
+                                <th title="Type">Type</th>
+                                <th title="Name">Name</th>
+                                <th title="Distribution">Distribution</th>
                             </tr>
                         </thead>
                         <tbody>
                             {dataFields.map((field) => {
                                 const isSelected = selectedFields.includes(field);
+                                const tooltipId = `tooltip-${field.name}`;
+                                const tooltipContent = `Field: ${field.name}
+                                                        Type: ${field.type}
+                                                        Frequency: ${field.freq}
+                                                        Entropy: ${field.entropy}
+                                                        Unique Values: ${field.unique}`;
+
                                 return (
-                                    <tr
-                                        key={field.name}
-                                        title={`Field: ${field.name}\nType: ${field.type}\nFrequency: ${field.freq}\nEntropy: ${field.entropy}\nUnique Values: ${field.unique}`}
-                                        className={isSelected ? 'selected-row' : ''}
-                                        onClick={() => handleCheckboxChange(field)}
-                                        style={{ cursor: 'pointer' }}
-                                    >
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedFields.includes(field)}
-                                                onChange={() => handleCheckboxChange(field)}
-                                            />
-                                        </td>
-                                        <td><b>{field.type}</b></td>
-                                        <td>{field.name}</td>
-                                        <td>{field.freq}</td>
-                                        <td>{field.entropy}</td>
-                                        <td>{field.unique}</td>
-                                        <td><DataFieldViz distribution={field.distribution} /></td>
-                                    </tr>
-                                )
+                                    <React.Fragment key={field.name}>
+                                        <tr
+                                            className={isSelected ? 'selected-row' : ''}
+                                            onClick={() => handleCheckboxChange(field)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            {/* Tooltip wrapper cells */}
+                                            <td
+                                                data-tooltip-id={tooltipId}
+                                                data-tooltip-content={tooltipContent}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isSelected}
+                                                    onChange={() => handleCheckboxChange(field)}
+                                                />
+                                            </td>
+                                            <td data-tooltip-id={tooltipId} data-tooltip-content={tooltipContent}>
+                                                <b>{field.type}</b>
+                                            </td>
+                                            <td data-tooltip-id={tooltipId} data-tooltip-content={tooltipContent}>
+                                                {field.name}
+                                            </td>
+                                            <td>
+                                                <DataFieldViz distribution={field.distribution} />
+                                            </td>
+                                        </tr>
+                                        <Tooltip
+                                            id={tooltipId}
+                                            place="right"
+                                            multiline
+                                            positionStrategy="fixed"
+                                            style={{ whiteSpace: 'pre-line', zIndex: 9999 }}
+                                        />
+                                    </React.Fragment>
+                                );
                             })}
                         </tbody>
                     </table>
