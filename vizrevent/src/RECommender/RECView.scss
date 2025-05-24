@@ -19,8 +19,10 @@
 }
 
 .container-open {
-  width: 25%;
-  max-width: 25%;
+      $rec-container-width: 22.5%;
+
+  min-width:   $rec-container-width;
+  max-width:   $rec-container-width;
   padding: dv.$spacing-medium;
 
 }
