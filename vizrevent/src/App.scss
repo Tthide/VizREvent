@@ -16,14 +16,13 @@ body {
   overflow: hidden;
 
   .app-header {
-    height: 4rem;
     background-color: dv.$color-primary;
     color: #fff;
-    font-size: 3rem;
+    font-size: dv.$font-size-biggest;
     font-family: dv.$font-family-primary;
     display: flex;
     align-items: center;
-    padding-left: 3rem;
+    padding: dv.$spacing-small;
     flex-shrink: 0;
   }
 

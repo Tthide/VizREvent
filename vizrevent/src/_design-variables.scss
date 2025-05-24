@@ -28,9 +28,11 @@ $border-thin-quaternary: 2px solid $color-quaternary;
 $border-thinner-quaternary: 1px solid $color-quaternary;
 
 // Font size variables
-$font-size-small: 0.8rem;
-$font-size-medium: 1rem;
-$font-size-large: 2rem;
+$font-size-small: clamp(0.4rem, 0.9vw, 0.875rem);
+$font-size-medium: clamp(0.5rem, 1.2vw, 1rem);
+$font-size-large: clamp(1rem, 2.5vw, 2rem);
+$font-size-biggest: clamp(1.5rem, 4vw, 3rem);
+
 
 // Spacing variables
 $spacing-smallest: rem(4);
