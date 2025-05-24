@@ -73,11 +73,10 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                                             place="right"
                                             positionStrategy="fixed"
                                             delayShow={200}
-                                            delayHide={200}
                                             clickable
                                             className='viz-tooltip'
                                             render={() => (
-                                                <DataFieldViz distribution={field.distribution} />
+                                                <DataFieldViz distribution={field.distribution} showRectTooltips/>
                                             )}
                                         />
                                     </React.Fragment>
