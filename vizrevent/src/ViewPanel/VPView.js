@@ -4,7 +4,7 @@ import './VPView.scss';
 import { DndContext, closestCorners } from '@dnd-kit/core';
 import DraggableViz from '../Viz/DraggableViz';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
-import { CirclePlus, OctagonX, Trash2 } from 'lucide-react';
+import { CirclePlus, OctagonX, Trash2,ZoomIn,ZoomOut } from 'lucide-react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 const VPView = (props) => {
@@ -158,8 +158,8 @@ const VPView = (props) => {
               {isDatasetSelected &&
                 (<div className="zoom-tools">
                   {/*<p>Current Scale: {currentScale.toFixed(2)}</p>*/}
-                  <button onClick={() => zoomIn()}>Zoom in +</button>
-                  <button onClick={() => zoomOut()}>Zoom out -</button>
+                  <button onClick={() => {zoomIn()}}><ZoomIn/></button>
+                  <button onClick={() => zoomOut()}><ZoomOut/></button>
                   <button onClick={() => setTransform(0, 0, currentScale)}>View Origin</button>
                   {vizSelected &&
                     <button onClick={zoomToElement}>See Selected Viz</button>}
