@@ -87,6 +87,7 @@ function drawTreemapSVG(svg, distribution, { width, height }, showRectTooltips) 
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     const leaves = root.leaves();
+    const totalValue = root.value;
 
     const rects = svg.selectAll('rect')
         .data(leaves)
@@ -100,7 +101,8 @@ function drawTreemapSVG(svg, distribution, { width, height }, showRectTooltips) 
     if (showRectTooltips) {
         rects
             .attr('data-tooltip-id', 'treemap-tooltip')
-            .attr('data-tooltip-content', d => `${d.data.name}: ${d.data.value}`);
+            .attr('data-tooltip-content', d => `${d.data.name}: ${d.data.value} (${((d.data.value / totalValue) * 100).toFixed(2)}%)`);
+
     }
 
     const sizeThreshold = 3500;
@@ -110,6 +112,14 @@ function drawTreemapSVG(svg, distribution, { width, height }, showRectTooltips) 
         .attr('x', d => d.x0 + 4)
         .attr('y', d => d.y0 + 14)
         .text(d => d.data.name)
+        .attr('class', 'treemap-rect');
+
+    svg.selectAll('text.value')
+        .data(leaves.filter(d => (d.x1 - d.x0) * (d.y1 - d.y0) >= sizeThreshold))
+        .join('text')
+        .attr('x', d => d.x0 + 4)
+        .attr('y', d => d.y0 + 28) // Position below the name
+        .text(d => `${((d.data.value / totalValue) * 100).toFixed(2)}%`)
         .attr('class', 'treemap-rect');
 }
 
