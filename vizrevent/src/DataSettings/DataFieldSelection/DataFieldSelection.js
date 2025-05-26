@@ -12,7 +12,6 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                     <table className="data-field-table">
                         <thead>
                             <tr>
-                                <th title="Select">Select</th>
                                 <th title="Type">Type</th>
                                 <th title="Name">Name</th>
                                 <th title="Distribution">Distribution</th>
@@ -37,16 +36,6 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                                             style={{ cursor: 'pointer' }}
                                         >
                                             {/* Tooltip wrapper cells */}
-                                            <td
-                                                data-tooltip-id={tooltipLineId}
-                                                data-tooltip-content={tooltipLineContent}
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={isSelected}
-                                                    onChange={() => handleCheckboxChange(field)}
-                                                />
-                                            </td>
                                             <td data-tooltip-id={tooltipLineId} data-tooltip-content={tooltipLineContent}>
                                                 <b>{field.type}</b>
                                             </td>

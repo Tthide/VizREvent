@@ -92,14 +92,14 @@
     }
 
     // Number of fixed-width columns (excluding last)
-    $fixed-columns: 3;
+    $fixed-columns: 2;
 
     // Total table width is 100%, distribute fixed widths accordingly
     // For example, fixed columns = 16% each
     // Last column fills remaining space
 
     // You can adjust this fixed width as needed
-    $fixed-width: 16%;
+    $fixed-width: 25%;
 
     // Assign fixed width for first 6 columns:
     @for $i from 1 through $fixed-columns {
