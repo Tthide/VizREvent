@@ -1,0 +1,17 @@
+{
+  "keep_keys": [
+    "period",
+    "timestamp",
+    "possession",
+    "type",
+    "possession_team",
+    "play_pattern",
+    "team"
+  ],
+  "non_kept_keys": [
+    "id",
+    "index",
+    "minute",
+    "second"
+  ]
+}
