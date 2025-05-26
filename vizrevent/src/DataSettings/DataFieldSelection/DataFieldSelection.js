@@ -55,7 +55,7 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                                             </td>
                                             <td data-tooltip-id={vizTooltipId} data-tooltip-content={tooltipLineContent}
                                                 data-tooltip-delay-hide={1000}>
-                                                <DataFieldViz distribution={field.distribution} />
+                                                <DataFieldViz distribution={field.distribution} renderMode="canvas" />
                                             </td>
 
                                         </tr>
@@ -77,7 +77,9 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
                                             clickable
                                             className='viz-tooltip'
                                             render={() => (
-                                                <DataFieldViz distribution={field.distribution} showRectTooltips/>
+                                                <DataFieldViz distribution={field.distribution}
+                                                    showRectTooltips
+                                                    renderMode="svg" />
                                             )}
                                         />
                                     </React.Fragment>
@@ -95,4 +97,4 @@ const DataFieldSelection = ({ dataFields, selectedFields, handleCheckboxChange }
     );
 };
 
-export default DataFieldSelection;
+export default React.memo(DataFieldSelection);

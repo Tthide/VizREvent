@@ -2,14 +2,17 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { Tooltip } from 'react-tooltip';
 
-
-const DataFieldViz = ({ distribution, showRectTooltips = false }) => {
+const DataFieldViz = ({ distribution, showRectTooltips = false, renderMode = 'svg', showResizeObserver = true }) => {
+    //renderMode= "svg" or "canvas"
     const containerRef = useRef();
     const svgRef = useRef();
+    const canvasRef = useRef();
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-    // ResizeObserver to track container size
+    // ResizeObserver
     useEffect(() => {
+        if (!showResizeObserver) return;
+
         const resizeObserver = new ResizeObserver(entries => {
             for (let entry of entries) {
                 const { width, height } = entry.contentRect;
@@ -22,46 +25,66 @@ const DataFieldViz = ({ distribution, showRectTooltips = false }) => {
         }
 
         return () => resizeObserver.disconnect();
-    }, []);
+    }, [showResizeObserver]);
 
-    // Draw visualization when dimensions or data change
+    // Canvas rendering
     useEffect(() => {
-        if (!distribution || dimensions.width === 0 || dimensions.height === 0) return;
+        if (!distribution || renderMode !== 'canvas') return;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
 
-        const svg = d3.select(svgRef.current);
-        svg.selectAll('*').remove(); // clear previous content
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, width, height);
 
         if (distribution.type === 'categorical') {
-            drawTreemap(svg, distribution, dimensions, showRectTooltips);
+            drawTreemapCanvas(ctx, distribution, width, height);
         } else if (distribution.type === 'numerical') {
-            drawHistogram(svg, distribution, dimensions, showRectTooltips);
+            drawHistogramCanvas(ctx, distribution, width, height);
         }
-    }, [distribution, dimensions]);
+    }, [distribution, renderMode]);
+
+    // SVG rendering
+    useEffect(() => {
+        if (!distribution || dimensions.width === 0 || dimensions.height === 0 || renderMode !== 'svg') return;
+
+        const svg = d3.select(svgRef.current);
+        svg.selectAll('*').remove();
+
+        if (distribution.type === 'categorical') {
+            drawTreemapSVG(svg, distribution, dimensions, showRectTooltips);
+        } else if (distribution.type === 'numerical') {
+            drawHistogramSVG(svg, distribution, dimensions, showRectTooltips);
+        }
+    }, [distribution, dimensions, renderMode]);
 
     return (
         <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
-            <svg className='datafield-viz' ref={svgRef} width="100%" height="100%" />
-            <Tooltip
-                id="treemap-tooltip"
-                place="top"
-                positionStrategy="fixed" />
+            {renderMode === 'svg' ? (
+                <>
+                    <svg ref={svgRef} width="100%" height="100%" className="datafield-viz" />
+                    <Tooltip id="treemap-tooltip" place="top" positionStrategy="fixed" />
+                </>
+            ) : (
+                <canvas ref={canvasRef} style={{ width: '100%', height: '100%' }} />
+            )}
         </div>
     );
-}
+};
 
-function drawTreemap(svg, distribution, { width, height }, showRectTooltips) {
+export default React.memo(DataFieldViz);
+
+// ======================== Drawing functions ========================
+
+function drawTreemapSVG(svg, distribution, { width, height }, showRectTooltips) {
     const data = Object.entries(distribution.frequencies).map(([name, value]) => ({ name, value }));
-
-
-    const root = d3.hierarchy({ children: data })
-        .sum(d => d.value)
-        .sort((a, b) => (b.value - a.value));
-
+    const root = d3.hierarchy({ children: data }).sum(d => d.value).sort((a, b) => b.value - a.value);
     d3.treemap().size([width, height]).padding(1)(root);
-
     const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    svg.selectAll("rect").remove();  // clear previous
 
     const leaves = root.leaves();
 
@@ -78,30 +101,22 @@ function drawTreemap(svg, distribution, { width, height }, showRectTooltips) {
         rects
             .attr('data-tooltip-id', 'treemap-tooltip')
             .attr('data-tooltip-content', d => `${d.data.name}: ${d.data.value}`);
-    } else {
-        rects
-            .attr('data-tooltip-id', null)
-            .attr('data-tooltip-content', null);
     }
 
-    //Size threshold for showing labels (area)
     const sizeThreshold = 3500;
-
-    // Add labels for rectangles big enough
     svg.selectAll('text')
         .data(leaves.filter(d => (d.x1 - d.x0) * (d.y1 - d.y0) >= sizeThreshold))
         .join('text')
-        .attr('x', d => d.x0 + 4)  // small padding inside rect
+        .attr('x', d => d.x0 + 4)
         .attr('y', d => d.y0 + 14)
         .text(d => d.data.name)
-        .attr('class', 'treemap-rect')
+        .attr('class', 'treemap-rect');
 }
 
-function drawHistogram(svg, distribution, { width, height }, showRectTooltips) {
-    let margin = {}
-    showRectTooltips ? margin = { top: 5, right: 5, bottom: 40, left: 45 }
-        : margin = { top: 5, right: 5, bottom: 20, left: 25 };
-
+function drawHistogramSVG(svg, distribution, { width, height }, showRectTooltips) {
+    const margin = showRectTooltips
+        ? { top: 5, right: 5, bottom: 40, left: 45 }
+        : { top: 5, right: 5, bottom: 20, left: 25 };
 
     const data = distribution.counts.map((count, i) => ({
         binStart: distribution.bins[i],
@@ -138,19 +153,61 @@ function drawHistogram(svg, distribution, { width, height }, showRectTooltips) {
         .attr('font-size', '10px');
 
     if (showRectTooltips) {
-        // X axis label
         svg.append('text')
-            .attr('x', (width) / 2)
+            .attr('x', width / 2)
             .attr('y', height - 5)
-            .attr('class', 'hist-axis-label')
-            .text(`Value`);
+            .text('Value')
+            .attr('class', 'hist-axis-label');
 
-        // Y axis label
         svg.append('text')
             .attr('transform', `translate(15,${height / 2}) rotate(-90)`)
-            .attr('class', 'hist-axis-label')
-            .text('Count');
+            .text('Count')
+            .attr('class', 'hist-axis-label');
     }
 }
 
-export default React.memo(DataFieldViz)
+function drawTreemapCanvas(ctx, distribution, width, height) {
+    const data = Object.entries(distribution.frequencies).map(([name, value]) => ({ name, value }));
+    const root = d3.hierarchy({ children: data }).sum(d => d.value).sort((a, b) => b.value - a.value);
+    d3.treemap().size([width, height]).padding(1)(root);
+
+    const sizeThreshold = 2000;
+
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    root.leaves().forEach(d => {
+        const w = d.x1 - d.x0;
+        const h = d.y1 - d.y0;
+        ctx.fillStyle = color(d.data.name);
+        ctx.fillRect(d.x0, d.y0, w, h);
+
+        if (w * h >= sizeThreshold) {
+            ctx.fillStyle = 'black';
+            ctx.fillText(d.data.name, d.x0 + 4, d.y0 + 10);
+        }
+    });
+}
+
+function drawHistogramCanvas(ctx, distribution, width, height) {
+    const margin = { top: 5, right: 5, bottom: 20, left: 25 };
+    const data = distribution.counts.map((count, i) => ({
+        binStart: distribution.bins[i],
+        binEnd: distribution.bins[i + 1],
+        count,
+    }));
+
+    const x = d3.scaleLinear()
+        .domain([distribution.bins[0], distribution.bins[distribution.bins.length - 1]])
+        .range([margin.left, width - margin.right]);
+
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(data, d => d.count)])
+        .range([height - margin.bottom, margin.top]);
+
+    ctx.fillStyle = '#69b3a2';
+    data.forEach(d => {
+        const x0 = x(d.binStart);
+        const x1 = x(d.binEnd);
+        const y1 = y(d.count);
+        ctx.fillRect(x0, y1, x1 - x0 - 1, y(0) - y1);
+    });
+}
