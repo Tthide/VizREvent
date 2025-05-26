@@ -48,13 +48,14 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        height: 3.3rem; // fixed cell height
-        max-height: 3.3rem;
+
     }
 
     td {
         color: dv.$color-primary;
         border: dv.$border-thinner-primary;
+        height: 3.3rem; // fixed cell height
+        max-height: 3.3rem;
 
     }
 
