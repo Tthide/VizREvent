@@ -53,8 +53,9 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
         setSelectedFields,
         resetEncodingLocal
     } = encodingStateSetters;
-
-    if (!spec) return resetEncodingLocal();
+    //resetting local encoding just to be sure
+    resetEncodingLocal();
+    if (!spec) return;
 
     const otherProps = [];
     const newSelectedField = [];
@@ -69,7 +70,7 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
                 const facetSpec = spec.facet[channel];
                 if (facetSpec && facetSpec.field) {
                     const found = dataFields.find(f => f.name === facetSpec.field);
-                    if (found && !selectedFields.includes(found)) {
+                    if (found) {
                         newSelectedField.push(found);
                     }
                     otherProps.push({
@@ -100,7 +101,7 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
             setXField(found || { name: enc.x.field, type: 'unknown' });
         }
         //adding new datafield to selectedField list
-        if (found && !selectedFields.includes(found)) {
+        if (found) {
             newSelectedField.push(found);
         }
 
@@ -128,7 +129,7 @@ export const parseSpec = (spec, dataFields, selectedFields, encodingStateSetters
             setYField(found || { name: enc.y.field, type: 'unknown' });
         }
         //adding new datafield to selectedField list
-        if (found && !selectedFields.includes(found)) {
+        if (found) {
             newSelectedField.push(found);
         }
 
