@@ -55,9 +55,11 @@
             padding-bottom: dv.$spacing-smallest;
             background-color: dv.$color-tertiary;
             border-radius: dv.$border-radius-small;
+            min-height: 10%;
             height: 35%;
-            max-height: 35%;
+            max-height: 80%;
             border: dv.$border-thin-primary;
+            resize: vertical;
             overflow: hidden; // hide any overflow outside container
         }
 
