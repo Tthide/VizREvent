@@ -1,6 +1,6 @@
 @use '../_design-variables.scss' as dv;
 
-$padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel opener
+
 
 .vp-container {
   display: flex;
@@ -14,7 +14,6 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
 
   .vp-banner {
     padding: dv.$spacing-large;
-    padding-left: $padding-left-no-rec-overlap;
     background-color: dv.$color-tertiary;
     border-bottom: dv.$border-thin-primary;
     width: 100%;
@@ -72,7 +71,8 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
     width: 100%;
     height: 100%;
     overflow: hidden;
-    margin-left: $padding-left-no-rec-overlap;
+    margin-left: dv.$spacing-medium;
+    margin-top: dv.$spacing-medium;
 
   }
 
@@ -81,7 +81,6 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
     min-height: 5000px;
     padding: dv.$spacing-medium;
     overflow: hidden;
-    margin-top: dv.$spacing-medium;
     position: relative;
 
 

@@ -4,60 +4,74 @@
 .rec-container {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: dv.$color-tertiary;
   color: dv.$color-primary;
   justify-content: center;
 }
 
 .container-closed {
-  width: 0;
-  overflow: visible;
-  /* allow chevron to overflow */
+  width: fit-content;
   position: relative;
   z-index: 10;
+  margin: 0;
+  padding: 0;
 }
 
 .container-open {
-      $rec-container-width: 22.5%;
+  $rec-container-width: 25%;
 
-  min-width:   $rec-container-width;
-  max-width:   $rec-container-width;
-  padding: dv.$spacing-medium;
+  min-width: $rec-container-width;
+  max-width: $rec-container-width;
 
 }
 
-.panel-button {
-  flex: 0 0 auto;
-  position: absolute;
-  top: 50%;
-  right: 0;
-  padding: 0;
 
-  transform: translate(100%, -50%); // push it outside the right edge + center vertically
-  background: transparent;
+
+
+
+.panel-button {
+  flex:  1 1 auto;
+
+  background: dv.$color-primary;
   border: none;
   cursor: pointer;
   z-index: 20;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  width: 100%;
+  min-width: 10%;
+  height: 100%;
 
 }
-
 $chevron-base-size: 32px;
 $chevron-medium-size: 42px;
 $chevron-large-size: 64px;
 
+
 .chevron-icon {
   width: $chevron-base-size;
   height: $chevron-base-size;
-  color: dv.$color-primary;
+  color: dv.$color-quaternary;
   transition: transform 0.3s ease;
   stroke-width: 2px;
-  margin-left: -20%; //bringing the chevron closer to the REC panel
   position: relative;
   z-index: 10;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
 
   @media (min-width: 600px) {
     width: $chevron-medium-size;
@@ -84,7 +98,7 @@ $chevron-large-size: 64px;
   justify-content: space-evenly;
   padding: dv.$spacing-medium;
   border-radius: dv.$border-radius-medium;
-  margin: dv.$spacing-small;
+  margin: dv.$spacing-medium;
 
 
   h1 {

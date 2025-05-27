@@ -45,7 +45,7 @@ const RECView = (props) => {
                 <OrbitProgress
                   color="#FFFFFF"
                   size="medium"
-                  text={totalCount!==0? `${recList.length} / ${totalCount}` : "..."}
+                  text={totalCount !== 0 ? `${recList.length} / ${totalCount}` : "..."}
                   textColor="#ffffff"
                 />
                 <h2>Recommendations loading...</h2>
@@ -65,11 +65,9 @@ const RECView = (props) => {
       )}
 
       {isDatasetSelected && <button onClick={handlePanelExpandClick} className={'panel-button'}>
-        <ChevronRight
-          className={`chevron-icon ${isOpened ? 'rotate-180' : ''}`}
-
-
-        />
+          <ChevronRight
+            className={`chevron-icon ${isOpened ? 'rotate-180' : ''}`}
+          />
       </button>}
     </div>
   );
