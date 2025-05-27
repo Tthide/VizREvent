@@ -91,14 +91,13 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      cursor: pointer;
       padding: dv.$spacing-small;
       border-radius: dv.$border-radius-small;
       background-color: dv.$color-tertiary;
 
 
       resize: both;
-      overflow: auto;
+      overflow: hidden;
 
       width: dv.rem(240); // Default size
       height: dv.rem(180);
@@ -109,7 +108,6 @@
       border: dv.$border-thin-primary;
       transition: border 0.2s;
 
-      margin: dv.$spacing-smallest;
       flex-shrink: 1;
 
       &.selected {
@@ -140,4 +138,12 @@
 
 
   }
+}
+
+
+.Viz-chart-container {
+  cursor: pointer;
+  flex-grow: 1 1 auto;
+  max-height: 85%;
+  padding: dv.$spacing-smallest;
 }
