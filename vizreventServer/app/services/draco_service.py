@@ -128,7 +128,12 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
         local_heap = []
         for j, model in enumerate(d.complete_spec(spec[1], num_chart)):
             cost = model.cost[0] if isinstance(model.cost, list) else model.cost
-            chart_name = spec[0] + f"_{j}" if specs is not None else f"chart_{i}_{j}"
+            if num_chart==1:
+                chart_name = spec[0]
+            elif specs is not None:
+                chart_name = spec[0] + f".{j}"
+            else :
+                chart_name = f"Chart {i+j}"
             entry = (cost, chart_name, i, j, model)
 
             if len(local_heap) < MAX_CHARTS:
@@ -160,7 +165,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
 
     # Now render and convert only these
     for cost, chart_name, i, j, model  in top_models:
-        chart_debug_name = f"CHART {(i * num_chart + j)}_{chart_name}"
+        chart_debug_name = f"CHART {(i * num_chart + j)}{chart_name}"
         schema = answer_set_to_dict(model.answer_set)
 
         # renderer.render returns a full vega-lite viz, but we only want the specs,
