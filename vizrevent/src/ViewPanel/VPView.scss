@@ -45,8 +45,15 @@ $padding-left-no-rec-overlap: 2rem; //so that nothing overlaps the rec panel ope
         gap: dv.$spacing-smallest;
         font-size: dv.$font-size-medium;
         flex: 1 1 auto;
+
+
       }
     }
+  }
+
+  .button-icon {
+    height: 1.5em;
+    width: 1.5em;
   }
 
   .zoom-tools {

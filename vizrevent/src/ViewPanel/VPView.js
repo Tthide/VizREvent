@@ -114,20 +114,20 @@ const VPView = (props) => {
 
         <div className='vp-banner-controller'>
           {isDatasetSelected &&
-            (<button onClick={handleVizCreateClick}>
-              <CirclePlus />Create Visualization
+            (<button  onClick={handleVizCreateClick}>
+              <CirclePlus className='button-icon' />Create Visualization
             </button>)}
 
           {vizSelected && (
             <button onClick={handleVizDelete}>
-              <OctagonX />
+              <OctagonX className='button-icon'/>
               Delete Selected Visualization
             </button>
           )}
 
           {vizList?.length > 0 && (
             <button onClick={handleVPVizClear}>
-              <Trash2 />
+              <Trash2 className='button-icon'/>
               Clear all Visualization
             </button>
           )}
@@ -158,8 +158,8 @@ const VPView = (props) => {
               {isDatasetSelected &&
                 (<div className="zoom-tools">
                   {/*<p>Current Scale: {currentScale.toFixed(2)}</p>*/}
-                  <button onClick={() => zoomIn()}><ZoomIn /></button>
-                  <button onClick={() => zoomOut()}><ZoomOut /></button>
+                  <button onClick={() => zoomIn()}><ZoomIn className='button-icon'/></button>
+                  <button onClick={() => zoomOut()}><ZoomOut className='button-icon'/></button>
                   <button onClick={() => setTransform(0, 0, currentScale)}>View Origin</button>
                   {vizSelected &&
                     <button onClick={zoomToElement}>See Selected Viz</button>}
