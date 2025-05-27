@@ -39,7 +39,7 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
         # Variant: Change mark type
         for alt_mark in ["bar", "line", "point", "area", "tick","rect"]:
             if mark and alt_mark != mark:
-                clauses = [f"attribute((mark,type),m0,{alt_mark}).", "entity(encoding,m0,e0)."]
+                clauses = [f"attribute((mark,type),m0,{alt_mark})."]
                 clauses.append(f"attribute((encoding,channel),e0,{channel}).")
                 clauses.append(f"attribute((encoding,field),e0,{field}).")
                 variants.append((f"change_mark_to_{alt_mark}", base + clauses))
@@ -75,16 +75,19 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
                 clauses.append(f"attribute((encoding,field),e0,{field}).")
                 clauses.append(f"attribute((encoding,aggregate),e0,{agg}).")
                 variants.append((f"add_agg_{agg}_{channel}", base + clauses))
+            # Variant: Add additional encoding using existing fields
+            
+        for alt_channel in ["color", "size", "shape"]:
+            for field in used_fields:
+                clauses = ["entity(encoding,m0,e1)."]
+                if mark:
+                    clauses.append(f"attribute((mark,type),m0,{mark}).")
+                clauses.append(f"attribute((encoding,channel),e0,{channel}).")
+                clauses.append(f"attribute((encoding,field),e0,{field}).")
+                
+                clauses.append(f"attribute((encoding,channel),e1,{alt_channel}).")
+                variants.append((f"add_{alt_channel}_to_{field}", base + clauses))
 
-    # Variant: Add additional encoding using existing fields
-    for channel in ["color", "size", "shape"]:
-        for field in used_fields:
-            clauses = []
-            if mark:
-                clauses.append(f"attribute((mark,type),m0,{mark}).")
-            clauses.append(f"attribute((encoding,channel),e0,{channel}).")
-            clauses.append(f"attribute((encoding,field),e0,{field}).")
-            variants.append((f"add_{channel}_{field}", base + clauses))
 
     # Variant: Explore unused fields in a new encoding
     for field in used_fields:
@@ -97,5 +100,8 @@ def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
 
     # Deduplicate variants
     # Use tuple of sorted clauses to ensure uniqueness
+    print("before sorting asp gen", len(variants))
     unique = {tuple(sorted(v[1])): v for v in variants}
+    print("after sorting asp gen", len(unique))
+
     return list(unique.values())
