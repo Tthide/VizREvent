@@ -47,8 +47,8 @@ const Viz = ({ spec, data, isVega = false }) => {
     }, []);
 
     useEffect(() => {
-        setImageURL(null); // clear old image on dimension change
-    }, [dimensions]);
+        setImageURL(null); // clear old image on dimension or spec change 
+    }, [dimensions,spec]);
 
     const enhancedSpec = spec && dimensions.width && dimensions.height ? {
         ...spec,
