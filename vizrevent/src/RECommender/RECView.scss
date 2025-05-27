@@ -2,17 +2,20 @@
 
 
 .rec-container {
-  position: relative;
   display: flex;
   flex-direction: row;
   background-color: dv.$color-tertiary;
   color: dv.$color-primary;
-  justify-content: center;
+  justify-content: flex-start;
+
+  @media (max-width: 768px) {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
 }
 
 .container-closed {
   width: fit-content;
-  position: relative;
   z-index: 10;
   margin: 0;
   padding: 0;
@@ -20,19 +23,21 @@
 
 .container-open {
   $rec-container-width: 25%;
-
+  flex: 1;
   min-width: $rec-container-width;
   max-width: $rec-container-width;
-
+  overflow: hidden;
 }
 
 
 
 
+$chevron-base-size: 32px;
+$chevron-medium-size: 42px;
+$chevron-large-size: 64px;
+
 
 .panel-button {
-  flex:  1 1 auto;
-
   background: dv.$color-primary;
   border: none;
   cursor: pointer;
@@ -44,19 +49,24 @@
   justify-content: center;
 
   overflow: hidden;
-  width: 100%;
-  min-width: 10%;
-  height: 100%;
+  min-width: $chevron-base-size;
+
+  // When open: ~20% width
+  @at-root .container-open & {
+    width: 20%;
+  }
+
+  // When closed: full width
+  @at-root .container-closed & {
+    width: 100%;
+  }
+
 
 }
-$chevron-base-size: 32px;
-$chevron-medium-size: 42px;
-$chevron-large-size: 64px;
 
 
 .chevron-icon {
-  width: $chevron-base-size;
-  height: $chevron-base-size;
+  width: 100%;
   color: dv.$color-quaternary;
   transition: transform 0.3s ease;
   stroke-width: 2px;
@@ -92,24 +102,38 @@ $chevron-large-size: 64px;
 .rec-panel {
   background-color: dv.$color-primary;
   height: 95%;
-  max-width: 100%;
+  flex: 1 1 80%; // allow it to shrink
+  min-width: 0; // allow it to shrink properly
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   padding: dv.$spacing-medium;
   border-radius: dv.$border-radius-medium;
   margin: dv.$spacing-medium;
+  overflow-y: auto;
 
+  @media (max-width: 768px) {
+    flex: 1 1 75%;
+    margin: dv.$spacing-small;
+  }
+
+  @media (max-width: 480px) {
+    flex: 1 1 70%;
+    margin: dv.$spacing-smallest;
+    border-radius: 0;
+  }
 
   h1 {
-    font-size: dv.$font-size-large;
+    font-size: dv.$font-size-medium-large;
     color: dv.$color-tertiary;
     background-color: dv.$color-primary;
-
+    flex-wrap: wrap;
+    text-overflow: ellipsis;
   }
 }
 
 .recviz-list {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
