@@ -129,7 +129,7 @@ const VPController = () => {
 
     const handleVizNameUpdate = (viz, newName) => {
 
-        if (viz && newName) {
+        if (viz) {
             // const {copyVizList,vizInList}=[...vizList,vizList.find(v =>{v.id===viz.id})];
             const copyVizList = [...vizList.filter(v => v.id !== viz.id )]
             viz.name = newName;

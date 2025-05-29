@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 
 import { Move } from 'lucide-react';
@@ -6,6 +6,8 @@ const DraggableViz = ({ viz, selected, onClick, currentScale, onVizUpdateName, c
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: viz.id,
   });
+
+  const [tempName, setTempName] = useState(viz.name);
 
   const style = {
     position: 'absolute',
@@ -29,10 +31,23 @@ const DraggableViz = ({ viz, selected, onClick, currentScale, onVizUpdateName, c
         </div>
         <input
           type="text"
-          value={viz.name}
-          onChange={(e) => onVizUpdateName(viz,e.target.value)}
+          value={tempName}
+          onChange={(e) => setTempName(e.target.value)}
+          onBlur={() => {
+            if (tempName.trim() !== "") {
+              onVizUpdateName(viz, tempName.trim());
+            } else {
+              setTempName(viz.name); // reset to original if empty
+            }
+          }}
+          onKeyDown={(e) => { // adding enter as an input validator
+            if (e.key === 'Enter') {
+              e.target.blur(); 
+            }
+          }}
           title={viz.name}
-        />      </div>
+        />
+      </div>
       <div className="viz-content">{children}</div>
     </div>
   );
