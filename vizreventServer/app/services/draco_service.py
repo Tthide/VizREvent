@@ -120,13 +120,20 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
         num_variant_chart=10
 
         if len(selected_fields)!=0:
+            #for performance reasons we still limit the number of chart per variant
+            # Calculate total number of combinations: single fields + pairs
+            num_combinations = len(selected_fields) + math.comb(len(selected_fields), 2)
+            # Distribute total_variants across all combinations
+            num_variant_chart = math.ceil(num_variant_chart / num_combinations)
+            
+            
             #We noticed that in this case, draco will output charts with facet that are ill-suited and make the frontend crash
             #Therefore, we add an hard constraint here to block this from happening
             additional_facts=[":-attribute((facet,channel),Fa,_)."]
             spec_facts = generate_asp_variants({}, default_input_spec+additional_facts,selected_fields)
             input_specs = [(spec[0],draco_facts + spec[1]) for spec in spec_facts]
-            num_variant_chart = math.ceil(num_variant_chart / len(selected_fields))  #for performance reasons we still limit the number of chart per variant
-            print("[Draco] Basic rec with selected fields",selected_fields)
+
+            print("[Draco] Basic rec with selected fields with num_variant_chart=",num_variant_chart)
 
         else:
             input_specs=[(chart_name,draco_facts+default_input_spec)]
@@ -141,6 +148,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     chart_specs = {}
     # Heap to store top 10 lowest-cost models (as a max-heap using negative costs)
     top_models_heap = []
+    print(f"\n[Draco] Number of variant generated: {len(input_specs)}")
 
     MAX_CHARTS = 10
     start_time_asp = time.time()

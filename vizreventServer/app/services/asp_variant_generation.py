@@ -1,3 +1,5 @@
+import itertools
+
 def generate_asp_variants(spec: dict, base: list[str],selected_fields: list[dict]) -> list[list[str]]:
     variants = []
 
@@ -12,14 +14,21 @@ def generate_asp_variants(spec: dict, base: list[str],selected_fields: list[dict
     
     #variant with selected fields
     if len(selected_fields)!=0:
-        
-        # Variant: Explore selected fields
-        for field in selected_fields:
-            clauses = []
-            if mark:
-                clauses.append(f"attribute((mark,type),m0,{mark}).")
-            clauses.append(f"attribute((encoding,field),e0,{field['name']}).")
-            variants.append((f"Explore fields including {field['name']}", base + clauses))
+    
+        # Variant: Explore selected fields (individual + pairs, not more because it won't work then)
+        for r in range(1, min(2, len(selected_fields)) + 1):
+            for combo in itertools.combinations(selected_fields, r):
+                clauses = []
+                field_names = [f["name"] for f in combo]
+                if mark:
+                    clauses.append(f"attribute((mark,type),m0,{mark}).")
+                for idx, field in enumerate(combo):
+                    
+                    clauses.append(f"entity(encoding,m0,e{idx}).")
+                    clauses.append(f"attribute((encoding,field),e{idx},{field['name']}).")
+                label = "Explore fields including " + ", ".join(field_names)
+                variants.append((label, base + clauses))
+
 
 
     #print("\ncurrent spec fields:",used_fields)
