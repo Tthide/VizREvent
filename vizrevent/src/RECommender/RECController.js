@@ -20,6 +20,7 @@ const RECController = () => {
     //Creating local state 
     const [isOpened, setIsOpened] = useState(false);
     const [recList, setRecList] = useState([]);
+    const [selectedFields, setSelectedFields] = useState([]);
     //count of recItem
     const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(false)
@@ -43,7 +44,7 @@ const RECController = () => {
         setRecList(prevList => [...prevList, item]);
     }, []);
     // Stream solutionSet one-by-one and append
-    const streamRecommendations = useCallback(async (datasetData,recSettings, signal) => {
+    const streamRecommendations = useCallback(async (datasetData, recSettings, signal) => {
 
         setTotalCount(0);
         try {
@@ -127,6 +128,8 @@ const RECController = () => {
         //we compute the recommendation only if the panel is opened.
         if (isOpened) {
 
+            state.recSettings && state.recSettings.selectedFields? setSelectedFields(state.recSettings.selectedFields) : setSelectedFields([]); 
+
             //checking if the recSettings (or more unlikely the dataset) changed or not from last opening or rerenders
             const recChanged = JSON.stringify(state.recSettings) !== JSON.stringify(lastRecSettingsRef.current);
             const datasetChanged = state.datasetId !== lastDatasetIdRef.current;
@@ -142,7 +145,6 @@ const RECController = () => {
                 setLoading(true);
                 setRecList([]); // Clear old recList
 
-
                 if (controllerRef.current) {
                     controllerRef.current.abort();
                 }
@@ -151,13 +153,16 @@ const RECController = () => {
                 controllerRef.current = newController;
 
 
-                streamRecommendations(state.datasetData,state.recSettings, newController.signal).finally(() => {
+                streamRecommendations(state.datasetData, state.recSettings, newController.signal).finally(() => {
                     if (!newController.signal.aborted) {
                         setLoading(false);
                         lastRecSettingsRef.current = state.recSettings;
                         lastDatasetIdRef.current = state.datasetId;
                     }
                 });
+
+
+
             }
         }
         // eslint-disable-next-line
@@ -174,8 +179,9 @@ const RECController = () => {
                 onPanelOpenerClick={handlePanelOpener}
                 recList={recList}
                 totalCount={totalCount}
+                selectedFields={selectedFields}
                 hasSelectedViz={state.selectedViz !== null}
-                selectedVizName={state.selectedViz !== null? state.selectedViz.name:""}
+                selectedVizName={state.selectedViz !== null ? state.selectedViz.name : ""}
                 onRecItemSelect={handleRecSelection}
             />
 

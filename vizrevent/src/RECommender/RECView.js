@@ -6,7 +6,7 @@ import { ChevronRight } from 'lucide-react';
 
 const RECView = (props) => {
 
-  const { isDatasetSelected, isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect, hasSelectedViz, selectedVizName, totalCount } = props;
+  const { isDatasetSelected, isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect, hasSelectedViz, selectedVizName, selectedFields, totalCount } = props;
 
 
   const handlePanelExpandClick = () => {
@@ -32,6 +32,7 @@ const RECView = (props) => {
 
   }
 
+  console.log(selectedFields)
 
 
   return (
@@ -40,10 +41,36 @@ const RECView = (props) => {
         <div className={'rec-panel'}>
           <div className={'rec-pannel-banner'}>
             <h1>REC Panel</h1>
-            {selectedVizName !== "" ?
-              (<h2>Recommendations on viz: <i>{selectedVizName}</i> </h2>)
-              : (<h2>General Recommendations</h2>)
-            }
+            <h2>
+              {selectedVizName !== "" ? (
+                selectedFields.length !== 0 ? (
+                  <>
+                    Recommendations on viz: <i>{selectedVizName}</i> with selected fields:{" "}
+                    {selectedFields.map((field, index) => (
+                      <span key={index}>
+                        <i>{field.name}</i>
+                        {index < selectedFields.length - 1 ? ', ' : ''}
+                      </span>
+                    ))}
+                  </>
+                ) : (
+                  <>Recommendations on viz: <i>{selectedVizName}</i></>
+                )
+              ) : selectedFields.length !== 0 ? (
+                <>
+                  General Recommendations with selected fields:
+                  {selectedFields.map((field, index) => (
+                    <span key={index}>
+                      <i>{field.name}</i>
+                      {index < selectedFields.length - 1 ? ', ' : ''}
+                    </span>
+                  ))}
+                </>
+              ) : (
+                "General Recommendations"
+              )}
+            </h2>
+
           </div>
 
           <div className={'recviz-list'}>
