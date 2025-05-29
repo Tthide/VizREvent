@@ -17,7 +17,6 @@ const VPController = () => {
         datasetData: state.datasetData
 
     }));
-    console.log("VP/datasetData", state.datasetData);
 
     //Creating local state 
     const [vizList, setVizList] = useState([]);
@@ -134,7 +133,6 @@ const VPController = () => {
             const copyVizList = [...vizList.filter(v => v.id !== viz.id )]
             viz.name = newName;
             setVizList([...copyVizList, viz]);
-            console.log([...copyVizList, viz]);
         }
 
     }
