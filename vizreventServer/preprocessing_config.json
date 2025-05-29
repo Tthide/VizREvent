@@ -1,7 +1,6 @@
 {
   "keep_keys": [
     "period",
-    "timestamp",
     "possession",
     "type",
     "possession_team",
@@ -12,6 +11,7 @@
     "id",
     "index",
     "minute",
-    "second"
+    "second",
+    "timestamp"
   ]
 }

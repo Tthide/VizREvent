@@ -19,17 +19,17 @@ def get_draco_recommendations():
 
         dataset_id = str(payload.get('dataset_id'))
         specs      = payload.get('specs')
-        num_chart  = payload.get('num_chart', 5)
+        num_variant_chart  = payload.get('num_chart', 5)
 
         # Debug logging (truncate specs for brevity)
-        print(f"[Draco] dataset_id={dataset_id}, num_chart={num_chart}")
+        print(f"[Draco] dataset_id={dataset_id}, num_chart={num_variant_chart}")
         print(f"[Draco] specs excerpt: {json.dumps(specs)[:200]}...")
         
         if dataset_id is None:
             return jsonify({"error": "dataset_id parameter is missing"}), 400
 
         data = get_data(dataset_id)
-        charts =draco_rec_compute(data,specs=specs,num_chart=num_chart)
+        charts =draco_rec_compute(data,specs=specs,num_variant_chart=num_variant_chart)
 
         # Wrap our generator in a JSON array:
         def generate():

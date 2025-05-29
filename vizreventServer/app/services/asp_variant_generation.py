@@ -1,13 +1,26 @@
-def generate_asp_variants(spec: dict, base: list[str]) -> list[list[str]]:
+def generate_asp_variants(spec: dict, base: list[str],selected_fields: list[dict]) -> list[list[str]]:
     variants = []
 
     #print("\ncurrent spec:",spec)
+    
 
     #extracting properties from the current selected spec
     mark = spec.get("mark", {}).get("type") or spec.get("spec", {}).get("mark", {}).get("type")
     encoding = spec.get("encoding") or spec.get("spec", {}).get("encoding", {})
+    used_fields = [enc.get("field") for enc in encoding.values() if enc.get("field")]
     
-    used_fields = {enc.get("field") for enc in encoding.values() if enc.get("field")}
+    
+    #variant with selected fields
+    if len(selected_fields)!=0:
+        
+        # Variant: Explore selected fields
+        for field in selected_fields:
+            clauses = []
+            if mark:
+                clauses.append(f"attribute((mark,type),m0,{mark}).")
+            clauses.append(f"attribute((encoding,field),e0,{field['name']}).")
+            variants.append((f"Explore fields including {field['name']}", base + clauses))
+
 
     #print("\ncurrent spec fields:",used_fields)
     #print("\ncurrent spec encoding:",encoding.items())

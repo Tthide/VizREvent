@@ -8,6 +8,7 @@ import heapq
 import time
 import concurrent.futures
 from pathlib import Path
+import math
 
 def get_draco_dataframe(preprocessed_data):
     """
@@ -87,13 +88,13 @@ default_input_spec =["entity(view,root,v0).", # a root has to exist to display a
                      "entity(encoding,m0,e0).", #here we ensure that we have at least one encoding
                      ":- {entity(encoding,m0,_)} < 2."]    # we want to have at least 2 encodings to produce interesting visualizations
 
-def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= default_input_spec,num_chart:int = 1, labeler=lambda i: f"CHART {i + 1}", Debug: bool=False):
+def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= default_input_spec,num_variant_chart:int = 1, labeler=lambda i: f"CHART {i + 1}", Debug: bool=False):
     """
     Computes and recommends Draco charts based on the input data.
 
     Parameters:
     data (JSON): The raw input data to be processed.
-    num_chart (int, optional): The number of charts to recommend.
+    num_variant_chart (int, optional): The number of charts to recommend.
     Debug(bool, optional):Debug mode, writes chart_specs_outpute to json files in ./data/events/temps/. Default is False.
     
     Returns:
@@ -101,19 +102,38 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     """
     start_time = time.time()
     
+    #initialisation
     renderer = AltairRenderer()
     draco_data=get_draco_dataframe(data)
     draco_facts=get_draco_facts(get_draco_schema(draco_data))
     
     spec_facts=[]
+    selected_fields=[]
     print("specs==None",specs==None) 
-    if specs==None :
+    
+    #differentiating between use cases
+    if specs is not None:
+        if "selectedFields" in specs and specs["selectedFields"] is not None:
+            selected_fields = specs.pop("selectedFields") 
+        
+    if specs==None or (("encoding" not in specs or specs["encoding"] is None) and ("mark" not in specs or specs["mark"] is None)) :
         chart_name= ''
-        input_specs=[(chart_name,draco_facts+default_input_spec)]
-        num_chart=6
+        num_variant_chart=10
+        print("basic rec but with selected fields",selected_fields)
+
+        if len(selected_fields)!=0:
+            #We noticed that in this case, draco will output charts with facet that are ill-suited and make the frontend crash
+            #Therefore, we add an hard constraint here to block this from happening
+            additional_facts=[":-attribute((facet,channel),Fa,_)."]
+            spec_facts = generate_asp_variants({}, default_input_spec+additional_facts,selected_fields)
+            input_specs = [(spec[0],draco_facts + spec[1]) for spec in spec_facts]
+            num_variant_chart = math.ceil(num_variant_chart / len(selected_fields))  #for performance reasons we still limit the number of chart per variant
+        else:
+            input_specs=[(chart_name,draco_facts+default_input_spec)]
     else:
+
         start_time_asp = time.time()
-        spec_facts = generate_asp_variants(specs, default_input_spec)
+        spec_facts = generate_asp_variants(specs, default_input_spec,selected_fields)
         input_specs = [(spec[0],draco_facts + spec[1]) for spec in spec_facts]
         print(f"\nExecution Time: {time.time() - start_time_asp:.2f} seconds")
     chart_specs = {}
@@ -126,9 +146,9 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     def process_spec(i_spec):
         i, spec = i_spec
         local_heap = []
-        for j, model in enumerate(d.complete_spec(spec[1], num_chart)):
+        for j, model in enumerate(d.complete_spec(spec[1], num_variant_chart)):
             cost = model.cost[0] if isinstance(model.cost, list) else model.cost
-            if num_chart==1:
+            if num_variant_chart==1:
                 chart_name = spec[0]
             elif specs is not None:
                 chart_name = spec[0] + f".{j}"
@@ -165,7 +185,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
 
     # Now render and convert only these
     for cost, chart_name, i, j, model  in top_models:
-        chart_debug_name = f"CHART {(i * num_chart + j)}{chart_name}"
+        chart_debug_name = f"CHART {(i * num_variant_chart + j)}{chart_name}"
         schema = answer_set_to_dict(model.answer_set)
 
         # renderer.render returns a full vega-lite viz, but we only want the specs,
@@ -195,6 +215,6 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     ]
     print(f"\Rendering VL execution Time: {time.time() - start_time_asp:.2f} seconds")
 
-    print(f"\nExecution Time: {time.time() - start_time:.2f} seconds | Item number: {len(input_specs)*num_chart} | Per Item : {( time.time() - start_time )/(len(input_specs)*num_chart)}")
+    print(f"\nExecution Time: {time.time() - start_time:.2f} seconds | Item number: {len(input_specs)*num_variant_chart} | Per Item : {( time.time() - start_time )/(len(input_specs)*num_variant_chart)}")
     return sorted_chart_vega_lite_json_list
 
