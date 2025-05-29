@@ -144,6 +144,7 @@
 
   .viz-name-input {
     margin: 0;
+    min-width: 0;
     flex-grow: 1;
     margin: dv.$spacing-smallest;
     font-family: dv.$font-family-primary;
