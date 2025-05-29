@@ -109,7 +109,6 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     
     spec_facts=[]
     selected_fields=[]
-    print("specs==None",specs==None) 
     
     #differentiating between use cases
     if specs is not None:
@@ -119,7 +118,6 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     if specs==None or (("encoding" not in specs or specs["encoding"] is None) and ("mark" not in specs or specs["mark"] is None)) :
         chart_name= ''
         num_variant_chart=10
-        print("basic rec but with selected fields",selected_fields)
 
         if len(selected_fields)!=0:
             #We noticed that in this case, draco will output charts with facet that are ill-suited and make the frontend crash
@@ -128,14 +126,18 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
             spec_facts = generate_asp_variants({}, default_input_spec+additional_facts,selected_fields)
             input_specs = [(spec[0],draco_facts + spec[1]) for spec in spec_facts]
             num_variant_chart = math.ceil(num_variant_chart / len(selected_fields))  #for performance reasons we still limit the number of chart per variant
+            print("[Draco] Basic rec with selected fields",selected_fields)
+
         else:
             input_specs=[(chart_name,draco_facts+default_input_spec)]
+            print("[Draco] Basic rec")
     else:
 
         start_time_asp = time.time()
         spec_facts = generate_asp_variants(specs, default_input_spec,selected_fields)
         input_specs = [(spec[0],draco_facts + spec[1]) for spec in spec_facts]
-        print(f"\nExecution Time: {time.time() - start_time_asp:.2f} seconds")
+        print(f"[Draco] Rec on Selected Viz")
+        print(f"\n[Draco] Variant Gen Execution Time: {time.time() - start_time_asp:.2f} seconds")
     chart_specs = {}
     # Heap to store top 10 lowest-cost models (as a max-heap using negative costs)
     top_models_heap = []
@@ -179,7 +181,7 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
     top_models = sorted(top_models_heap)
     # Convert heap to sorted list (ascending cost)
     #top_models = sorted([(-cost, chart_name, i, j, model ) for cost, chart_name, i, j, model in top_models_heap])
-    print(f"\Top model execution Time: {time.time() - start_time_asp:.2f} seconds")
+    print(f"[Draco] Top model execution Time: {time.time() - start_time_asp:.2f} seconds")
 
     start_time_asp = time.time()
 
@@ -213,8 +215,8 @@ def draco_rec_compute(data,d:draco.Draco = draco.Draco(),specs:list[str]= defaul
         {"name": value[0], "spec": value[1]["spec"]}
         for value in chart_specs.values()
     ]
-    print(f"\Rendering VL execution Time: {time.time() - start_time_asp:.2f} seconds")
+    print(f"[Draco] Rendering VL execution Time: {time.time() - start_time_asp:.2f} seconds")
 
-    print(f"\nExecution Time: {time.time() - start_time:.2f} seconds | Item number: {len(input_specs)*num_variant_chart} | Per Item : {( time.time() - start_time )/(len(input_specs)*num_variant_chart)}")
+    print(f"\n[Draco] Global Execution Time: {time.time() - start_time:.2f} seconds | Item number: {len(input_specs)*num_variant_chart} | Per Item : {( time.time() - start_time )/(len(input_specs)*num_variant_chart)}")
     return sorted_chart_vega_lite_json_list
 
