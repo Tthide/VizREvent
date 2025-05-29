@@ -2,7 +2,7 @@ import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
 
 import { Move } from 'lucide-react';
-const DraggableViz = ({ viz, selected, onClick, currentScale, children }) => {
+const DraggableViz = ({ viz, selected, onClick, currentScale, onVizUpdateName, children }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: viz.id,
   });
@@ -16,8 +16,6 @@ const DraggableViz = ({ viz, selected, onClick, currentScale, children }) => {
       : undefined,
     zIndex: selected ? 1 : 0,
   };
-  console.log("viName",viz.name)
-
   return (
     <div
       ref={setNodeRef}
@@ -29,8 +27,12 @@ const DraggableViz = ({ viz, selected, onClick, currentScale, children }) => {
         <div className="viz-drag-handle" {...listeners} {...attributes}>
           <Move size={32} />
         </div>
-        <p title={viz.name}>{viz.name}</p>
-      </div>
+        <input
+          type="text"
+          value={viz.name}
+          onChange={(e) => onVizUpdateName(viz,e.target.value)}
+          title={viz.name}
+        />      </div>
       <div className="viz-content">{children}</div>
     </div>
   );

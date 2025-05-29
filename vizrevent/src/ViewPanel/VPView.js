@@ -8,7 +8,7 @@ import { CirclePlus, OctagonX, Trash2, ZoomIn, ZoomOut } from 'lucide-react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 const VPView = (props) => {
-  const { isDatasetSelected, vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, GRID_SIZE, data } = props;
+  const { isDatasetSelected, vizList, vizSelected, onVizSelect, onVizCreate, onVizDelete, onVizUpdatePosition, onVizUpdateName, GRID_SIZE, data } = props;
   const transformRef = useRef(null);
   const [currentScale, setCurrentScale] = useState(1);
   const vizListSizeRef = useRef(0);
@@ -181,6 +181,7 @@ const VPView = (props) => {
                       viz={viz}
                       selected={vizSelected?.id === viz.id}
                       currentScale={currentScale}
+                      onVizUpdateName={onVizUpdateName}
                     >
                       <div id={`viz-${viz.id}`}
                         className="Viz-chart-container"

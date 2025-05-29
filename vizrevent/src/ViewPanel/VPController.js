@@ -22,7 +22,7 @@ const VPController = () => {
     //Creating local state 
     const [vizList, setVizList] = useState([]);
 
-    const [vizCounter,setVizCounter] = useState(0);
+    const [vizCounter, setVizCounter] = useState(0);
 
     //the viz panel consist of grid in which we can place the viz instances, here we can change the size of each grid cells
     //the bigger the size, the less freedom in placement we have
@@ -40,7 +40,7 @@ const VPController = () => {
                 y: 0
             };
             setVizList(preVizList => [...preVizList, newViz]);
-            setVizCounter(preVizCounter => preVizCounter+1);
+            setVizCounter(preVizCounter => preVizCounter + 1);
             dispatch.setRecSettings(newViz.vizQuery);
             dispatch.setSelectedViz(newViz);
             dispatch.setInputViz(null);
@@ -127,6 +127,17 @@ const VPController = () => {
 
     }, [state.vizParam]);
 
+    const handleVizNameUpdate = (viz, newName) => {
+
+        if (viz && newName) {
+            // const {copyVizList,vizInList}=[...vizList,vizList.find(v =>{v.id===viz.id})];
+            const copyVizList = [...vizList.filter(v => v.id !== viz.id )]
+            viz.name = newName;
+            setVizList([...copyVizList, viz]);
+            console.log([...copyVizList, viz]);
+        }
+
+    }
 
     return (
         <>
@@ -138,6 +149,7 @@ const VPController = () => {
                 onVizCreate={handleEmptyVizCreate}
                 onVizDelete={handleVizDelete}
                 onVizUpdatePosition={handleVizUpdatePosition}
+                onVizUpdateName={handleVizNameUpdate}
                 GRID_SIZE={GRID_SIZE}
                 data={state.datasetData}
             />
