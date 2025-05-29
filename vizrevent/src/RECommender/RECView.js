@@ -58,7 +58,7 @@ const RECView = (props) => {
                 )
               ) : selectedFields.length !== 0 ? (
                 <>
-                  General Recommendations with selected fields:
+                  General Recommendations with selected fields:{" "}
                   {selectedFields.map((field, index) => (
                     <span key={index}>
                       <i>{field.name}</i>
