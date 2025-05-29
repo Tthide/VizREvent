@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "https://tthide.github.io/VizREvent/static/css/main.32f6d214.css",
-    "main.js": "https://tthide.github.io/VizREvent/static/js/main.f58fbc6f.js",
+    "main.js": "https://tthide.github.io/VizREvent/static/js/main.cd769cd1.js",
     "static/js/453.2ff1f593.chunk.js": "https://tthide.github.io/VizREvent/static/js/453.2ff1f593.chunk.js",
     "static/media/github-mark.svg": "https://tthide.github.io/VizREvent/static/media/github-mark.6fa18895f6e6c7772cab7049f7e05f59.svg",
     "index.html": "https://tthide.github.io/VizREvent/index.html",
     "main.32f6d214.css.map": "https://tthide.github.io/VizREvent/static/css/main.32f6d214.css.map",
-    "main.f58fbc6f.js.map": "https://tthide.github.io/VizREvent/static/js/main.f58fbc6f.js.map",
+    "main.cd769cd1.js.map": "https://tthide.github.io/VizREvent/static/js/main.cd769cd1.js.map",
     "453.2ff1f593.chunk.js.map": "https://tthide.github.io/VizREvent/static/js/453.2ff1f593.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.32f6d214.css",
-    "static/js/main.f58fbc6f.js"
+    "static/js/main.cd769cd1.js"
   ]
 }
