@@ -22,20 +22,25 @@ const VPController = () => {
     //Creating local state 
     const [vizList, setVizList] = useState([]);
 
+    const [vizCounter,setVizCounter] = useState(0);
+
     //the viz panel consist of grid in which we can place the viz instances, here we can change the size of each grid cells
     //the bigger the size, the less freedom in placement we have
     const GRID_SIZE = 50;
 
     //create a Viz and automatically selects it
     const createViz = useCallback((vizQuery = null) => {
+
         if (state.datasetId) {
             const newViz = {
                 id: uuidv4(),
+                name: `Chart n° ${vizCounter}`,
                 vizQuery: vizQuery ? vizQuery.spec : null,
                 x: 0,
                 y: 0
             };
             setVizList(preVizList => [...preVizList, newViz]);
+            setVizCounter(preVizCounter => preVizCounter+1);
             dispatch.setRecSettings(newViz.vizQuery);
             dispatch.setSelectedViz(newViz);
             dispatch.setInputViz(null);

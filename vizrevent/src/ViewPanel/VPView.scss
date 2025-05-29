@@ -115,15 +115,7 @@
         color: dv.$color-quaternary;
       }
 
-      .viz-drag-handle {
-        align-self: flex-start;
-        cursor: move;
-        border-radius: dv.$border-radius-small;
-        background-color: rgba(0, 0, 0, 0.15);
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-      }
+
 
       .viz-content {
         position: relative;
@@ -140,6 +132,32 @@
   }
 }
 
+.viz-banner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex:0 0 auto;
+  height: fit-content;
+  gap: dv.$spacing-small;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  p{
+    margin: 0;
+    flex-grow: 1;
+    padding: dv.$spacing-small;
+  }
+
+  .viz-drag-handle {
+    align-self: flex-start;
+    cursor: move;
+    border-radius: dv.$border-radius-small;
+    background-color: rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
 
 .Viz-chart-container {
   cursor: pointer;
