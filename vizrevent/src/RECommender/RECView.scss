@@ -123,13 +123,35 @@ $chevron-large-size: 64px;
     border-radius: 0;
   }
 
-  h1 {
-    font-size: dv.$font-size-medium-large;
-    color: dv.$color-tertiary;
-    background-color: dv.$color-primary;
-    flex-wrap: wrap;
-    text-overflow: ellipsis;
+  .rec-pannel-banner {
+    margin: 0;
+    padding: dv.$spacing-small;
+    display: flex;
+    flex-direction: column;
+    gap: dv.$spacing-small;
+
+    h1 {
+      font-size: dv.$font-size-large;
+      color: dv.$color-tertiary;
+      background-color: dv.$color-primary;
+      flex-wrap: wrap;
+      text-overflow: ellipsis;
+      margin: 0;
+
+    }
+
+    h2 {
+      font-size: dv.$font-size-medium;
+      color: dv.$color-tertiary;
+      background-color: dv.$color-primary;
+      flex-wrap: wrap;
+      text-overflow: ellipsis;
+      margin: 0;
+
+
+    }
   }
+
 }
 
 .recviz-list {

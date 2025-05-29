@@ -6,7 +6,7 @@ import { ChevronRight } from 'lucide-react';
 
 const RECView = (props) => {
 
-  const { isDatasetSelected, isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect, hasSelectedViz, totalCount } = props;
+  const { isDatasetSelected, isOpened, loading, onPanelOpenerClick, recList, onRecItemSelect, hasSelectedViz, selectedVizName, totalCount } = props;
 
 
   const handlePanelExpandClick = () => {
@@ -38,7 +38,14 @@ const RECView = (props) => {
     <div className={`rec-container ${isOpened ? 'container-open' : 'container-closed'}`}>
       {isOpened && (
         <div className={'rec-panel'}>
-          <h1>Recommendations</h1>
+          <div className={'rec-pannel-banner'}>
+            <h1>REC Panel</h1>
+            {selectedVizName !== "" ?
+              (<h2>Recommendations on viz: <i>{selectedVizName}</i> </h2>)
+              : (<h2>General Recommendations</h2>)
+            }
+          </div>
+
           <div className={'recviz-list'}>
             {loading && (
               <div className={'loading-wrapper'}>
@@ -65,9 +72,9 @@ const RECView = (props) => {
       )}
 
       {isDatasetSelected && <button onClick={handlePanelExpandClick} className={'panel-button'}>
-          <ChevronRight
-            className={`chevron-icon ${isOpened ? 'rotate-180' : ''}`}
-          />
+        <ChevronRight
+          className={`chevron-icon ${isOpened ? 'rotate-180' : ''}`}
+        />
       </button>}
     </div>
   );

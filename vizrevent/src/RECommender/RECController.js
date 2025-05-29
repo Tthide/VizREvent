@@ -175,6 +175,7 @@ const RECController = () => {
                 recList={recList}
                 totalCount={totalCount}
                 hasSelectedViz={state.selectedViz !== null}
+                selectedVizName={state.selectedViz !== null? state.selectedViz.name:""}
                 onRecItemSelect={handleRecSelection}
             />
 
