@@ -13,6 +13,9 @@ const VPView = (props) => {
   const [currentScale, setCurrentScale] = useState(1);
   const vizListSizeRef = useRef(0);
 
+  const [isHoveringViz, setIsHoveringViz] = useState(false);
+
+
   const handleVizCreateClick = () => {
     return onVizCreate();
   }
@@ -143,7 +146,7 @@ const VPView = (props) => {
         <TransformWrapper
           ref={transformRef}
           wheel={{ step: 2, smoothStep: 0.001 }}
-          panning={{ allowLeftClickPan: false }}
+          panning={{ allowLeftClickPan: !isHoveringViz }}
           doubleClick={{ disabled: true }}
           initialScale={1}
           minScale={0.4}
@@ -182,6 +185,7 @@ const VPView = (props) => {
                       selected={vizSelected?.id === viz.id}
                       currentScale={currentScale}
                       onVizUpdateName={onVizUpdateName}
+                      onHoverChange={setIsHoveringViz}
                     >
                       <div id={`viz-${viz.id}`}
                         className="Viz-chart-container"
