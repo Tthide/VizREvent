@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import DSView from './DSView'
 import { useStoreSelector } from '../Store/VizreventStore';
-import { DatasetListFetcher, DatafieldsList,DatasetFetcher } from './DatasetUtils';
+import { DatasetListFetcher, DatafieldsList, DatasetFetcher } from './DatasetUtils';
 import { buildNewSpec, parseSpec } from './DataEncodingSelection/DataEncodingUtils';
 
 const DSController = () => {
@@ -11,6 +11,7 @@ const DSController = () => {
         vizParam: state.vizParam,
         datasetId: state.datasetId,
         selectedViz: state.selectedViz,
+        recSettings: state.recSettings
     }));
 
     const [datasetList, setDatasetList] = useState([]);
@@ -190,21 +191,21 @@ const DSController = () => {
     *Takes selected datafield and updates local state.
     */
     const handleDatafieldSelect = (field) => {
-        //this function will only be called by UI interaction that are displayed when a viz is selected
-        setSelectedFields(prevSelectedFields => {
-            //deselection case
-            if (prevSelectedFields.includes(field)) {
+        const currentSelectedFields = [...selectedFields];
 
-                //otherwise just remove it
-                return prevSelectedFields.filter(f => f !== field);
-            }
-            //selection case
-            else {
-                return [...prevSelectedFields, field];
-            }
+        const updatedSelectedFields = currentSelectedFields.includes(field)
+            ? currentSelectedFields.filter(f => f !== field) // deselect
+            : [...currentSelectedFields, field];             // select
+
+        setSelectedFields(updatedSelectedFields);
+
+        //appending the selectedFields to the current recSettings
+        dispatch.setRecSettings({
+            ...state.recSettings,
+            selectedFields: [...updatedSelectedFields]
         });
-
     };
+
 
     return (
         <>
