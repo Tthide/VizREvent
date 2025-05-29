@@ -32,6 +32,7 @@ const DraggableViz = ({ viz, selected, onClick, currentScale, onVizUpdateName, c
         <input
           type="text"
           value={tempName}
+          className='viz-name-input'
           onChange={(e) => setTempName(e.target.value)}
           onBlur={() => {
             if (tempName.trim() !== "") {

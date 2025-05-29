@@ -136,16 +136,36 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  flex:0 0 auto;
+  flex: 0 0 auto;
   height: fit-content;
   gap: dv.$spacing-small;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  p{
+  .viz-name-input {
     margin: 0;
     flex-grow: 1;
-    padding: dv.$spacing-small;
+    margin: dv.$spacing-smallest;
+    font-family: dv.$font-family-primary;
+    font-size: dv.$font-size-medium;
+
+    color: dv.$color-primary;
+    background-color: rgba(dv.$color-tertiary,0.80);
+    border: dv.$border-thinner-primary;
+    border-radius: dv.$border-radius-small;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 7px;
+    outline: none;
+    transition: border 0.2s ease, background-color 0.2s ease;
+
+    &:focus {
+      border: dv.$border-thin-primary;
+      background-color: dv.$color-quaternary;
+    }
+
+    &::placeholder {
+      color: rgba(dv.$color-primary, 0.6);
+      font-style: italic;
+    }
   }
 
   .viz-drag-handle {
